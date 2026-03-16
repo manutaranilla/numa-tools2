@@ -7,7 +7,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-.tip-icon,.tip-generic-icon,.diaphragm-banner-icon,.disclaimer-icon{color:#1D9BF0;font-size:22px!important}
 body{background:#fff;color:#1a1a1a;font-family:'Inter',sans-serif;min-height:100vh}
 .page-wrap{max-width:1100px;margin:0 auto;padding:0 24px 64px}
 
@@ -279,6 +278,19 @@ body{background:#fff;color:#1a1a1a;font-family:'Inter',sans-serif;min-height:100
   .age-vs{display:none}
 }
 </style>
+<script src="https://twemoji.maxcdn.com/v/latest/twemoji.min.js" crossorigin="anonymous"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  twemoji.parse(document.body, {folder: 'svg', ext: '.svg'});
+  // Re-parsear cuando se genere contenido dinámico
+  var observer = new MutationObserver(function(mutations) {
+    mutations.forEach(function(m) {
+      if (m.addedNodes.length) twemoji.parse(document.body, {folder: 'svg', ext: '.svg'});
+    });
+  });
+  observer.observe(document.body, {childList: true, subtree: true});
+});
+</script>
 </head>
 <body>
 <div class="page-wrap">
@@ -305,7 +317,7 @@ body{background:#fff;color:#1a1a1a;font-family:'Inter',sans-serif;min-height:100
         <p>En solo <strong>30 segundos</strong>, calcula la edad funcional de tu sistema respiratorio a partir de tu fuerza inspiratoria y espiratoria (MIP / MEP), uno de los biomarcadores más infravalorados de:</p>
         <ul class="hero-list">
           <li>💪 Rendimiento físico</li>
-          <li>◎ Salud pulmonar</li>
+          <li>🫁 Salud pulmonar</li>
           <li>⚡ Resiliencia metabólica</li>
           <li>🔬 Longevidad funcional</li>
         </ul>
@@ -408,7 +420,7 @@ body{background:#fff;color:#1a1a1a;font-family:'Inter',sans-serif;min-height:100
     <div class="summary-banner" id="summary-text"></div>
 
     <!-- ═══ SILHOUETTE AGE COMPARE ═══ -->
-    <span class="sec-label">◎ Edad funcional de tu sistema respiratorio</span>
+    <span class="sec-label">🫁 Edad funcional de tu sistema respiratorio</span>
     <div class="sil-card">
       <div class="sil-title">Tu edad real vs. la edad funcional de tu musculatura respiratoria</div>
       <div class="sil-row">
@@ -518,7 +530,7 @@ body{background:#fff;color:#1a1a1a;font-family:'Inter',sans-serif;min-height:100
     <div class="motivational-card" id="motivational"></div>
 
     <div class="diaphragm-banner">
-      <div class="diaphragm-banner-icon">◎</div>
+      <div class="diaphragm-banner-icon">🫁</div>
       <div>
         <div class="diaphragm-banner-title">El diafragma, el gran olvidado</div>
         <div class="diaphragm-banner-sub">Trabajarlo de forma específica es seguro y potencia salud, longevidad y rendimiento.</div>
@@ -536,16 +548,16 @@ body{background:#fff;color:#1a1a1a;font-family:'Inter',sans-serif;min-height:100
 
     <span class="sec-label" style="margin-top:28px">Recomendaciones generales</span>
     <div class="tips-grid-generic">
-      <div class="tip-generic"><div class="tip-generic-icon">↻</div><div><div class="tip-generic-title">Recomendación práctica</div><div class="tip-generic-body">Se sugieren 2 sesiones al día de 30 respiraciones con BigBreathe u otro entrenador inspiratorio similar.</div></div></div>
-      <div class="tip-generic"><div class="tip-generic-icon">↗</div><div><div class="tip-generic-title">La constancia aporta resultados</div><div class="tip-generic-body">En pocas semanas pueden observarse mejoras en descanso, recuperación, resistencia y claridad mental.</div></div></div>
-      <div class="tip-generic"><div class="tip-generic-icon">⚖</div><div><div class="tip-generic-title">Factor peso / IMC</div><div class="tip-generic-body">El exceso de peso corporal puede penalizar la fuerza respiratoria. Reducirlo mejora la eficacia del entrenamiento y la salud global.</div></div></div>
-      <div class="tip-generic"><div class="tip-generic-icon">◈</div><div><div class="tip-generic-title">Nota de seguridad</div><div class="tip-generic-body">Este plan no sustituye la valoración médica ni un programa personalizado. La progresión debe ser gradual y sin sobreesfuerzo.</div></div></div>
+      <div class="tip-generic"><div class="tip-generic-icon">🔄</div><div><div class="tip-generic-title">Recomendación práctica</div><div class="tip-generic-body">Se sugieren 2 sesiones al día de 30 respiraciones con BigBreathe u otro entrenador inspiratorio similar.</div></div></div>
+      <div class="tip-generic"><div class="tip-generic-icon">📈</div><div><div class="tip-generic-title">La constancia aporta resultados</div><div class="tip-generic-body">En pocas semanas pueden observarse mejoras en descanso, recuperación, resistencia y claridad mental.</div></div></div>
+      <div class="tip-generic"><div class="tip-generic-icon">⚖️</div><div><div class="tip-generic-title">Factor peso / IMC</div><div class="tip-generic-body">El exceso de peso corporal puede penalizar la fuerza respiratoria. Reducirlo mejora la eficacia del entrenamiento y la salud global.</div></div></div>
+      <div class="tip-generic"><div class="tip-generic-icon">🛡️</div><div><div class="tip-generic-title">Nota de seguridad</div><div class="tip-generic-body">Este plan no sustituye la valoración médica ni un programa personalizado. La progresión debe ser gradual y sin sobreesfuerzo.</div></div></div>
     </div>
 
     <!-- PDF BUTTON — BOTTOM -->
     <div class="pdf-btn-wrap">
       <div class="disclaimer-box">
-        <span class="disclaimer-icon">▲</span>
+        <span class="disclaimer-icon">⚠️</span>
         <div>
           <p><strong>Aviso legal:</strong> Los datos reflejados en este informe son el resultado de una valoración funcional de la fuerza de la musculatura respiratoria. <strong>No constituyen un diagnóstico médico</strong> ni sustituyen la evaluación clínica por parte de un profesional de la salud cualificado. Los valores de referencia utilizados son de carácter orientativo. Este informe no debe utilizarse como base única para la toma de decisiones terapéuticas o clínicas. Ante cualquier síntoma respiratorio, cardíaco o de otra índole, consulte con su médico o especialista.</p>
           <p style="margin-top:8px;font-size:11px;color:#92400e;border-top:1px solid #fcd34d;padding-top:8px;">📚 <strong>Basado en evidencia científica:</strong> Wilson (1984) · Evans &amp; Whitelaw (2009) · Morales &amp; Lista-Paz (2023)<br>Esta herramienta es orientativa y no sustituye la valoración clínica profesional · <strong>www.numablue.com</strong></p>
@@ -708,62 +720,62 @@ function getMotivational(mL,eL){
 const tipsData={
   sedentary:{
     low:[
-      {icon:'◉',title:'Tu cuerpo lleva años sin respirar bien',body:'Cada noche que duermes mal, cada tarde que te falta el aire subiendo escaleras… no es cansancio, es tu diafragma pidiendo ayuda. Solo 5 minutos al día pueden cambiar todo esto.'},
-      {icon:'▲',title:'Tu energía depende de esto',body:'La fatiga crónica, la niebla mental y el bajo rendimiento están relacionados con una respiración débil. Entrenar tu sistema respiratorio es la palanca más infrautilizada para recuperar vitalidad.'},
-      {icon:'◌',title:'Duerme mejor desde la primera semana',body:'Un diafragma fuerte regula el sistema nervioso autónomo. Personas como tú reportan dormir más profundo y descansar mejor en apenas 7-10 días de entrenamiento respiratorio.'},
-      {icon:'◷',title:'Solo 5 minutos al día',body:'No necesitas más tiempo. 2 series de 30 respiraciones con BigBreathe, mañana y noche, es todo lo que necesitas para que tu cuerpo empiece a cambiar desde dentro.'}
+      {icon:'😮‍💨',title:'Tu cuerpo lleva años sin respirar bien',body:'Cada noche que duermes mal, cada tarde que te falta el aire subiendo escaleras… no es cansancio, es tu diafragma pidiendo ayuda. Solo 5 minutos al día pueden cambiar todo esto.'},
+      {icon:'🔋',title:'Tu energía depende de esto',body:'La fatiga crónica, la niebla mental y el bajo rendimiento están relacionados con una respiración débil. Entrenar tu sistema respiratorio es la palanca más infrautilizada para recuperar vitalidad.'},
+      {icon:'🛌',title:'Duerme mejor desde la primera semana',body:'Un diafragma fuerte regula el sistema nervioso autónomo. Personas como tú reportan dormir más profundo y descansar mejor en apenas 7-10 días de entrenamiento respiratorio.'},
+      {icon:'⏱️',title:'Solo 5 minutos al día',body:'No necesitas más tiempo. 2 series de 30 respiraciones con BigBreathe, mañana y noche, es todo lo que necesitas para que tu cuerpo empiece a cambiar desde dentro.'}
     ],
     mid:[
-      {icon:'↗',title:'Estás más cerca de lo que crees',body:'Ya tienes una base. Con un pequeño empujón, tu sistema respiratorio puede pasar de funcional a potente. Eso se traduce en más energía, menos estrés y mejor calidad de vida.'},
-      {icon:'◎',title:'El estrés se gestiona desde la respiración',body:'Tu diafragma es el músculo del sistema nervioso parasimpático. Fortalecerlo no solo mejora tu salud física: reduces el cortisol, aumentas la claridad mental y te sientes más tranquilo.'},
-      {icon:'♥',title:'Protege tu corazón',body:'Una mayor fuerza respiratoria se asocia con menor presión arterial y menor riesgo cardiovascular. Es una de las inversiones más silenciosas y más rentables que puedes hacer en tu salud.'},
-      {icon:'◈',title:'Progresa con seguridad',body:'El entrenamiento respiratorio es seguro y progresivo. Empieza suave, escucha tu cuerpo y aumenta la resistencia poco a poco. Tu cuerpo te lo agradecerá sin sobresaltos.'}
+      {icon:'📈',title:'Estás más cerca de lo que crees',body:'Ya tienes una base. Con un pequeño empujón, tu sistema respiratorio puede pasar de funcional a potente. Eso se traduce en más energía, menos estrés y mejor calidad de vida.'},
+      {icon:'🧠',title:'El estrés se gestiona desde la respiración',body:'Tu diafragma es el músculo del sistema nervioso parasimpático. Fortalecerlo no solo mejora tu salud física: reduces el cortisol, aumentas la claridad mental y te sientes más tranquilo.'},
+      {icon:'🫀',title:'Protege tu corazón',body:'Una mayor fuerza respiratoria se asocia con menor presión arterial y menor riesgo cardiovascular. Es una de las inversiones más silenciosas y más rentables que puedes hacer en tu salud.'},
+      {icon:'🛡️',title:'Progresa con seguridad',body:'El entrenamiento respiratorio es seguro y progresivo. Empieza suave, escucha tu cuerpo y aumenta la resistencia poco a poco. Tu cuerpo te lo agradecerá sin sobresaltos.'}
     ],
     high:[
-      {icon:'★',title:'Eres la excepción, no la regla',body:'Con estilo de vida sedentario y este nivel de fuerza respiratoria, tu cuerpo está haciendo algo muy bien. Ahora imagina lo que podrías conseguir con un entrenamiento específico.'},
-      {icon:'◈',title:'Mantener es tan importante como mejorar',body:'La fuerza respiratoria se pierde con la edad y el sedentarismo. Mantener este nivel activo es clave para que en 10 años tu cuerpo siga respondiendo igual de bien.'},
-      {icon:'✦',title:'El siguiente nivel: la calidad',body:'Más allá de la fuerza, trabaja la coordinación respiratoria, la respiración nasal y la eficiencia. Hay un mundo más allá de la cantidad que pocos exploran.'},
-      {icon:'◎',title:'Comparte esto con alguien que lo necesite',body:'Si tú estás bien siendo sedentario, imagina el impacto que puede tener en alguien de tu entorno que todavía no sabe lo que está perdiendo. La respiración cambia vidas.'}
+      {icon:'🏆',title:'Eres la excepción, no la regla',body:'Con estilo de vida sedentario y este nivel de fuerza respiratoria, tu cuerpo está haciendo algo muy bien. Ahora imagina lo que podrías conseguir con un entrenamiento específico.'},
+      {icon:'🔒',title:'Mantener es tan importante como mejorar',body:'La fuerza respiratoria se pierde con la edad y el sedentarismo. Mantener este nivel activo es clave para que en 10 años tu cuerpo siga respondiendo igual de bien.'},
+      {icon:'💡',title:'El siguiente nivel: la calidad',body:'Más allá de la fuerza, trabaja la coordinación respiratoria, la respiración nasal y la eficiencia. Hay un mundo más allá de la cantidad que pocos exploran.'},
+      {icon:'🎯',title:'Comparte esto con alguien que lo necesite',body:'Si tú estás bien siendo sedentario, imagina el impacto que puede tener en alguien de tu entorno que todavía no sabe lo que está perdiendo. La respiración cambia vidas.'}
     ]
   },
   active:{
     low:[
-      {icon:'▲',title:'Tu rendimiento tiene un techo invisible',body:'Entrenas, te mueves, cuidas tu cuerpo… pero hay algo que te frena sin que lo sepas. Tu sistema respiratorio es el eslabón más débil de tu cadena. Hasta que no lo entrenes, estarás dejando rendimiento sobre la mesa.'},
-      {icon:'◎',title:'El músculo que nadie entrena',body:'Llevas años trabajando piernas, espalda, core… pero probablemente nunca hayas entrenado tu diafragma de forma específica. Es el músculo más importante para el rendimiento y el más olvidado de todos.'},
-      {icon:'↯',title:'Recuperación: la ventaja oculta',body:'Una respiración fuerte activa el sistema nervioso parasimpático más rápido tras el esfuerzo. Eso significa que te recuperas antes, entrenas más y acumulas menos fatiga residual.'},
-      {icon:'↘',title:'Sin esto, todo lo demás pierde eficacia',body:'Nutrición, descanso, entrenamiento de fuerza… todo pierde eficacia si tu capacidad de oxigenar los tejidos está limitada. La respiración es la base de la base.'}
+      {icon:'🚨',title:'Tu rendimiento tiene un techo invisible',body:'Entrenas, te mueves, cuidas tu cuerpo… pero hay algo que te frena sin que lo sepas. Tu sistema respiratorio es el eslabón más débil de tu cadena. Hasta que no lo entrenes, estarás dejando rendimiento sobre la mesa.'},
+      {icon:'🫁',title:'El músculo que nadie entrena',body:'Llevas años trabajando piernas, espalda, core… pero probablemente nunca hayas entrenado tu diafragma de forma específica. Es el músculo más importante para el rendimiento y el más olvidado de todos.'},
+      {icon:'⚡',title:'Recuperación: la ventaja oculta',body:'Una respiración fuerte activa el sistema nervioso parasimpático más rápido tras el esfuerzo. Eso significa que te recuperas antes, entrenas más y acumulas menos fatiga residual.'},
+      {icon:'📉',title:'Sin esto, todo lo demás pierde eficacia',body:'Nutrición, descanso, entrenamiento de fuerza… todo pierde eficacia si tu capacidad de oxigenar los tejidos está limitada. La respiración es la base de la base.'}
     ],
     mid:[
-      {icon:'◎',title:'Estás bien, pero podrías estar en otro nivel',body:'Ya tienes fuerza respiratoria funcional. Pero en un activo como tú, el objetivo no es estar bien: es estar al máximo. Ese 20-30% que te falta puede marcar la diferencia entre buen rendimiento y rendimiento de élite.'},
-      {icon:'↻',title:'Más resistencia, menos percepción de esfuerzo',body:'Con un diafragma más fuerte, el mismo esfuerzo físico te costará menos. No porque seas más fuerte, sino porque tu cuerpo oxigena mejor y tarda más en entrar en fatiga.'},
-      {icon:'◌',title:'Lo que pasa mientras duermes',body:'Un sistema respiratorio entrenado mejora la calidad del sueño profundo. Y en el sueño profundo es donde ocurre la recuperación real. Esto no es teoría: lo notan quienes entrenan la respiración en dos semanas.'},
-      {icon:'▦',title:'Monitoriza tu progreso',body:'Repite el test en 6-8 semanas tras entrenar con BigBreathe. Ver cómo mejoran tus valores de MIP y MEP es uno de los motivadores más potentes para seguir entrenando.'}
+      {icon:'🎯',title:'Estás bien, pero podrías estar en otro nivel',body:'Ya tienes fuerza respiratoria funcional. Pero en un activo como tú, el objetivo no es estar bien: es estar al máximo. Ese 20-30% que te falta puede marcar la diferencia entre buen rendimiento y rendimiento de élite.'},
+      {icon:'🔁',title:'Más resistencia, menos percepción de esfuerzo',body:'Con un diafragma más fuerte, el mismo esfuerzo físico te costará menos. No porque seas más fuerte, sino porque tu cuerpo oxigena mejor y tarda más en entrar en fatiga.'},
+      {icon:'🌙',title:'Lo que pasa mientras duermes',body:'Un sistema respiratorio entrenado mejora la calidad del sueño profundo. Y en el sueño profundo es donde ocurre la recuperación real. Esto no es teoría: lo notan quienes entrenan la respiración en dos semanas.'},
+      {icon:'📊',title:'Monitoriza tu progreso',body:'Repite el test en 6-8 semanas tras entrenar con BigBreathe. Ver cómo mejoran tus valores de MIP y MEP es uno de los motivadores más potentes para seguir entrenando.'}
     ],
     high:[
-      {icon:'▲',title:'Nivel élite. Así se ve un cuerpo bien oxigenado',body:'Tu fuerza respiratoria está en el top de los activos. Eso se traduce en mejor resistencia, recuperación más rápida, menos inflamación y una salud cardiovascular sólida.'},
-      {icon:'✦',title:'La longevidad empieza aquí',body:'La fuerza espiratoria máxima es uno de los predictores más potentes de longevidad funcional. Estás construyendo tu salud de los 70 desde hoy. Eso tiene un valor incalculable.'},
-      {icon:'◉',title:'Ahora trabaja la calidad, no solo la cantidad',body:'Incorpora trabajo de coherencia cardiaca, respiración nasal en el entrenamiento y técnicas de regulación autonómica. Hay un nivel superior que pocos alcanzan.'},
-      {icon:'◈',title:'Tu cuerpo es un ejemplo',body:'Comparte tus resultados. Eres el tipo de persona que puede inspirar a otros a empezar. Y recuerda: mantener este nivel requiere constancia, no lo des por garantizado.'}
+      {icon:'💪',title:'Nivel élite. Así se ve un cuerpo bien oxigenado',body:'Tu fuerza respiratoria está en el top de los activos. Eso se traduce en mejor resistencia, recuperación más rápida, menos inflamación y una salud cardiovascular sólida.'},
+      {icon:'🧬',title:'La longevidad empieza aquí',body:'La fuerza espiratoria máxima es uno de los predictores más potentes de longevidad funcional. Estás construyendo tu salud de los 70 desde hoy. Eso tiene un valor incalculable.'},
+      {icon:'🧘',title:'Ahora trabaja la calidad, no solo la cantidad',body:'Incorpora trabajo de coherencia cardiaca, respiración nasal en el entrenamiento y técnicas de regulación autonómica. Hay un nivel superior que pocos alcanzan.'},
+      {icon:'📣',title:'Tu cuerpo es un ejemplo',body:'Comparte tus resultados. Eres el tipo de persona que puede inspirar a otros a empezar. Y recuerda: mantener este nivel requiere constancia, no lo des por garantizado.'}
     ]
   },
   athlete:{
     low:[
-      {icon:'▲',title:'Esto te está costando rendimiento real',body:'Si eres deportista y tus valores de MIP/MEP están bajos, hay una fuga de rendimiento directa. Tu corazón y tus músculos trabajan más de lo necesario porque tu bomba respiratoria no los apoya como debería.'},
-      {icon:'▶',title:'El diafragma en el deporte de resistencia',body:'En esfuerzos prolongados, el diafragma compite con los músculos locomotores por el flujo sanguíneo. Un diafragma débil pierde esa batalla y tus piernas lo notan. Esto tiene nombre: metaboreflex.'},
-      {icon:'▶',title:'En deportes de potencia también importa',body:'La musculatura espiratoria es clave para la estabilización del tronco, el golpeo, el sprint y cualquier gesto explosivo. Si tu MEP es bajo, tu potencia tiene un techo que no es muscular: es respiratorio.'},
-      {icon:'✦',title:'Datos que no puedes ignorar',body:'Estudios en atletas muestran que 4-8 semanas de entrenamiento inspiratorio específico mejoran el VO₂max, reducen la fatiga y mejoran el tiempo de recuperación. No es suplementación: es fisiología básica.'}
+      {icon:'⚠️',title:'Esto te está costando rendimiento real',body:'Si eres deportista y tus valores de MIP/MEP están bajos, hay una fuga de rendimiento directa. Tu corazón y tus músculos trabajan más de lo necesario porque tu bomba respiratoria no los apoya como debería.'},
+      {icon:'🏃',title:'El diafragma en el deporte de resistencia',body:'En esfuerzos prolongados, el diafragma compite con los músculos locomotores por el flujo sanguíneo. Un diafragma débil pierde esa batalla y tus piernas lo notan. Esto tiene nombre: metaboreflex.'},
+      {icon:'🥊',title:'En deportes de potencia también importa',body:'La musculatura espiratoria es clave para la estabilización del tronco, el golpeo, el sprint y cualquier gesto explosivo. Si tu MEP es bajo, tu potencia tiene un techo que no es muscular: es respiratorio.'},
+      {icon:'🔬',title:'Datos que no puedes ignorar',body:'Estudios en atletas muestran que 4-8 semanas de entrenamiento inspiratorio específico mejoran el VO₂max, reducen la fatiga y mejoran el tiempo de recuperación. No es suplementación: es fisiología básica.'}
     ],
     mid:[
-      {icon:'▶',title:'Tan cerca del podio respiratorio',body:'Estás a un ciclo de entrenamiento de tener una fuerza respiratoria de élite. Ese gap que existe entre tu MIP/MEP actual y el óptimo se puede cerrar en 6-8 semanas con trabajo específico y consistente.'},
-      {icon:'✦',title:'Añade el protocolo respiratorio a tu plan',body:'Integra 2 sesiones diarias de entrenamiento inspiratorio con carga progresiva. No resta tiempo de tu entrenamiento: lo potencia. Tu preparador físico debería saberlo.'},
-      {icon:'↗',title:'La ventilación no es un límite, es una palanca',body:'Muchos atletas asumen que el límite es cardiovascular o muscular. Pero a este nivel, la eficiencia ventilatoria y la fuerza del diafragma son determinantes de rendimiento que aún pueden mejorarse.'},
-      {icon:'★',title:'El detalle que marca la diferencia',body:'En competición, los pequeños márgenes deciden. Un sistema respiratorio más fuerte te da más reserva en los momentos críticos, mejor gestión del estrés y una recuperación entre series o entre días que se nota.'}
+      {icon:'🎽',title:'Tan cerca del podio respiratorio',body:'Estás a un ciclo de entrenamiento de tener una fuerza respiratoria de élite. Ese gap que existe entre tu MIP/MEP actual y el óptimo se puede cerrar en 6-8 semanas con trabajo específico y consistente.'},
+      {icon:'🧪',title:'Añade el protocolo respiratorio a tu plan',body:'Integra 2 sesiones diarias de entrenamiento inspiratorio con carga progresiva. No resta tiempo de tu entrenamiento: lo potencia. Tu preparador físico debería saberlo.'},
+      {icon:'📈',title:'La ventilación no es un límite, es una palanca',body:'Muchos atletas asumen que el límite es cardiovascular o muscular. Pero a este nivel, la eficiencia ventilatoria y la fuerza del diafragma son determinantes de rendimiento que aún pueden mejorarse.'},
+      {icon:'🏅',title:'El detalle que marca la diferencia',body:'En competición, los pequeños márgenes deciden. Un sistema respiratorio más fuerte te da más reserva en los momentos críticos, mejor gestión del estrés y una recuperación entre series o entre días que se nota.'}
     ],
     high:[
-      {icon:'★',title:'Fuerza respiratoria de élite. Mereces saberlo',body:'Estás en el percentil superior de fuerza respiratoria para un deportista. Tu diafragma es un activo real de rendimiento. Eso se traduce en capacidad de esfuerzo, resiliencia y longevidad deportiva.'},
-      {icon:'▲',title:'Ahora el objetivo es la eficiencia',body:'Más allá de la fuerza máxima, trabaja la economía respiratoria: respiración nasal en esfuerzo submáximo, ritmo ventilatorio, sincronización con el movimiento. Aquí está el siguiente nivel.'},
-      {icon:'◎',title:'La mente también respira',body:'Una alta fuerza respiratoria se asocia con mejor regulación del sistema nervioso bajo estrés competitivo. Tu capacidad de mantener la calma y el foco en momentos de presión está conectada con esto.'},
-      {icon:'▤',title:'Planifica el mantenimiento como un entrenamiento más',body:'No dejes que este activo se deprecie. Incluye el entrenamiento respiratorio en tu mesociclo como parte estructural, no como añadido. Lo que no se entrena, se pierde. Y esto vale demasiado para perderlo.'}
+      {icon:'🥇',title:'Fuerza respiratoria de élite. Mereces saberlo',body:'Estás en el percentil superior de fuerza respiratoria para un deportista. Tu diafragma es un activo real de rendimiento. Eso se traduce en capacidad de esfuerzo, resiliencia y longevidad deportiva.'},
+      {icon:'🔋',title:'Ahora el objetivo es la eficiencia',body:'Más allá de la fuerza máxima, trabaja la economía respiratoria: respiración nasal en esfuerzo submáximo, ritmo ventilatorio, sincronización con el movimiento. Aquí está el siguiente nivel.'},
+      {icon:'🧠',title:'La mente también respira',body:'Una alta fuerza respiratoria se asocia con mejor regulación del sistema nervioso bajo estrés competitivo. Tu capacidad de mantener la calma y el foco en momentos de presión está conectada con esto.'},
+      {icon:'📋',title:'Planifica el mantenimiento como un entrenamiento más',body:'No dejes que este activo se deprecie. Incluye el entrenamiento respiratorio en tu mesociclo como parte estructural, no como añadido. Lo que no se entrena, se pierde. Y esto vale demasiado para perderlo.'}
     ]
   }
 };
@@ -833,7 +845,7 @@ document.getElementById('analysis-form').addEventListener('submit',function(e){
   document.getElementById('sil-func-num').textContent=worstLabel;
 
   const badge=document.getElementById('sil-func-badge');
-  if(diff>10){badge.className='sil-badge older';badge.textContent='Más envejecido ▲';}
+  if(diff>10){badge.className='sil-badge older';badge.textContent='Más envejecido ⚠️';}
   else if(diff>0){badge.className='sil-badge equal';badge.textContent='Ligeramente mayor';}
   else if(diff<0){badge.className='sil-badge younger';badge.textContent='¡Más joven! ✓';}
   else{badge.className='sil-badge equal';badge.textContent='En sintonía con tu edad';}
