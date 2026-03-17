@@ -349,16 +349,16 @@ body{background:#fff;color:#1a1a1a;font-family:'Inter',sans-serif;min-height:100
             <input type="hidden" id="category" value="">
             <details id="catDetails" style="border:1.5px solid #d1d5db;border-radius:8px;background:#fff;overflow:hidden;margin-top:4px;">
               <summary id="catSummary" style="padding:10px 14px;cursor:pointer;font-size:14px;color:#6b7280;list-style:none;display:flex;align-items:center;justify-content:space-between;font-family:Arial;">
-                <span id="catSummaryText">Selecciona una categoria...</span>
+                <span id="catSummaryText">Selecciona una categoría...</span>
                 <span style="font-size:11px;color:#94a3b8;">&#9660;</span>
               </summary>
-              <div data-val="clinical" data-name="Clinico" data-color="#ef4444" data-bg="#fff5f5" data-text="Patologia respiratoria, cardiovascular o neuromuscular diagnosticada que afecta al diafragma." data-ex="Ej: EPOC, ICC, post-COVID severo, esclerosis, post-quirurgico, oncologico" onclick="selCatFromData(this)" style="display:flex;align-items:flex-start;gap:10px;padding:11px 14px;border-top:1px solid #f1f5f9;cursor:pointer;font-family:Arial;">
+              <div data-val="clinical" data-name="Clinico" data-color="#ef4444" data-bg="#fff5f5" data-text="Patología respiratoria, cardiovascular o neuromuscular diagnosticada que afecta al diafragma." data-ex="Ej: EPOC, ICC, post-COVID severo, esclerosis, post-quirurgico, oncologico" onclick="selCatFromData(this)" style="display:flex;align-items:flex-start;gap:10px;padding:11px 14px;border-top:1px solid #f1f5f9;cursor:pointer;font-family:Arial;">
                 <span style="width:12px;height:12px;border-radius:50%;background:#ef4444;flex-shrink:0;margin-top:3px;display:inline-block;"></span>
-                <div><div style="font-size:13px;font-weight:700;color:#0f172a;">Clinico</div><div style="font-size:11px;color:#64748b;margin-top:2px;">Patologia respiratoria, cardiovascular o neuromuscular diagnosticada que afecta al diafragma.</div><div style="font-size:10px;color:#94a3b8;font-style:italic;margin-top:2px;">Ej: EPOC, ICC, post-COVID severo, esclerosis, post-quirurgico, oncologico</div></div>
+                <div><div style="font-size:13px;font-weight:700;color:#0f172a;">Clínico</div><div style="font-size:11px;color:#64748b;margin-top:2px;">Patología respiratoria, cardiovascular o neuromuscular diagnosticada que afecta al diafragma.</div><div style="font-size:10px;color:#94a3b8;font-style:italic;margin-top:2px;">Ej: EPOC, ICC, post-COVID severo, esclerosis, post-quirurgico, oncologico</div></div>
               </div>
-              <div data-val="vulnerable" data-name="Vulnerable" data-color="#f97316" data-bg="#fff7ed" data-text="Sin patologia confirmada pero con funcion respiratoria comprometida y factores de riesgo." data-ex="Ej: fumador cronico, adulto mayor sedentario, sobrepeso severo, apnea del sueno" onclick="selCatFromData(this)" style="display:flex;align-items:flex-start;gap:10px;padding:11px 14px;border-top:1px solid #f1f5f9;cursor:pointer;font-family:Arial;">
+              <div data-val="vulnerable" data-name="Vulnerable" data-color="#f97316" data-bg="#fff7ed" data-text="Sin patología confirmada pero con función respiratoria comprometida y factores de riesgo." data-ex="Ej: fumador cronico, adulto mayor sedentario, sobrepeso severo, apnea del sueño" onclick="selCatFromData(this)" style="display:flex;align-items:flex-start;gap:10px;padding:11px 14px;border-top:1px solid #f1f5f9;cursor:pointer;font-family:Arial;">
                 <span style="width:12px;height:12px;border-radius:50%;background:#f97316;flex-shrink:0;margin-top:3px;display:inline-block;"></span>
-                <div><div style="font-size:13px;font-weight:700;color:#0f172a;">Vulnerable</div><div style="font-size:11px;color:#64748b;margin-top:2px;">Sin patologia confirmada pero con funcion respiratoria comprometida y factores de riesgo.</div><div style="font-size:10px;color:#94a3b8;font-style:italic;margin-top:2px;">Ej: fumador cronico, adulto mayor sedentario, sobrepeso severo, apnea del sueno</div></div>
+                <div><div style="font-size:13px;font-weight:700;color:#0f172a;">Vulnerable</div><div style="font-size:11px;color:#64748b;margin-top:2px;">Sin patología confirmada pero con función respiratoria comprometida y factores de riesgo.</div><div style="font-size:10px;color:#94a3b8;font-style:italic;margin-top:2px;">Ej: fumador cronico, adulto mayor sedentario, sobrepeso severo, apnea del sueño</div></div>
               </div>
               <div data-val="sedentary" data-name="Sedentario" data-color="#ca8a04" data-bg="#fefce8" data-text="Sin actividad fisica regular o menos de 2 dias por semana. Funcion dentro de la normalidad pero sin reserva funcional." data-ex="Ej: trabajo de oficina, vida mayoritariamente inactiva, sin deporte habitual" onclick="selCatFromData(this)" style="display:flex;align-items:flex-start;gap:10px;padding:11px 14px;border-top:1px solid #f1f5f9;cursor:pointer;font-family:Arial;">
                 <span style="width:12px;height:12px;border-radius:50%;background:#eab308;flex-shrink:0;margin-top:3px;display:inline-block;"></span>
@@ -413,10 +413,10 @@ body{background:#fff;color:#1a1a1a;font-family:'Inter',sans-serif;min-height:100
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;">
             <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:10px;"><div style="font-size:9px;font-weight:800;text-transform:uppercase;color:#0284c7;margin-bottom:4px;">Referencias de normalidad</div><div style="font-size:11px;color:#334155;line-height:1.5;">Valores basados en el <strong>percentil 5 (LIN)</strong> segun criterios <strong>ATS/ERS 2002</strong>.</div></div>
             <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:10px;"><div style="font-size:9px;font-weight:800;text-transform:uppercase;color:#0284c7;margin-bottom:4px;">Correccion por sexo</div><div style="font-size:11px;color:#334155;line-height:1.5;">Las mujeres presentan <strong>30-40% menos</strong> fuerza respiratoria. Umbrales especificos por sexo.</div></div>
-            <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:10px;"><div style="font-size:9px;font-weight:800;text-transform:uppercase;color:#0284c7;margin-bottom:4px;">Correccion por edad</div><div style="font-size:11px;color:#334155;line-height:1.5;">Reduccion del <strong>8% por decada</strong> a partir de los 50 anos.</div></div>
+            <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:10px;"><div style="font-size:9px;font-weight:800;text-transform:uppercase;color:#0284c7;margin-bottom:4px;">Correccion por edad</div><div style="font-size:11px;color:#334155;line-height:1.5;">Reduccion del <strong>8% por decada</strong> a partir de los 50 años.</div></div>
             <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:10px;"><div style="font-size:9px;font-weight:800;text-transform:uppercase;color:#0284c7;margin-bottom:4px;">Referencias de elite</div><div style="font-size:11px;color:#334155;line-height:1.5;">Ratio <strong>&gt;2.2 cmH2O/kg MIP</strong> en atletas de resistencia (Ohya 2016-2017).</div></div>
-            <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:10px;"><div style="font-size:9px;font-weight:800;text-transform:uppercase;color:#0284c7;margin-bottom:4px;">Breath Age</div><div style="font-size:11px;color:#334155;line-height:1.5;">Compara valores con tablas por categoria, sexo y decada. <strong>Edad muscular equivalente</strong>.</div></div>
-            <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:10px;"><div style="font-size:9px;font-weight:800;text-transform:uppercase;color:#0284c7;margin-bottom:4px;">Ratio presion/peso</div><div style="font-size:11px;color:#334155;line-height:1.5;">Calculado como <strong>cmH2O/kg</strong>. Parametro mas sensible para seguimiento.</div></div>
+            <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:10px;"><div style="font-size:9px;font-weight:800;text-transform:uppercase;color:#0284c7;margin-bottom:4px;">Breath Age</div><div style="font-size:11px;color:#334155;line-height:1.5;">Compara valores con tablas por categoría, sexo y decada. <strong>Edad muscular equivalente</strong>.</div></div>
+            <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:10px;"><div style="font-size:9px;font-weight:800;text-transform:uppercase;color:#0284c7;margin-bottom:4px;">Ratio presion/peso</div><div style="font-size:11px;color:#334155;line-height:1.5;">Calculado como <strong>cmH2O/kg</strong>. Parámetro más sensible para seguimiento.</div></div>
           </div>
           <div style="border-top:1px solid #e2e8f0;padding-top:12px;">
             <div style="font-size:9px;font-weight:800;text-transform:uppercase;color:#64748b;margin-bottom:8px;">Referencias bibliograficas</div>
@@ -427,7 +427,7 @@ body{background:#fff;color:#1a1a1a;font-family:'Inter',sans-serif;min-height:100
             <div style="font-size:11px;color:#334155;line-height:1.7;padding:4px 0;border-bottom:1px solid #f1f5f9;"><strong>Ohya et al. (2016-2017).</strong> Inspiratory muscle strength in endurance athletes. <em>Respir Physiol Neurobiol.</em></div>
             <div style="font-size:11px;color:#334155;line-height:1.7;padding:4px 0;"><strong>Enright et al. (1994).</strong> Respiratory muscle strength in the elderly. <em>Am J Respir Crit Care Med.</em></div>
           </div>
-          <div style="margin-top:12px;background:#eff8ff;border-left:3px solid #0284c7;padding:8px 12px;font-size:11px;color:#075985;line-height:1.5;border-radius:0 6px 6px 0;">Esta herramienta es orientativa y no sustituye la valoracion clinica profesional.</div>
+          <div style="margin-top:12px;background:#eff8ff;border-left:3px solid #0284c7;padding:8px 12px;font-size:11px;color:#075985;line-height:1.5;border-radius:0 6px 6px 0;">Esta herramienta es orientativa y no sustituye la valoración clínica profesional.</div>
         </div>
       </details>
       </form>
@@ -967,7 +967,7 @@ function renderTips(cat,level){
   var tips=tipsData[safecat][key];
   var grid=document.getElementById('tips-grid');
   var label=document.getElementById('tips-label');
-  var catNames={clinical:'Clinico',vulnerable:'Vulnerable',sedentary:'Sedentario',active:'Activo',athlete:'Deportista'};
+  var catNames={clinical:'Clínico',vulnerable:'Vulnerable',sedentary:'Sedentario',active:'Activo',athlete:'Deportista'};
   var levelNames={low:'nivel Bajo',mid:'nivel Medio',high:'nivel Alto'};
   label.textContent='Recomendaciones para '+catNames[safecat]+' · '+levelNames[key];
   grid.innerHTML=tips.map(function(t){ return '<div class="tip-card"><div class="tip-icon">'+t.icon+'</div><div class="tip-title">'+t.title+'</div><div class="tip-body">'+t.body+'</div></div>'; }).join('');}
@@ -1052,7 +1052,7 @@ document.getElementById('analysis-form').addEventListener('submit',function(e){
 
   // Report header
   document.getElementById('report-patient-name').textContent=patientName;
-  var catLabel={clinical:'Clinico',vulnerable:'Vulnerable',sedentary:'Sedentario',active:'Activo',athlete:'Deportista'};
+  var catLabel={clinical:'Clínico',vulnerable:'Vulnerable',sedentary:'Sedentario',active:'Activo',athlete:'Deportista'};
   var sexLabel={male:'Masculino',female:'Femenino'};
   document.getElementById('report-patient-meta').textContent='Edad: '+age+' años  ·  Peso: '+weight+' kg  ·  Sexo: '+sexLabel[sex]+'  ·  Categoría: '+catLabel[cat];
   if(professional)document.getElementById('report-professional').textContent='👤 '+professional;
@@ -1067,7 +1067,7 @@ document.getElementById('analysis-form').addEventListener('submit',function(e){
   // Profile validation — solo si diferencia >= 2 categorias
   var suggestedCat = getSuggestedCat(mipRatio, mepRatio);
   var catOrder = ['clinical','vulnerable','sedentary','active','athlete'];
-  var catNamesES = {clinical:'Clinico',vulnerable:'Vulnerable',sedentary:'Sedentario',active:'Activo',athlete:'Deportista'};
+  var catNamesES = {clinical:'Clínico',vulnerable:'Vulnerable',sedentary:'Sedentario',active:'Activo',athlete:'Deportista'};
   var chosenIdx = catOrder.indexOf(cat);
   var suggestedIdx = catOrder.indexOf(suggestedCat);
   var alertBox = document.getElementById('profile-alert');
@@ -1095,7 +1095,7 @@ document.getElementById('analysis-form').addEventListener('submit',function(e){
 function recalcWithSuggested() {
   var s = window._lastSuggestedCat;
   if (!s) return;
-  var names = {clinical:'Clinico',vulnerable:'Vulnerable',sedentary:'Sedentario',active:'Activo',athlete:'Deportista'};
+  var names = {clinical:'Clínico',vulnerable:'Vulnerable',sedentary:'Sedentario',active:'Activo',athlete:'Deportista'};
   var colors = {clinical:'#ef4444',vulnerable:'#f97316',sedentary:'#ca8a04',active:'#16a34a',athlete:'#2563eb'};
   var bgs = {clinical:'#fff5f5',vulnerable:'#fff7ed',sedentary:'#fefce8',active:'#f0fdf4',athlete:'#eff6ff'};
   var texts = {clinical:'Patologia respiratoria diagnosticada.',vulnerable:'Funcion comprometida sin patologia.',sedentary:'Sin actividad regular.',active:'Ejercicio 3-5 dias semana.',athlete:'Entrenamiento sistematico.'};
