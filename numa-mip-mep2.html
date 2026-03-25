@@ -1197,12 +1197,33 @@ function recalcWithSuggested() {
 function downloadPDF() {
   var n = (document.getElementById('patient-name').value || 'Paciente').trim();
   var c = (document.getElementById('professional-name').value || '').trim();
-  function slug(s){ return s.replace(/\s+/g,'_').replace(/[^a-zA-Z0-9_\-]/g,''); }
+  function slug(s){
+    return s.normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+            .replace(/\s+/g,'_').replace(/[^a-zA-Z0-9_\-]/g,'');
+  }
   var title = 'Informe_Respiratorio_' + slug(n) + (c ? '_' + slug(c) : '');
+
+  // Set title on this document AND try to reach parent if inside iframe
   var prev = document.title;
+  var prevParent = '';
   document.title = title;
+  try {
+    if (window.parent && window.parent !== window) {
+      prevParent = window.parent.document.title;
+      window.parent.document.title = title;
+    }
+  } catch(e) {}
+
   window.print();
-  setTimeout(function(){ document.title = prev; }, 1000);
+
+  setTimeout(function(){
+    document.title = prev;
+    try {
+      if (window.parent && window.parent !== window) {
+        window.parent.document.title = prevParent;
+      }
+    } catch(e) {}
+  }, 2000);
 }
 
 function closeProfileAlert() {
