@@ -1203,27 +1203,51 @@ function downloadPDF() {
   }
   var title = 'Informe_Respiratorio_' + slug(n) + (c ? '_' + slug(c) : '');
 
-  // Set title on this document AND try to reach parent if inside iframe
-  var prev = document.title;
-  var prevParent = '';
-  document.title = title;
-  try {
-    if (window.parent && window.parent !== window) {
-      prevParent = window.parent.document.title;
-      window.parent.document.title = title;
-    }
-  } catch(e) {}
-
-  window.print();
-
-  setTimeout(function(){
-    document.title = prev;
+  // Collect print-only styles
+  var styles = '';
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
     try {
-      if (window.parent && window.parent !== window) {
-        window.parent.document.title = prevParent;
+      var rules = sheets[i].cssRules || sheets[i].rules;
+      for (var j = 0; j < rules.length; j++) {
+        styles += rules[j].cssText + '\n';
       }
     } catch(e) {}
-  }, 2000);
+  }
+
+  // Clone the results section content
+  var body = document.body.cloneNode(true);
+  // Remove non-print elements from clone
+  var toRemove = body.querySelectorAll('.topbar,.hero,.btn-pdf,.pdf-btn-wrap,.cta-card');
+  for (var k = 0; k < toRemove.length; k++) { toRemove[k].remove(); }
+  // Make results section visible
+  var res = body.querySelector('.results-section');
+  if (res) { res.style.display = 'block'; res.style.marginTop = '0'; }
+
+  // Open new window, write full HTML with correct title, print
+  var pw = window.open('', '_blank', 'width=900,height=700');
+  if (!pw) {
+    // Fallback: popup blocked, try same-window title trick
+    var prev = document.title;
+    document.title = title;
+    window.print();
+    setTimeout(function(){ document.title = prev; }, 2000);
+    return;
+  }
+
+  pw.document.open();
+  pw.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>' + title + '</title>' +
+    '<style>' + styles + ' .results-section{display:block!important;margin-top:0!important;border-top:none!important;padding-top:0!important} .topbar,.hero,.btn-pdf,.pdf-btn-wrap,.cta-card{display:none!important} @media screen{body{padding:20px;max-width:900px;margin:0 auto}}</style>' +
+    '</head><body>' + body.innerHTML + '</body></html>');
+  pw.document.close();
+
+  pw.onload = function() {
+    setTimeout(function() {
+      pw.focus();
+      pw.print();
+      setTimeout(function(){ pw.close(); }, 1000);
+    }, 600);
+  };
 }
 
 function closeProfileAlert() {
