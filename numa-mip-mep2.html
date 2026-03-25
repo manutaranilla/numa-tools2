@@ -1139,13 +1139,11 @@ document.getElementById('analysis-form').addEventListener('submit',function(e){
   }
   summaryEl.textContent = summaryFinal;
   document.getElementById('motivational').textContent=getMotivational(mipLevel,mepLevel);
-  // Tips use worst level — if imbalance, always show tips for the weaker muscle
-  var tipsLevel;
-  if (Math.abs(mipAgeNum - mepAgeNum) >= 20) {
-    tipsLevel = 'Bajo'; // Always show improvement tips when there's significant imbalance
-  } else {
-    tipsLevel = mipLevel==='Bajo'||mepLevel==='Bajo'?'Bajo':mipLevel==='Medio'||mepLevel==='Medio'?'Medio':'Alto';
-  }
+  // Tips level — MIP weighted 70%, MEP 30% (MIP is the primary respiratory muscle)
+  var levelToNum = function(l){ return l==='Alto'?2:l==='Medio'?1:0; };
+  var numToLevel = function(n){ return n>=1.5?'Alto':n>=0.7?'Medio':'Bajo'; };
+  var tipsScore = levelToNum(mipLevel)*0.7 + levelToNum(mepLevel)*0.3;
+  var tipsLevel = numToLevel(tipsScore);
   renderTips(cat, tipsLevel);
 
   // Profile validation — solo si diferencia >= 2 categorias
