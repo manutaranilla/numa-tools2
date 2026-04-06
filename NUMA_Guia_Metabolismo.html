@@ -633,7 +633,7 @@ const i18n = {
   }
 };
 
-let currentLang = 'es';
+let currentLang = null; // null on boot → setLang('es') never skipped on first load
 
 function setLang(lang) {
   if (lang === currentLang) return;
@@ -660,10 +660,12 @@ function setLang(lang) {
 }
 
 window.addEventListener('DOMContentLoaded', () => {
-  let savedLang = 'es';
-  try { savedLang = localStorage.getItem('numa_lang') || 'es'; } catch(e) {}
+  // Priority: URL param → localStorage → default 'es'
+  let initLang = 'es';
+  try { initLang = localStorage.getItem('numa_lang') || 'es'; } catch(e) {}
   const urlLang = new URLSearchParams(window.location.search).get('lang');
-  setLang(urlLang || savedLang);
+  if (urlLang && i18n[urlLang]) initLang = urlLang;
+  setLang(initLang);
 });
 </script>
 
