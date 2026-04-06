@@ -265,7 +265,7 @@ const i18n = {
     kpi1_val: "±3%", kpi1_lbl: "Precisión medición",
     kpi2_val: "30%", kpi2_lbl: "Menos error vs fórmulas",
     kpi3_val: "Gold", kpi3_lbl: "Standard clínico",
-    kpi4_val: "15 min", kpi4_lbl: "Duración test",
+    kpi4_val: "~10 min", kpi4_lbl: "Duración test",
 
     /* SEC 01 */
     sec1_num: "01",
@@ -276,7 +276,7 @@ const i18n = {
     m3_lbl:"Calcula", m3_val:"REE", m3_unit:"Gasto energético basal · kcal/día",
     m4_lbl:"Determina", m4_val:"RQ", m4_unit:"Combustible en uso · VCO₂ / VO₂",
     sec1_card_h: "🔬 ¿Cómo funciona el dispositivo Breezing Pro?",
-    sec1_card_p1: "Respiras a través de una mascarilla durante aproximadamente 15 minutos en reposo absoluto. El sensor electroquímico analiza el aire que exhalas, midiendo la diferencia de concentración de O₂ y CO₂ entre el aire inspirado y el espirado. De esa diferencia se calcula en tiempo real cuánta energía está produciendo tu metabolismo.",
+    sec1_card_p1: "Respiras a través de una mascarilla durante aproximadamente 10 minutos en reposo absoluto. El sensor electroquímico analiza el aire que exhalas, midiendo la diferencia de concentración de O₂ y CO₂ entre el aire inspirado y el espirado. De esa diferencia se calcula en tiempo real cuánta energía está produciendo tu metabolismo.",
     sec1_card_p2: "<strong>Dato clave:</strong> Las fórmulas predictivas (Harris-Benedict, Mifflin-St. Jeor) pueden equivocarse hasta 950 kcal/día por encima o 660 kcal/día por debajo del metabolismo real en individuos concretos. El dispositivo Breezing elimina ese error.",
 
     /* SEC 02 */
@@ -287,7 +287,7 @@ const i18n = {
     th_iam:"IAM", th_diag:"Diagnóstico", th_means:"¿Qué significa para ti?", th_status:"Estado",
     iam_r1_code:"> 1.15", iam_r1_diag:"Motor acelerado", iam_r1_txt:"Gastas más energía de lo esperado. Propio de atletas con alta masa muscular, hipertiroidismo o sobreentrenamiento crónico con alerta autonómica sostenida.", iam_r1_badge:"Vigilar",
     iam_r2_code:"0.85 – 1.15", iam_r2_diag:"Eficiente / Normal", iam_r2_txt:"Tu motor metabólico coincide con tu biometría. Sistema sano y responsivo. Ideal para pautar planes nutricionales con total seguridad y aplicar déficits de hasta el 20%.", iam_r2_badge:"Óptimo",
-    iam_r3_code:"< 0.85", iam_r3_diag:"Conservador (Ahorro)", iam_r3_txt:"Supresión metabólica severa. El cuerpo ha entrado en modo \"supervivencia\" tras dietas extremas, estrés crónico o hipotiroidismo. Altísima predisposición al efecto yoyó.", iam_r3_badge:"Atención",
+    iam_r3_code:"< 0.85", iam_r3_diag:"Conservador (Ahorro)", iam_r3_txt:"Supresión metabólica severa. El cuerpo ha entrado en modo «supervivencia» tras dietas extremas, estrés crónico o hipotiroidismo. Altísima predisposición al efecto yoyó.", iam_r3_badge:"Atención",
     alert1_title:"IAM < 0.85 — No iniciar dieta restrictiva todavía",
     alert1_txt:"Aplicar un déficit calórico con el metabolismo deprimido agrava el estancamiento y acelera la pérdida de masa muscular (gluconeogénesis). Primero se restaura el metabolismo con dieta normocalórica o refeed 4–8 semanas, luego se pauta el déficit.",
     sec2_h3b: "🔥 Cociente Respiratorio (RQ) y Flexibilidad Metabólica (IFM)",
@@ -382,6 +382,32 @@ const i18n = {
     bib_flex_label:"🔥 Flexibilidad metabólica, RQ y ayuno",
     bib_note:"<strong style='color:var(--numa-sky)'>Nota:</strong> Guía elaborada por NUMA SmartLAB con fines divulgativos y de apoyo clínico. Guía actualizada: abril 2026 · <a href='https://numablue.com' target='_blank' class='bib-link'>numablue.com</a>",
 
+
+    /* NUEVAS SECCIONES */
+    sec2_h3e: "🧬 Edad Metabólica Estimada",
+    sec2_age_p: "La <strong>Edad Metabólica Estimada</strong> refleja el desgaste celular real de tu cuerpo más allá del calendario. No es una edad biológica clínica, sino un indicador funcional derivado de dos parámetros del test: el <strong>IAM</strong> (eficiencia del motor metabólico) y el <strong>EqCO₂</strong> (coste ventilatorio en reposo). Un IAM deprimido o un EqCO₂ elevado penalizan el indicador, elevando la edad metabólica estimada por encima de la cronológica.",
+    sec2_age_how: "¿Cómo se calcula?",
+    sec2_age_formula: "Edad Met. = Edad Cronológica + [(1 − IAM) × 20] + correcciones por EqCO₂ elevado y RQ &gt; 0.95",
+    sec2_age_note: "El resultado se limita a ±8 años respecto a la edad real para mantener la coherencia clínica. Un valor menor que la edad cronológica indica un organismo metabólicamente más joven. El objetivo del protocolo NUMA es reducir la Edad Metabólica Estimada mediante mejoras reales del IAM y el EqCO₂.",
+    age_ex1_lbl: "Ejemplo A — Metabolismo óptimo", age_ex1_txt: "35 años cronológicos · IAM 1.02 · EqCO₂ 27 → Edad Met. Estimada: <strong>34 años</strong>",
+    age_ex2_lbl: "Ejemplo B — Supresión metabólica", age_ex2_txt: "35 años cronológicos · IAM 0.79 · EqCO₂ 38 → Edad Met. Estimada: <strong>41 años</strong>",
+
+    sec2_h3f: "⚖️ REE Relativo al Peso (kcal/kg/día)",
+    sec2_nmi_p: "El <strong>REE absoluto</strong> (kcal/día) varía mucho entre personas de distinto tamaño. Para comparar la eficiencia metabólica real entre pacientes, se normaliza dividiendo el REE por el peso corporal en kilos. Este ratio elimina el efecto del tamaño corporal y revela si el metabolismo es activo o está frenado en términos relativos.",
+    th_nmi_range: "Rango (kcal/kg/día)", th_nmi_class: "Clasificación", th_nmi_what: "¿Qué indica?",
+    nmi_r1_range: "≥ 30", nmi_r1_class: "Alto / Activo", nmi_r1_what: "Metabolismo muy activo. Frecuente en atletas o personas con alta masa muscular. El músculo es el mayor consumidor de energía en reposo.",
+    nmi_r2_range: "22 – 29", nmi_r2_class: "Normal", nmi_r2_what: "Rango saludable. El organismo mantiene una economía energética eficiente y adecuada a su masa corporal.",
+    nmi_r3_range: "18 – 21", nmi_r3_class: "Bajo", nmi_r3_what: "Metabolismo frenado. Puede indicar pérdida de masa muscular, adaptación a dietas hipocalóricas repetidas o disfunción tiroidea subclínica.",
+    nmi_r4_range: "< 18", nmi_r4_class: "Crítico", nmi_r4_what: "Supresión metabólica severa. Alto riesgo de efecto rebote ante cualquier exceso calórico. Se requiere protocolo de restauración antes de cualquier intervención de pérdida de peso.",
+    nmi_alert_t: "¿Por qué usar el REE/kg en vez del REE absoluto?", nmi_alert_x: "Una persona de 50 kg con REE 1.100 kcal/día (22 kcal/kg) puede estar en rango normal, mientras que una persona de 90 kg con el mismo REE (12 kcal/kg) estaría en supresión crítica. Sin el normalizador por peso, el dato absoluto engaña.",
+
+    sec2_h3g: "📐 REE por Superficie Corporal (BSA)",
+    sec2_bsa_p: "La <strong>Superficie Corporal (BSA)</strong> integra peso y altura en una sola cifra que aproxima el área total del cuerpo humano. Normalizar el REE por la BSA (DuBois, 1916) es el estándar histórico de la fisiología clínica y permite comparar el gasto energético entre personas de morfologías muy distintas con mayor precisión que el simple ratio peso.",
+    sec2_bsa_formula: "BSA (m²) = 0,007184 × Peso (kg)⁰·⁴²⁵ × Altura (cm)⁰·⁷²⁵",
+    sec2_bsa_ref: "Referencia clínica: <strong>800 – 950 kcal/m²/día</strong> en reposo para adultos sanos.",
+    sec2_bsa_vs: "REE/Peso vs. REE/BSA — ¿cuándo usar cada uno?",
+    sec2_bsa_vs_p: "El <strong>REE/Peso</strong> es más intuitivo y útil para prescripción nutricional cotidiana. El <strong>REE/BSA</strong> es más preciso fisiológicamente y se usa en comparativas clínicas donde la altura del paciente influye significativamente en la superficie de intercambio de calor.",
+
     /* FOOTER */
     footer_txt:"<strong>NUMA Blue · Smart Lab</strong> · Sistema de Análisis Metabólico y Respiratorio en Reposo<br>Av. Manoteras 12, Piso 6, Oficina 661, 28050 Madrid · <a href='mailto:hello@numablue.com'>hello@numablue.com</a> · <a href='tel:+34613079475'>+34 613 07 94 75</a><br><a href='https://numablue.com' target='_blank'>numablue.com</a> · © NUMA Blue 2026"
   },
@@ -406,7 +432,7 @@ const i18n = {
     kpi1_val:"±3%", kpi1_lbl:"Measurement accuracy",
     kpi2_val:"30%", kpi2_lbl:"Less error vs formulas",
     kpi3_val:"Gold", kpi3_lbl:"Clinical standard",
-    kpi4_val:"15 min", kpi4_lbl:"Test duration",
+    kpi4_val:"~10 min", kpi4_lbl:"Test duration",
     sec1_num:"01", sec1_title:"What does this test really measure?",
     sec1_p1:"<strong>Resting indirect calorimetry</strong> is the clinical gold standard for measuring how much energy your body uses at rest. It is not a mathematical estimate — it is a direct measurement of what is happening in your cells at that precise moment.",
     m1_lbl:"Measures", m1_val:"O₂", m1_unit:"Oxygen consumed · VO₂ (mL/min)",
@@ -414,7 +440,7 @@ const i18n = {
     m3_lbl:"Calculates", m3_val:"REE", m3_unit:"Resting energy expenditure · kcal/day",
     m4_lbl:"Determines", m4_val:"RQ", m4_unit:"Fuel being used · VCO₂ / VO₂",
     sec1_card_h:"🔬 How does the Breezing Pro device work?",
-    sec1_card_p1:"You breathe through a mask for approximately 15 minutes in complete rest. The electrochemical sensor analyses the air you exhale, measuring the difference in O₂ and CO₂ concentration between inhaled and exhaled air. From this difference, your metabolic energy production is calculated in real time.",
+    sec1_card_p1:"You breathe through a mask for approximately 10 minutes in complete rest. The electrochemical sensor analyses the air you exhale, measuring the difference in O₂ and CO₂ concentration between inhaled and exhaled air. From this difference, your metabolic energy production is calculated in real time.",
     sec1_card_p2:"<strong>Key fact:</strong> Predictive formulas (Harris-Benedict, Mifflin-St. Jeor) can be off by up to 950 kcal/day above or 660 kcal/day below a person's actual metabolism. The Breezing device eliminates that error.",
     sec2_num:"02", sec2_title:"Key metrics in your report",
     sec2_h3a:"📊 Resting Energy Expenditure (REE) and Metabolic Adaptation Index (MAI)",
@@ -529,7 +555,7 @@ const i18n = {
     kpi1_val:"±3%", kpi1_lbl:"Precisão da medição",
     kpi2_val:"30%", kpi2_lbl:"Menos erro vs fórmulas",
     kpi3_val:"Gold", kpi3_lbl:"Standard clínico",
-    kpi4_val:"15 min", kpi4_lbl:"Duração do teste",
+    kpi4_val:"~10 min", kpi4_lbl:"Duração do teste",
     sec1_num:"01", sec1_title:"O que mede realmente este teste?",
     sec1_p1:"A <strong>calorimetria indireta em repouso</strong> é o padrão ouro clínico para medir quanta energia o seu corpo consome em repouso. Não é uma estimativa matemática — é uma medição direta do que está acontecendo nas suas células naquele preciso momento.",
     m1_lbl:"Mede", m1_val:"O₂", m1_unit:"Oxigénio consumido · VO₂ (mL/min)",
@@ -537,7 +563,7 @@ const i18n = {
     m3_lbl:"Calcula", m3_val:"REE", m3_unit:"Gasto energético basal · kcal/dia",
     m4_lbl:"Determina", m4_val:"RQ", m4_unit:"Combustível em uso · VCO₂ / VO₂",
     sec1_card_h:"🔬 Como funciona o dispositivo Breezing Pro?",
-    sec1_card_p1:"Respira através de uma máscara durante aproximadamente 15 minutos em repouso absoluto. O sensor electroquímico analisa o ar exalado, medindo a diferença de concentração de O₂ e CO₂ entre o ar inspirado e o expirado. A partir dessa diferença, calcula-se em tempo real quanta energia o seu metabolismo está produzindo.",
+    sec1_card_p1:"Respira através de uma máscara durante aproximadamente 10 minutos em repouso absoluto. O sensor electroquímico analisa o ar exalado, medindo a diferença de concentração de O₂ e CO₂ entre o ar inspirado e o expirado. A partir dessa diferença, calcula-se em tempo real quanta energia o seu metabolismo está produzindo.",
     sec1_card_p2:"<strong>Dado fundamental:</strong> As fórmulas preditivas (Harris-Benedict, Mifflin-St. Jeor) podem errar até 950 kcal/dia acima ou 660 kcal/dia abaixo do metabolismo real em indivíduos concretos. O dispositivo Breezing elimina esse erro.",
     sec2_num:"02", sec2_title:"As métricas chave do seu relatório",
     sec2_h3a:"📊 Gasto Energético em Repouso (REE) e Índice de Adaptação Metabólica (IAM)",
@@ -630,7 +656,252 @@ const i18n = {
     bib_flex_label:"🔥 Flexibilidade metabólica, QR e jejum",
     bib_note:"<strong style='color:var(--numa-sky)'>Nota:</strong> Guia elaborado pela NUMA SmartLAB para fins divulgativos e de apoio clínico. Actualizado: abril 2026 · <a href='https://numablue.com' target='_blank' class='bib-link'>numablue.com</a>",
     footer_txt:"<strong>NUMA Blue · Smart Lab</strong> · Sistema de Análise Metabólica e Respiratória em Repouso<br>Av. Manoteras 12, Piso 6, Escritório 661, 28050 Madrid · <a href='mailto:hello@numablue.com'>hello@numablue.com</a> · <a href='tel:+34613079475'>+34 613 07 94 75</a><br><a href='https://numablue.com' target='_blank'>numablue.com</a> · © NUMA Blue 2026"
-  }
+  },
+
+  /* ═══════════════════ ITALIANO ═══════════════════ */
+  it: {
+    html_lang: "it",
+    page_title: "NUMA SmartLAB · Guida all'Analisi Metabolica a Riposo",
+    topbar: 'Analisi Metabolica a Riposo · NUMA SmartLAB · <a href="https://numablue.com" target="_blank">numablue.com</a> · hello@numablue.com',
+    logo_sub: "Smart Lab",
+    nav_what: "Cosa misura", nav_metrics: "Metriche", nav_report: "Il tuo report", nav_compare: "vs Formule", nav_faq: "FAQ", nav_glossary: "Glossario", nav_bib: "📚 Bibliografia",
+    hero_chip: "Guida all'Analisi Metabolica a Riposo",
+    hero_h1a: "Il tuo metabolismo reale,", hero_h1b: "misurato con precisione.",
+    hero_desc: "Comprendi ogni numero del tuo report NUMA SmartLAB. Una guida completa per professionisti della salute e pazienti che vogliono prendere decisioni basate su dati fisiologici reali.",
+    kpi1_val: "±3%", kpi1_lbl: "Precisione misurazione", kpi2_val: "30%", kpi2_lbl: "Meno errore vs formule", kpi3_val: "Gold", kpi3_lbl: "Standard clinico", kpi4_val: "~10 min", kpi4_lbl: "Durata test",
+    sec1_num: "01", sec1_title: "Cosa misura davvero questo test?",
+    sec1_p1: "La <strong>calorimetria indiretta a riposo</strong> è lo standard oro clinico per misurare quanta energia consuma il corpo senza muoversi. Non è una stima matematica: è una misurazione diretta di ciò che accade nelle cellule in quel preciso momento.",
+    m1_lbl:"Misura", m1_val:"O₂", m1_unit:"Ossigeno consumato · VO₂ (mL/min)", m2_lbl:"Misura", m2_val:"CO₂", m2_unit:"CO₂ prodotto · VCO₂ (mL/min)", m3_lbl:"Calcola", m3_val:"REE", m3_unit:"Dispendio energetico basale · kcal/giorno", m4_lbl:"Determina", m4_val:"RQ", m4_unit:"Carburante in uso · VCO₂ / VO₂",
+    sec1_card_h: "🔬 Come funziona il dispositivo Breezing Pro?",
+    sec1_card_p1: "Respiri attraverso una maschera per circa 10 minuti a riposo assoluto. Il sensore elettrochimico analizza l'aria che esali, misurando la differenza di concentrazione di O₂ e CO₂ tra aria inspirata ed espirata. Da questa differenza si calcola in tempo reale quanta energia sta producendo il tuo metabolismo.",
+    sec1_card_p2: "<strong>Dato chiave:</strong> Le formule predittive (Harris-Benedict, Mifflin-St. Jeor) possono sbagliare fino a 950 kcal/giorno in più o 660 kcal/giorno in meno rispetto al metabolismo reale in individui specifici. Il dispositivo Breezing elimina questo errore.",
+    sec2_num: "02", sec2_title: "Le metriche chiave del tuo report",
+    sec2_h3a: "📊 Dispendio Energetico Basale (REE) e Indice di Adattamento Metabolico (IAM)",
+    sec2_p1: "Il <strong>REE</strong> è l'energia minima necessaria al corpo a riposo assoluto per mantenere le funzioni vitali. L'<strong>IAM</strong> confronta il tuo REE reale con quello previsto dalla formula standard per una persona con il tuo stesso peso, altezza ed età.",
+    th_iam:"IAM", th_diag:"Diagnosi", th_means:"Cosa significa per te?", th_status:"Stato",
+    iam_r1_code:"> 1,15", iam_r1_diag:"Motore accelerato", iam_r1_txt:"Consumi più energia del previsto. Tipico di atleti con alta massa muscolare, ipertiroidismo o sovrallenamento cronico con allerta autonomica sostenuta.", iam_r1_badge:"Monitorare",
+    iam_r2_code:"0,85 – 1,15", iam_r2_diag:"Efficiente / Normale", iam_r2_txt:"Il motore metabolico coincide con la biometria. Sistema sano e responsivo. Ideale per pianificare regimi nutrizionali con totale sicurezza e applicare deficit fino al 20%.", iam_r2_badge:"Ottimale",
+    iam_r3_code:"< 0,85", iam_r3_diag:"Conservativo (Risparmio)", iam_r3_txt:"Soppressione metabolica severa. Il corpo è entrato in modalità «sopravvivenza» dopo diete estreme, stress cronico o ipotiroidismo. Altissima predisposizione all'effetto yo-yo.", iam_r3_badge:"Attenzione",
+    alert1_title:"IAM < 0,85 — Non iniziare ancora una dieta restrittiva",
+    alert1_txt:"Applicare un deficit calorico con il metabolismo depresso peggiora il ristagno e accelera la perdita di massa muscolare (gluconeogenesi). Prima si ripristina il metabolismo con dieta normocalorica o refeed 4–8 settimane, poi si programma il deficit.",
+    sec2_h3b: "🔥 Quoziente Respiratorio (QR) e Flessibilità Metabolica (IFM)",
+    sec2_p2: "Il <strong>QR</strong> = VCO₂ / VO₂. È l'impronta digitale di ciò che sta bruciando il corpo. Il grasso produce QR ≈ 0,70; i carboidrati, QR ≈ 1,00. L'<strong>IFM</strong> classifica la reale capacità di alternare combustibili.",
+    ifm4_seg:"IFM 4 · Ottimale\n≤ 0,78", ifm3_seg:"IFM 3 · Eccellente\n0,79 – 0,85", ifm2_seg:"IFM 2 · Mista\n0,86 – 0,92", ifm1_seg:"IFM 1 · Bassa\n> 0,92",
+    th_scale:"Scala", th_rq:"QR", th_physio:"Fisiologia", th_fast:"Digiuno raccomandato",
+    ifm4_label:"IFM 4 — Ottimale", ifm4_rq:"≤ 0,78", ifm4_txt:"Predominio assoluto di ossidazione dei grassi. Mitocondri estremamente efficienti. Risparmio completo del glicogeno per situazioni di stress.", ifm4_badge:"Fino a 18h",
+    ifm3_label:"IFM 3 — Eccellente", ifm3_rq:"0,79 – 0,85", ifm3_txt:"Brucia grassi efficacemente con protezione della massa magra. Stato ideale di mantenimento. Digiuno 16–18h con massimi benefici per autofagia e biogenesi mitocondriale.", ifm3_badge:"14 – 18h",
+    ifm2_label:"IFM 2 — Mista", ifm2_rq:"0,86 – 0,92", ifm2_txt:"Uso equilibrato di grassi e glucosio. Normale se si è mangiato di recente. In digiuno prolungato, indica inizio di inflessibilità metabolica.", ifm2_badge:"14 – 16h",
+    ifm1_label:"IFM 1 — Bassa", ifm1_rq:"> 0,92", ifm1_txt:"Glucosedipendenza. Il corpo dipende dallo zucchero anche da seduto. Incapace di accedere alle riserve di grasso. Tendenza a fatica, fame costante e resistenza all'insulina.", ifm1_badge:"Máx. 12h",
+    alert2_title:"Perché i grafici a «ciambella» sembrano diversi?",
+    alert2_txt:"Il grasso apporta 9 kcal/g, ma carboidrati e proteine solo 4 kcal/g. Per questo il grafico di <em>distribuzione energetica</em> mostra più % di grassi di quello dei <em>grammi</em>. Leggi sempre entrambi i grafici insieme.",
+    sec2_h3c: "💨 Efficienza Respiratoria e Accoppiamento Cardiopolmonare (EqCO₂)",
+    sec2_p3: "L'<strong>EqCO₂ = VE / VCO₂</strong> misura quanti litri d'aria devi muovere per eliminare 1 litro di CO₂ cellulare. Più è basso, più sei efficiente respiratoriamente.",
+    th_eq:"EqCO₂", th_class:"Classificazione", th_impact:"Impatto fisiologico",
+    eq1_code:"< 30", eq1_class:"Eccellente", eq1_txt:"Accoppiamento cardiopolmonare ottimale. Basso stress metabolico basale. La pulizia di CO₂ è rapida ed energeticamente economica.",
+    eq2_code:"30 – 35", eq2_class:"Limite / Regolare", eq2_txt:"Forma respiratoria migliorabile. Il corpo ventila un po' più del necessario. Nelle persone sane riflette sedentarietà prolungata.",
+    eq3_code:"36 – 44", eq3_class:"Scarsa", eq3_txt:"Inefficienza respiratoria subclinica. Il sistema parasimpatico è annullato e il paziente iperventila leggermente a riposo per compensare.",
+    eq4_code:"≥ 45", eq4_class:"Rischio Clinico", eq4_txt:"Stress ventilatorio severo. Tipico in patologie ostruttive o insufficienze. Richiede valutazione medica prima di qualsiasi intervento nutrizionale.",
+    sec2_h3d: "❤️ Frequenza Cardiaca a Riposo (% FC Max)",
+    li1:"<strong>FC Max teorica = 220 − età.</strong> Il sistema valuta la % che raggiunge il tuo cuore a riposo assoluto.",
+    li2:"<strong>&lt; 40% FC Max a riposo:</strong> Bradicardia sana. Cuore forte che pompa molto sangue per battito. Eccellente stato di recupero.",
+    li3:"<strong>40–55% FC Max a riposo:</strong> Normale. Qualità autonomica accettabile.",
+    li4:"<strong>&gt; 55% FC Max a riposo:</strong> Allerta simpatica. Il corpo è in modalità stress anche a riposo. Ostacola la mobilizzazione dei grassi.",
+    sec2_h3e: "🧬 Età Metabolica Stimata",
+    sec2_age_p: "L'<strong>Età Metabolica Stimata</strong> riflette il vero logoramento cellulare del corpo al di là del calendario. Non è un'età biologica clinica, ma un indicatore funzionale derivato da due parametri del test: l'<strong>IAM</strong> (efficienza del motore metabolico) e l'<strong>EqCO₂</strong> (costo ventilatorio a riposo). Un IAM depresso o un EqCO₂ elevato penalizza l'indicatore, aumentando l'età metabolica stimata rispetto a quella cronologica.",
+    sec2_age_how: "Come si calcola?",
+    sec2_age_formula: "Età Met. = Età Cronologica + [(1 − IAM) × 20] + correzioni per EqCO₂ elevato e QR &gt; 0,95",
+    sec2_age_note: "Il risultato è limitato a ±8 anni rispetto all'età reale per mantenere la coerenza clinica. Un valore inferiore all'età cronologica indica un organismo metabolicamente più giovane. L'obiettivo del protocollo NUMA è ridurre l'Età Metabolica Stimata attraverso miglioramenti reali dell'IAM e dell'EqCO₂.",
+    age_ex1_lbl: "Esempio A — Metabolismo ottimale", age_ex1_txt: "35 anni cronologici · IAM 1,02 · EqCO₂ 27 → Età Met. Stim.: <strong>34 anni</strong>",
+    age_ex2_lbl: "Esempio B — Soppressione metabolica", age_ex2_txt: "35 anni cronologici · IAM 0,79 · EqCO₂ 38 → Età Met. Stim.: <strong>41 anni</strong>",
+    sec2_h3f: "⚖️ REE Relativo al Peso (kcal/kg/giorno)",
+    sec2_nmi_p: "Il <strong>REE assoluto</strong> (kcal/giorno) varia molto tra persone di dimensioni diverse. Per confrontare la reale efficienza metabolica tra pazienti, lo si normalizza dividendo il REE per il peso corporeo in chili. Questo rapporto elimina l'effetto della dimensione corporea e rivela se il metabolismo è attivo o frenato in termini relativi.",
+    th_nmi_range: "Intervallo (kcal/kg/giorno)", th_nmi_class: "Classificazione", th_nmi_what: "Cosa indica?",
+    nmi_r1_range: "≥ 30", nmi_r1_class: "Alto / Attivo", nmi_r1_what: "Metabolismo molto attivo. Frequente in atleti o persone con alta massa muscolare. Il muscolo è il maggior consumatore di energia a riposo.",
+    nmi_r2_range: "22 – 29", nmi_r2_class: "Normale", nmi_r2_what: "Intervallo sano. L'organismo mantiene un'economia energetica efficiente e adeguata alla sua massa corporea.",
+    nmi_r3_range: "18 – 21", nmi_r3_class: "Basso", nmi_r3_what: "Metabolismo frenato. Può indicare perdita di massa muscolare, adattamento a diete ipocaloriche ripetute o disfunzione tiroidea subclinica.",
+    nmi_r4_range: "< 18", nmi_r4_class: "Critico", nmi_r4_what: "Soppressione metabolica severa. Alto rischio di rimbalzo con qualsiasi eccesso calorico. È necessario un protocollo di ripristino prima di qualsiasi intervento di perdita di peso.",
+    nmi_alert_t: "Perché usare il REE/kg invece del REE assoluto?", nmi_alert_x: "Una persona di 50 kg con REE 1.100 kcal/giorno (22 kcal/kg) può essere nel range normale, mentre una persona di 90 kg con lo stesso REE (12 kcal/kg) sarebbe in soppressione critica. Senza il normalizzatore per peso, il dato assoluto inganna.",
+    sec2_h3g: "📐 REE per Superficie Corporea (BSA)",
+    sec2_bsa_p: "La <strong>Superficie Corporea (BSA)</strong> integra peso e altezza in un'unica cifra che approssima l'area totale del corpo umano. Normalizzare il REE per la BSA (DuBois, 1916) è lo standard storico della fisiologia clinica e permette di confrontare il dispendio energetico tra persone di morfologie molto diverse con maggiore precisione del semplice rapporto peso.",
+    sec2_bsa_formula: "BSA (m²) = 0,007184 × Peso (kg)⁰·⁴²⁵ × Altezza (cm)⁰·⁷²⁵",
+    sec2_bsa_ref: "Riferimento clinico: <strong>800 – 950 kcal/m²/giorno</strong> a riposo per adulti sani.",
+    sec2_bsa_vs: "REE/Peso vs. REE/BSA — quando usare ciascuno?",
+    sec2_bsa_vs_p: "Il <strong>REE/Peso</strong> è più intuitivo e utile per la prescrizione nutrizionale quotidiana. Il <strong>REE/BSA</strong> è fisiologicamente più preciso e si usa nei confronti clinici in cui l'altezza del paziente influenza significativamente la superficie di scambio del calore.",
+    sec3_num:"03", sec3_title:"Come interpretare il tuo report",
+    s1_h:"Individua il tuo REE misurato e confrontalo con quello atteso", s1_p:"Vedrai due valori: il <strong>REE misurato</strong> (il tuo metabolismo reale) e il <strong>REE Mifflin-St. Jeor</strong> (previsione standard). Se il reale è notevolmente inferiore all'atteso, c'è soppressione metabolica.",
+    s2_h:"Leggi l'IAM", s2_p:"È il rapporto tra i due. Sotto 0,85 = metabolismo depresso. Tra 0,85 e 1,15 = efficiente. Sopra 1,15 = accelerato.",
+    s3_h:"Guarda il QR", s3_p:"Sotto 0,85 = stai bruciando principalmente grassi. Sopra 0,92 = stai bruciando principalmente zuccheri. Il QR determina il protocollo di digiuno raccomandato.",
+    s4_h:"Controlla l'EqCO₂", s4_p:"Sotto 30 è eccellente. Tra 30 e 35 è accettabile. Sopra 36 indica inefficienza respiratoria che interferisce con la perdita di peso e il recupero.",
+    s5_h:"Frequenza cardiaca a riposo", s5_p:"Si valuta come percentuale della FC Max (220 − età). Sopra il 55% in riposo assoluto indica stress autonomico cronico.",
+    s6_h:"Età Metabolica Stimata", s6_p:"Confronta con la tua età reale. Se è superiore, il protocollo NUMA prioritizza il ripristino dell'IAM e la riduzione dell'EqCO₂ prima di interventi di peso.",
+    s7_h:"REE Relativo (kcal/kg/giorno) e REE/BSA", s7_p:"Normalizzano il gasto energetico per permettere confronti clinici tra persone di morfologie diverse. Un REE/kg inferiore a 18 indica soppressione critica indipendentemente dal REE assoluto.",
+    sec4_num:"04", sec4_title:"Calorimetria reale vs. Formule classiche",
+    sec4_p1:"Le formule come <strong>Harris-Benedict</strong> o <strong>Mifflin-St. Jeor</strong> sono state create con dati popolazionali medi. Possono sbagliare fino a <strong>±950 kcal/giorno</strong> in individui specifici con composizione corporea atipica, ipotiroidismo o adattamento metabolico.",
+    old_h:"❌ Formule predittive",
+    old_li1:"Stima matematica, non misurazione", old_li2:"Errore individuale fino a ±950 kcal/giorno", old_li3:"Non rileva la soppressione metabolica (IAM)", old_li4:"Ignora la flessibilità metabolica (QR)", old_li5:"Non differenzia muscolo da grasso", old_li6:"Non misura l'efficienza respiratoria", old_li7:"Stessa stima per uguale peso, diversa composizione", old_li8:"Non cambia con dieta, stress o malattia",
+    new_h:"✅ Calorimetria NUMA SmartLAB",
+    new_li1:"Misurazione diretta del metabolismo reale", new_li2:"Precisione ±3% (Gold Standard clinico)", new_li3:"Rileva e quantifica l'IAM", new_li4:"Misura quale carburante si usa (QR/IFM)", new_li5:"Riflette la composizione funzionale reale", new_li6:"Misura EqCO₂ e accoppiamento cardiopolmonare", new_li7:"Completamente personalizzata e irripetibile", new_li8:"Cambia con ogni intervento nutrizionale",
+    card4_h:"📌 L'esempio concreto della differenza",
+    card4_p1:"Il paziente di esempio ha un REE <strong>misurato di 1.500 kcal/giorno</strong>. Mifflin-St. Jeor stimava <strong>1.618 kcal/giorno</strong>. Se la dieta fosse stata progettata sulla formula, sarebbero state assegnate 118 kcal/giorno in più — equivalente ad accumulare circa <strong>6 kg di grasso aggiuntivi all'anno</strong>.",
+    alert4_title:"Quando usare allora le formule?",
+    alert4_txt:"In screening rapido senza accesso alla calorimetria, le formule sono un riferimento accettabile. In situazioni cliniche serie — perdita di peso, prestazione sportiva, patologia metabolica, digiuno terapeutico o chirurgia bariatrica — la calorimetria indiretta è una necessità diagnostica.",
+    sec5_num:"05", sec5_title:"Domande frequenti",
+    faq1_q:"Devo essere a digiuno per fare il test?", faq1_a:"Sì. Si raccomanda un minimo di 4–6 ore di digiuno, idealmente 8–12 ore (la mattina prima della colazione). Mangiare prima altera il QR perché il corpo metabolizza attivamente i nutrienti ingeriti. Non bisogna aver fatto esercizio intenso nelle 24h precedenti.",
+    faq2_q:"Cosa succede se il mio REE è molto più basso della formula?", faq2_a:"Significa soppressione metabolica (IAM < 0,85). Può verificarsi dopo diete restrittive ripetute, stress elevato sostenuto, disfunzione tiroidea subclinica o sedentarietà estrema. La soluzione <strong>non</strong> è mangiare meno, ma ripristinare il metabolismo con nutrizione normocalorica per 4–8 settimane.",
+    faq3_q:"Un QR alto significa che sto ingrassando?", faq3_a:"Non direttamente: significa che il corpo usa lo zucchero come carburante principale anche a riposo. A lungo termine, la glucosedipendenza favorisce la resistenza all'insulina, la fatica cronica e la difficoltà a perdere grasso.",
+    faq4_q:"Posso fare il digiuno intermittente se il mio IFM è basso?", faq4_a:"Dipende dall'IAM. Se il metabolismo è depresso (IAM < 0,85), il digiuno prolungato è controproducente: senza accesso efficiente ai grassi, il corpo distrugge proteine muscolari per mantenere la glicemia (gluconeogenesi). Si raccomanda solo il digiuno fisiologico notturno (max. 12h).",
+    faq5_q:"Perché il mio EqCO₂ potrebbe essere elevato se mi sento bene?", faq5_a:"L'EqCO₂ elevato a riposo è solitamente silenzioso. Indica che il sistema nervoso autonomo è cronicamente in modalità simpatica. Cause frequenti: stress lavorativo o emotivo sostenuto, scarsa qualità del sonno, sedentarietà o sistema respiratorio non allenato.",
+    faq6_q:"Con quale frequenza devo ripetere il test?", faq6_a:"Con protocollo attivo (dieta, esercizio, digiuno): ogni <strong>4–6 settimane</strong>. Una volta stabilizzato: ogni 3–6 mesi. Si indica anche il re-test in caso di variazioni brusche di peso (>5%), inizio di farmaci ormonali o periodi di stress intenso.",
+    faq7_q:"L'ipossia intermittente può migliorare il mio metabolismo?", faq7_a:"Sì. L'ipossia intermittente (protocolli IHH/IHHT con dispositivi come Mitovit) agisce direttamente sulla biogenesi mitocondriale attraverso la via HIF-1α. Un mitocondrio più efficiente si riflette in un QR migliore, maggiore capacità di ossidazione dei grassi e un IAM più stabile. La calorimetria NUMA SmartLAB è lo strumento obiettivo di riferimento per monitorare questi cambiamenti.",
+    sec6_num:"06", sec6_title:"Glossario dei termini",
+    g1:"Resting Energy Expenditure / Tasso Metabolico a Riposo. Energia minima di cui il corpo ha bisogno per mantenere le funzioni vitali senza attività.",
+    g2:"Total Energy Expenditure. Dispendio energetico totale giornaliero: REE + attività fisica + termogenesi degli alimenti (TEF).",
+    g3:"Quoziente Respiratorio (VCO₂/VO₂). Varia tra 0,70 (combustione pura di grasso) e 1,00 (combustione pura di carboidrati).",
+    g4:"Volume di ossigeno consumato al minuto (mL/min). Indicatore diretto dell'attività metabolica ossidativa cellulare a riposo.",
+    g5:"Volume di CO₂ prodotto al minuto (mL/min). Riflette i metaboliti gassosi che l'organismo genera e deve eliminare per ventilazione.",
+    g6:"Indice di Adattamento Metabolico. Rapporto REE misurato / REE previsto. Indica se il metabolismo è depresso, normale o accelerato.",
+    g7:"Indice di Flessibilità Metabolica. Scala 1–4 che valuta la capacità del corpo di alternare efficientemente tra grassi e glucosio.",
+    g8:"VE/VCO₂. Litri d'aria necessari per eliminare 1 L di CO₂. Misura l'efficienza respiratoria e l'accoppiamento cardiopolmonare a riposo.",
+    g9:"VE/VO₂. Efficienza nell'acquisizione di ossigeno da parte del sistema ventilatorio. Complementa l'EqCO₂ nella valutazione respiratoria basale.",
+    g10:"Sintesi epatica di glucosio usando aminoacidi (proteina muscolare). Avviene in digiuni prolungati quando la flessibilità metabolica è bassa (IFM 1).",
+    g11:"Riciclaggio cellulare di componenti danneggiati. Si attiva con digiuni ≥14–16h in persone con buona flessibilità metabolica (IFM 3–4).",
+    g12:"Formazione di nuovi mitocondri nella cellula. Indotta da esercizio, digiuno e ipossia intermittente. Migliora il QR e l'IAM a lungo termine.",
+    g13:"Intensità di esercizio alla quale il corpo brucia il massimo di grasso in valori assoluti (g/min). Si stima dal test a riposo.",
+    g14:"Indice di affidabilità del test (0–100). Valuta la stabilità respiratoria durante la misurazione. Score <70 può indicare perdite nella maschera.",
+    g15:"Età biologica calcolata dallo stato reale del metabolismo (IAM) e dall'efficienza respiratoria (EqCO₂). Può differire dall'età cronologica.",
+    g16:"Rapido recupero del peso perso dopo una dieta. Si verifica quando l'IAM era depresso e il corpo converte qualsiasi eccesso calorico in grasso prioritariamente.",
+    sec7_num:"07", sec7_title:"Bibliografia scientifica di riferimento",
+    bib_intro:"Evidenza pubblicata in riviste peer-reviewed indicizzate in PubMed/PMC e fonti specializzate in calorimetria indiretta, validazione di dispositivi e flessibilità metabolica.",
+    bib_ib_label:"🇪🇸 Riferimento spagnolo chiave — Dr. Iván Ibáñez García",
+    bib_valid_label:"🔬 Validazione del dispositivo Breezing Pro",
+    bib_formula_label:"📐 Limitazioni delle formule predittive vs. calorimetria",
+    bib_flex_label:"🔥 Flessibilità metabolica, QR e digiuno",
+    bib_note:"<strong style='color:var(--numa-sky)'>Nota:</strong> Guida elaborata da NUMA SmartLAB a fini divulgativi e di supporto clinico. Guida aggiornata: aprile 2026 · <a href='https://numablue.com' target='_blank' class='bib-link'>numablue.com</a>",
+    footer_txt:"<strong>NUMA Blue · Smart Lab</strong> · Sistema di Analisi Metabolica e Respiratoria a Riposo<br>Av. Manoteras 12, Piano 6, Ufficio 661, 28050 Madrid · <a href='mailto:hello@numablue.com'>hello@numablue.com</a> · <a href='tel:+34613079475'>+34 613 07 94 75</a><br><a href='https://numablue.com' target='_blank'>numablue.com</a> · © NUMA Blue 2026"
+  },
+
+  /* ═══════════════════ DEUTSCH ═══════════════════ */
+  de: {
+    html_lang: "de",
+    page_title: "NUMA SmartLAB · Leitfaden zur Ruhemetabolismus-Analyse",
+    topbar: 'Ruhemetabolismus-Analyse · NUMA SmartLAB · <a href="https://numablue.com" target="_blank">numablue.com</a> · hello@numablue.com',
+    logo_sub: "Smart Lab",
+    nav_what: "Was misst es", nav_metrics: "Metriken", nav_report: "Dein Bericht", nav_compare: "vs Formeln", nav_faq: "FAQ", nav_glossary: "Glossar", nav_bib: "📚 Literatur",
+    hero_chip: "Leitfaden zur Ruhemetabolismus-Analyse",
+    hero_h1a: "Dein echter Stoffwechsel,", hero_h1b: "präzise gemessen.",
+    hero_desc: "Verstehe jede Zahl deines NUMA SmartLAB-Berichts. Ein vollständiger Leitfaden für Gesundheitsfachkräfte und Patienten, die Entscheidungen auf Basis echter physiologischer Daten treffen wollen.",
+    kpi1_val: "±3%", kpi1_lbl: "Messpräzision", kpi2_val: "30%", kpi2_lbl: "Weniger Fehler vs Formeln", kpi3_val: "Gold", kpi3_lbl: "Klinischer Standard", kpi4_val: "~10 min", kpi4_lbl: "Testdauer",
+    sec1_num: "01", sec1_title: "Was misst dieser Test wirklich?",
+    sec1_p1: "Die <strong>indirekte Ruhekalorimetrie</strong> ist der klinische Goldstandard zur Messung des Energieverbrauchs des Körpers ohne Bewegung. Es ist keine mathematische Schätzung: Es ist eine direkte Messung dessen, was in deinen Zellen in diesem genauen Moment passiert.",
+    m1_lbl:"Misst", m1_val:"O₂", m1_unit:"Verbrauchter Sauerstoff · VO₂ (mL/min)", m2_lbl:"Misst", m2_val:"CO₂", m2_unit:"Produziertes CO₂ · VCO₂ (mL/min)", m3_lbl:"Berechnet", m3_val:"REE", m3_unit:"Grundumsatz · kcal/Tag", m4_lbl:"Bestimmt", m4_val:"RQ", m4_unit:"Verwendeter Brennstoff · VCO₂ / VO₂",
+    sec1_card_h: "🔬 Wie funktioniert das Breezing Pro-Gerät?",
+    sec1_card_p1: "Du atmest etwa 10 Minuten lang durch eine Maske in absoluter Ruhe. Der elektrochemische Sensor analysiert die ausgeatmete Luft und misst den Unterschied in der O₂- und CO₂-Konzentration zwischen ein- und ausgeatmeter Luft. Aus diesem Unterschied wird in Echtzeit berechnet, wie viel Energie dein Stoffwechsel produziert.",
+    sec1_card_p2: "<strong>Wichtige Information:</strong> Prädiktive Formeln (Harris-Benedict, Mifflin-St. Jeor) können bei bestimmten Personen um bis zu 950 kcal/Tag über- oder 660 kcal/Tag unterschätzen. Das Breezing-Gerät eliminiert diesen Fehler.",
+    sec2_num: "02", sec2_title: "Die wichtigsten Metriken deines Berichts",
+    sec2_h3a: "📊 Ruheenergieverbrauch (REE) und Metabolischer Anpassungsindex (MAI)",
+    sec2_p1: "Der <strong>REE</strong> ist die minimale Energie, die dein Körper in absoluter Ruhe benötigt, um lebenswichtige Funktionen aufrechtzuerhalten. Der <strong>MAI</strong> vergleicht deinen echten REE mit dem, den die Standardformel für jemanden mit deinem Gewicht, deiner Größe und deinem Alter vorhersagt.",
+    th_iam:"MAI", th_diag:"Diagnose", th_means:"Was bedeutet das für dich?", th_status:"Status",
+    iam_r1_code:"> 1,15", iam_r1_diag:"Beschleunigter Motor", iam_r1_txt:"Du verbrauchst mehr Energie als erwartet. Typisch für Athleten mit hoher Muskelmasse, Hyperthyreose oder chronisches Übertraining mit anhaltender autonomer Alarmierung.", iam_r1_badge:"Beobachten",
+    iam_r2_code:"0,85 – 1,15", iam_r2_diag:"Effizient / Normal", iam_r2_txt:"Dein Stoffwechselmotor stimmt mit deiner Biometrie überein. Gesundes und reaktionsfähiges System. Ideal für die Planung ernährungsphysiologischer Maßnahmen mit totaler Sicherheit und Anwendung von Defiziten bis zu 20%.", iam_r2_badge:"Optimal",
+    iam_r3_code:"< 0,85", iam_r3_diag:"Konservativ (Sparmodus)", iam_r3_txt:"Schwere metabolische Suppression. Der Körper ist nach extremen Diäten, chronischem Stress oder Hypothyreose in den «Überlebensmodus» gewechselt. Sehr hohe Anfälligkeit für den Jo-Jo-Effekt.", iam_r3_badge:"Achtung",
+    alert1_title:"MAI < 0,85 — Noch keine restriktive Diät beginnen",
+    alert1_txt:"Ein Kaloriendefizit bei deprimiertem Stoffwechsel verschlimmert die Stagnation und beschleunigt den Muskelabbau (Gluconeogenese). Zuerst wird der Stoffwechsel mit normokalorier Ernährung oder Refeed 4–8 Wochen wiederhergestellt, dann wird das Defizit geplant.",
+    sec2_h3b: "🔥 Respiratorischer Quotient (RQ) und Metabolische Flexibilität (MFI)",
+    sec2_p2: "Der <strong>RQ</strong> = VCO₂ / VO₂. Er ist der Fingerabdruck dessen, was dein Körper verbrennt. Fett erzeugt RQ ≈ 0,70; Kohlenhydrate, RQ ≈ 1,00. Der <strong>MFI</strong> klassifiziert deine echte Fähigkeit, Brennstoffe zu wechseln.",
+    ifm4_seg:"MFI 4 · Optimal\n≤ 0,78", ifm3_seg:"MFI 3 · Exzellent\n0,79 – 0,85", ifm2_seg:"MFI 2 · Gemischt\n0,86 – 0,92", ifm1_seg:"MFI 1 · Niedrig\n> 0,92",
+    th_scale:"Skala", th_rq:"RQ", th_physio:"Physiologie", th_fast:"Empfohlenes Fasten",
+    ifm4_label:"MFI 4 — Optimal", ifm4_rq:"≤ 0,78", ifm4_txt:"Absolutes Vorherrschen der Fettoxidation. Extrem effiziente Mitochondrien. Vollständige Glykogeneinsparung für Stresssituationen.", ifm4_badge:"Bis zu 18h",
+    ifm3_label:"MFI 3 — Exzellent", ifm3_rq:"0,79 – 0,85", ifm3_txt:"Verbrennt effizient Fett mit Schutz der Magermasse. Idealer Erhaltungszustand. Fasten 16–18h mit maximalen Vorteilen für Autophagie und mitochondriale Biogenese.", ifm3_badge:"14 – 18h",
+    ifm2_label:"MFI 2 — Gemischt", ifm2_rq:"0,86 – 0,92", ifm2_txt:"Ausgeglichene Nutzung von Fetten und Glukose. Normal nach kürzlichem Essen. Bei längerem Fasten deutet es auf den Beginn metabolischer Inflexibilität hin.", ifm2_badge:"14 – 16h",
+    ifm1_label:"MFI 1 — Niedrig", ifm1_rq:"> 0,92", ifm1_txt:"Glukoseabhängigkeit. Der Körper ist selbst im Sitzen auf Zucker angewiesen. Unfähig, auf Fettreserven zuzugreifen. Tendenz zu Müdigkeit, ständigem Hunger und Insulinresistenz.", ifm1_badge:"Max. 12h",
+    alert2_title:"Warum sehen die «Donut»-Diagramme unterschiedlich aus?",
+    alert2_txt:"Fett liefert 9 kcal/g, aber Kohlenhydrate und Proteine nur 4 kcal/g. Deshalb zeigt das Diagramm der <em>Energieverteilung</em> mehr % Fett als das der <em>Gramm</em>. Lies immer beide Diagramme zusammen.",
+    sec2_h3c: "💨 Atemeffizienz und Kardiopulmonale Kopplung (EqCO₂)",
+    sec2_p3: "Das <strong>EqCO₂ = VE / VCO₂</strong> misst, wie viele Liter Luft du bewegen musst, um 1 Liter zelluläres CO₂ zu eliminieren. Je niedriger, desto effizienter atmest du.",
+    th_eq:"EqCO₂", th_class:"Klassifizierung", th_impact:"Physiologische Auswirkung",
+    eq1_code:"< 30", eq1_class:"Ausgezeichnet", eq1_txt:"Optimale kardiopulmonale Kopplung. Niedriger basaler Stoffwechselstress. Die CO₂-Eliminierung ist schnell und energetisch günstig.",
+    eq2_code:"30 – 35", eq2_class:"Grenzwertig / Mäßig", eq2_txt:"Verbesserungsfähige Atemform. Der Körper ventiliert etwas mehr als nötig. Bei gesunden Personen spiegelt es anhaltende Bewegungsarmut wider.",
+    eq3_code:"36 – 44", eq3_class:"Schlecht", eq3_txt:"Subklinische Ateminsuffizienz. Das Parasympathische System ist deaktiviert und der Patient hyperventiliert leicht in Ruhe, um zu kompensieren.",
+    eq4_code:"≥ 45", eq4_class:"Klinisches Risiko", eq4_txt:"Schwerer Ventilationsstress. Typisch bei obstruktiven Erkrankungen oder Insuffizienzen. Erfordert ärztliche Beurteilung vor jeder Ernährungsintervention.",
+    sec2_h3d: "❤️ Ruheherzfrequenz (% max. HF)",
+    li1:"<strong>Theoretische max. HF = 220 − Alter.</strong> Das System bewertet den %, den dein Herz in absoluter Ruhe erreicht.",
+    li2:"<strong>&lt; 40% max. HF in Ruhe:</strong> Gesunde Bradykardie. Starkes Herz, das viel Blut pro Schlag pumpt. Exzellenter Erholungszustand.",
+    li3:"<strong>40–55% max. HF in Ruhe:</strong> Normal. Akzeptable autonome Qualität.",
+    li4:"<strong>&gt; 55% max. HF in Ruhe:</strong> Sympathische Alarmierung. Der Körper ist auch in Ruhe im Stressmodus. Behindert die Fettmobilisierung.",
+    sec2_h3e: "🧬 Geschätztes Metabolisches Alter",
+    sec2_age_p: "Das <strong>Geschätzte Metabolische Alter</strong> spiegelt den wahren zellulären Verschleiß des Körpers jenseits des Kalenders wider. Es ist kein klinisches biologisches Alter, sondern ein funktioneller Indikator, der aus zwei Testparametern abgeleitet wird: dem <strong>MAI</strong> (Effizienz des Stoffwechselmotors) und dem <strong>EqCO₂</strong> (Ventilationskosten in Ruhe). Ein deprimierter MAI oder ein erhöhter EqCO₂ bestraft den Indikator und hebt das geschätzte metabolische Alter über das chronologische.",
+    sec2_age_how: "Wie wird es berechnet?",
+    sec2_age_formula: "Met. Alter = Chronologisches Alter + [(1 − MAI) × 20] + Korrekturen für erhöhtes EqCO₂ und RQ &gt; 0,95",
+    sec2_age_note: "Das Ergebnis ist auf ±8 Jahre gegenüber dem echten Alter begrenzt, um die klinische Kohärenz zu gewährleisten. Ein Wert unter dem chronologischen Alter zeigt einen metabolisch jüngeren Organismus an. Das Ziel des NUMA-Protokolls ist es, das Geschätzte Metabolische Alter durch echte Verbesserungen des MAI und EqCO₂ zu reduzieren.",
+    age_ex1_lbl: "Beispiel A — Optimaler Stoffwechsel", age_ex1_txt: "35 chronologische Jahre · MAI 1,02 · EqCO₂ 27 → Gesch. Met. Alter: <strong>34 Jahre</strong>",
+    age_ex2_lbl: "Beispiel B — Metabolische Suppression", age_ex2_txt: "35 chronologische Jahre · MAI 0,79 · EqCO₂ 38 → Gesch. Met. Alter: <strong>41 Jahre</strong>",
+    sec2_h3f: "⚖️ Relativer REE zum Körpergewicht (kcal/kg/Tag)",
+    sec2_nmi_p: "Der <strong>absolute REE</strong> (kcal/Tag) variiert stark zwischen Personen unterschiedlicher Größe. Um die echte Stoffwechseleffizienz zwischen Patienten zu vergleichen, wird er normalisiert, indem der REE durch das Körpergewicht in Kilogramm geteilt wird. Dieses Verhältnis eliminiert den Effekt der Körpergröße und zeigt, ob der Stoffwechsel in relativen Begriffen aktiv oder gedämpft ist.",
+    th_nmi_range: "Bereich (kcal/kg/Tag)", th_nmi_class: "Klassifizierung", th_nmi_what: "Was zeigt es an?",
+    nmi_r1_range: "≥ 30", nmi_r1_class: "Hoch / Aktiv", nmi_r1_what: "Sehr aktiver Stoffwechsel. Häufig bei Athleten oder Personen mit hoher Muskelmasse. Muskel ist der größte Energieverbraucher in Ruhe.",
+    nmi_r2_range: "22 – 29", nmi_r2_class: "Normal", nmi_r2_what: "Gesunder Bereich. Der Körper behält eine effiziente Energiewirtschaft bei, die seiner Körpermasse angemessen ist.",
+    nmi_r3_range: "18 – 21", nmi_r3_class: "Niedrig", nmi_r3_what: "Gedämpfter Stoffwechsel. Kann auf Muskelmasseverlust, Anpassung an wiederholte hypokalorische Diäten oder subklinische Schilddrüsendysfunktion hinweisen.",
+    nmi_r4_range: "< 18", nmi_r4_class: "Kritisch", nmi_r4_what: "Schwere metabolische Suppression. Hohes Rückprallrisiko bei jedem kalorischen Überschuss. Ein Wiederherstellungsprotokoll ist vor jeder Gewichtsabnahme-Intervention erforderlich.",
+    nmi_alert_t: "Warum REE/kg statt absolutem REE verwenden?", nmi_alert_x: "Eine 50 kg schwere Person mit REE 1.100 kcal/Tag (22 kcal/kg) kann im Normalbereich liegen, während eine 90 kg schwere Person mit demselben REE (12 kcal/kg) in kritischer Suppression wäre. Ohne den Gewichtsnormalisierer ist die absolute Zahl irreführend.",
+    sec2_h3g: "📐 REE pro Körperoberfläche (BSA)",
+    sec2_bsa_p: "Die <strong>Körperoberfläche (BSA)</strong> integriert Gewicht und Größe in eine einzige Zahl, die die Gesamtfläche des menschlichen Körpers annähert. Die Normalisierung des REE durch die BSA (DuBois, 1916) ist der historische Standard der klinischen Physiologie und ermöglicht den Vergleich des Energieverbrauchs zwischen Personen sehr unterschiedlicher Morphologie mit größerer Präzision als das einfache Gewichtsverhältnis.",
+    sec2_bsa_formula: "BSA (m²) = 0,007184 × Gewicht (kg)⁰·⁴²⁵ × Größe (cm)⁰·⁷²⁵",
+    sec2_bsa_ref: "Klinische Referenz: <strong>800 – 950 kcal/m²/Tag</strong> in Ruhe für gesunde Erwachsene.",
+    sec2_bsa_vs: "REE/Gewicht vs. REE/BSA — wann welches verwenden?",
+    sec2_bsa_vs_p: "<strong>REE/Gewicht</strong> ist intuitiver und nützlicher für die alltägliche Ernährungsvorschrift. <strong>REE/BSA</strong> ist physiologisch präziser und wird bei klinischen Vergleichen verwendet, bei denen die Körpergröße des Patienten die Wärmeaustauschfläche erheblich beeinflusst.",
+    sec3_num:"03", sec3_title:"Wie deinen Bericht interpretieren",
+    s1_h:"Finde deinen gemessenen REE und vergleiche ihn mit dem erwarteten", s1_p:"Du siehst zwei Werte: den <strong>gemessenen REE</strong> (dein echter Stoffwechsel) und den <strong>Mifflin-St. Jeor REE</strong> (Standardvorhersage). Wenn der echte Wert deutlich niedriger als erwartet ist, liegt eine metabolische Suppression vor.",
+    s2_h:"Lies den MAI", s2_p:"Es ist das Verhältnis zwischen beiden. Unter 0,85 = deprimierter Stoffwechsel. Zwischen 0,85 und 1,15 = effizient. Über 1,15 = beschleunigt.",
+    s3_h:"Schau dir den RQ an", s3_p:"Unter 0,85 = du verbrennst hauptsächlich Fett. Über 0,92 = du verbrennst hauptsächlich Zucker. Der RQ bestimmt das empfohlene Fastenprotokoll.",
+    s4_h:"Überprüfe das EqCO₂", s4_p:"Unter 30 ist ausgezeichnet. Zwischen 30 und 35 ist akzeptabel. Über 36 deutet auf Ateminsuffizienz hin, die Gewichtsabnahme und Erholung behindert.",
+    s5_h:"Ruheherzfrequenz", s5_p:"Sie wird als Prozentsatz der max. HF bewertet (220 − Alter). Über 55% in absoluter Ruhe deutet auf chronischen autonomen Stress hin.",
+    s6_h:"Geschätztes Metabolisches Alter", s6_p:"Vergleiche mit deinem echten Alter. Wenn es höher ist, priorisiert das NUMA-Protokoll die Wiederherstellung des MAI und die Reduzierung des EqCO₂ vor Gewichtsinterventionen.",
+    s7_h:"Relativer REE (kcal/kg/Tag) und REE/BSA", s7_p:"Sie normalisieren den Energieverbrauch, um klinische Vergleiche zwischen Personen unterschiedlicher Morphologie zu ermöglichen. Ein REE/kg unter 18 zeigt kritische Suppression unabhängig vom absoluten REE an.",
+    sec4_num:"04", sec4_title:"Echte Kalorimetrie vs. Klassische Formeln",
+    sec4_p1:"Formeln wie <strong>Harris-Benedict</strong> oder <strong>Mifflin-St. Jeor</strong> wurden mit durchschnittlichen Bevölkerungsdaten erstellt. Sie können bei bestimmten Personen mit atypischer Körperzusammensetzung, Hypothyreose oder metabolischer Anpassung um bis zu <strong>±950 kcal/Tag</strong> daneben liegen.",
+    old_h:"❌ Prädiktive Formeln",
+    old_li1:"Mathematische Schätzung, keine Messung", old_li2:"Individueller Fehler bis zu ±950 kcal/Tag", old_li3:"Erkennt keine metabolische Suppression (MAI)", old_li4:"Ignoriert metabolische Flexibilität (RQ)", old_li5:"Unterscheidet Muskel nicht von Fett", old_li6:"Misst keine Atemeffizienz", old_li7:"Gleiche Schätzung bei gleichem Gewicht, verschiedener Zusammensetzung", old_li8:"Ändert sich nicht mit Diät, Stress oder Erkrankung",
+    new_h:"✅ NUMA SmartLAB Kalorimetrie",
+    new_li1:"Direkte Messung deines echten Stoffwechsels", new_li2:"Präzision ±3% (klinischer Goldstandard)", new_li3:"Erkennt und quantifiziert den MAI", new_li4:"Misst welchen Brennstoff du verwendest (RQ/MFI)", new_li5:"Spiegelt deine echte funktionelle Zusammensetzung wider", new_li6:"Misst EqCO₂ und kardiopulmonale Kopplung", new_li7:"Vollständig personalisiert und einzigartig", new_li8:"Ändert sich mit jeder Ernährungsintervention",
+    card4_h:"📌 Das konkrete Beispiel des Unterschieds",
+    card4_p1:"Der Beispielpatient hat einen <strong>gemessenen REE von 1.500 kcal/Tag</strong>. Mifflin-St. Jeor schätzte <strong>1.618 kcal/Tag</strong>. Wäre die Diät auf der Formel basiert worden, hätte man 118 kcal/Tag zu viel zugewiesen — entspricht etwa <strong>6 kg zusätzlichem Fett pro Jahr</strong>.",
+    alert4_title:"Wann dann Formeln verwenden?",
+    alert4_txt:"Bei schnellem Screening ohne Zugang zur Kalorimetrie sind Formeln eine akzeptable Referenz. In ernsthaften klinischen Situationen — Gewichtsabnahme, Sportleistung, metabolische Pathologie, therapeutisches Fasten oder bariatrische Chirurgie — ist die indirekte Kalorimetrie eine diagnostische Notwendigkeit.",
+    sec5_num:"05", sec5_title:"Häufig gestellte Fragen",
+    faq1_q:"Muss ich nüchtern sein für den Test?", faq1_a:"Ja. Mindestens 4–6 Stunden Nüchternheit werden empfohlen, idealerweise 8–12 Stunden (morgens vor dem Frühstück). Essen verändert den RQ, weil der Körper die aufgenommenen Nährstoffe aktiv metabolisiert. Man sollte in den vorherigen 24h auch kein intensives Training gemacht haben.",
+    faq2_q:"Was passiert, wenn mein REE viel niedriger ist als die Formel?", faq2_a:"Das bedeutet metabolische Suppression (MAI < 0,85). Das kann nach wiederholten restriktiven Diäten, anhaltendem hohem Stress, subklinischer Schilddrüsendysfunktion oder extremer Bewegungsarmut auftreten. Die Lösung ist <strong>nicht</strong>, weniger zu essen, sondern den Stoffwechsel 4–8 Wochen lang mit normokalorier Ernährung wiederherzustellen.",
+    faq3_q:"Bedeutet ein hoher RQ, dass ich zunehme?", faq3_a:"Nicht direkt: Es bedeutet, dass dein Körper Zucker als Hauptbrennstoff auch in Ruhe verwendet. Langfristig begünstigt die Glukoseabhängigkeit Insulinresistenz, chronische Müdigkeit und Schwierigkeiten beim Fettabbau.",
+    faq4_q:"Kann ich Intervallfasten machen, wenn mein MFI niedrig ist?", faq4_a:"Das hängt vom MAI ab. Wenn der Stoffwechsel deprimiert ist (MAI < 0,85), ist längeres Fasten kontraproduktiv: ohne effizienten Zugang zu Fetten zerstört der Körper Muskelprotein zur Blutzuckermaintenance (Gluconeogenese). Nur das physiologische Nachtfasten wird empfohlen (max. 12h).",
+    faq5_q:"Warum kann mein EqCO₂ erhöht sein, obwohl ich mich gut fühle?", faq5_a:"Ein erhöhtes Ruhe-EqCO₂ ist meist still. Es zeigt an, dass das autonome Nervensystem chronisch im Sympathikotonusmodus ist. Häufige Ursachen: anhaltender Berufs- oder emotionaler Stress, schlechte Schlafqualität, Bewegungsarmut oder untrainiertes Atemsystem.",
+    faq6_q:"Wie oft sollte ich den Test wiederholen?", faq6_a:"Mit aktivem Protokoll (Diät, Sport, Fasten): alle <strong>4–6 Wochen</strong>. Einmal stabilisiert: alle 3–6 Monate. Re-Test ist auch bei plötzlichen Gewichtsveränderungen (>5%), Beginn hormoneller Medikation oder intensiven Stressphasen indiziert.",
+    faq7_q:"Kann intermittierende Hypoxie meinen Stoffwechsel verbessern?", faq7_a:"Ja. Intermittierende Hypoxie (IHH/IHHT-Protokolle mit Geräten wie Mitovit) wirkt direkt auf die mitochondriale Biogenese über den HIF-1α-Weg. Ein effizienteres Mitochondrium spiegelt sich in einem besseren RQ, größerer Fettoxidationskapazität und einem stabileren MAI wider. Die NUMA SmartLAB Kalorimetrie ist das objektive Referenzinstrument zur Überwachung dieser Veränderungen.",
+    sec6_num:"06", sec6_title:"Glossar der Begriffe",
+    g1:"Resting Energy Expenditure / Grundumsatz. Minimale Energie, die der Körper benötigt, um lebenswichtige Funktionen ohne Aktivität aufrechtzuerhalten.",
+    g2:"Total Energy Expenditure. Gesamter täglicher Energieverbrauch: REE + körperliche Aktivität + Thermogenese der Nahrungsmittel (TEF).",
+    g3:"Respiratorischer Quotient (VCO₂/VO₂). Schwankt zwischen 0,70 (reine Fettverbrennung) und 1,00 (reine Kohlenhydratverbrennung).",
+    g4:"Volumen des pro Minute verbrauchten Sauerstoffs (mL/min). Direkter Indikator der zellulären oxidativen Stoffwechselaktivität in Ruhe.",
+    g5:"Volumen des pro Minute produzierten CO₂ (mL/min). Spiegelt die gasförmigen Stoffwechselprodukte wider, die der Körper erzeugt und per Ventilation eliminieren muss.",
+    g6:"Metabolischer Anpassungsindex. Verhältnis gemessener REE / vorhergesagter REE. Zeigt an, ob der Stoffwechsel deprimiert, normal oder beschleunigt ist.",
+    g7:"Metabolischer Flexibilitätsindex. Skala 1–4, die die Fähigkeit des Körpers bewertet, effizient zwischen Fetten und Glukose zu wechseln.",
+    g8:"VE/VCO₂. Liter Luft, die benötigt werden, um 1 L CO₂ zu eliminieren. Misst die Atemeffizienz und die kardiopulmonale Kopplung in Ruhe.",
+    g9:"VE/VO₂. Effizienz bei der Sauerstoffaufnahme durch das Ventilationssystem. Ergänzt das EqCO₂ bei der basalen Atembeurteilung.",
+    g10:"Hepatische Glukosesynthese aus Aminosäuren (Muskelprotein). Tritt bei längerem Fasten auf, wenn die metabolische Flexibilität niedrig ist (MFI 1).",
+    g11:"Zelluläres Recycling beschädigter Komponenten. Wird bei Fasten ≥14–16h bei Personen mit guter metabolischer Flexibilität aktiviert (MFI 3–4).",
+    g12:"Bildung neuer Mitochondrien in der Zelle. Durch Sport, Fasten und intermittierende Hypoxie induziert. Verbessert langfristig RQ und MAI.",
+    g13:"Trainingsintensität, bei der der Körper die maximale Fettmenge in absoluten Werten verbrennt (g/min). Wird aus dem Ruhetest geschätzt.",
+    g14:"Testreliabilitätsindex (0–100). Bewertet die Atemstabilität während der Messung. Score <70 kann auf Leckagen in der Maske hinweisen.",
+    g15:"Biologisches Alter, berechnet aus dem tatsächlichen Stoffwechselzustand (MAI) und der Atemeffizienz (EqCO₂). Kann vom chronologischen Alter abweichen.",
+    g16:"Schnelle Gewichtszunahme nach einer Diät. Tritt auf, wenn der MAI deprimiert war und der Körper jeden kalorischen Überschuss vorrangig in Fett umwandelt.",
+    sec7_num:"07", sec7_title:"Wissenschaftliche Referenzbibliographie",
+    bib_intro:"In Peer-reviewed-Zeitschriften veröffentlichte Evidenz, indexiert in PubMed/PMC und spezialisierten Quellen zu indirekter Kalorimetrie, Gerätevalidierung und metabolischer Flexibilität.",
+    bib_ib_label:"🇪🇸 Spanische Schlüsselreferenz — Dr. Iván Ibáñez García",
+    bib_valid_label:"🔬 Validierung des Breezing Pro-Geräts",
+    bib_formula_label:"📐 Einschränkungen prädiktiver Formeln vs. Kalorimetrie",
+    bib_flex_label:"🔥 Metabolische Flexibilität, RQ und Fasten",
+    bib_note:"<strong style='color:var(--numa-sky)'>Hinweis:</strong> Leitfaden erstellt von NUMA SmartLAB zu Informationszwecken und klinischer Unterstützung. Leitfaden aktualisiert: April 2026 · <a href='https://numablue.com' target='_blank' class='bib-link'>numablue.com</a>",
+    footer_txt:"<strong>NUMA Blue · Smart Lab</strong> · System zur Stoffwechsel- und Atemanalyse in Ruhe<br>Av. Manoteras 12, Etage 6, Büro 661, 28050 Madrid · <a href='mailto:hello@numablue.com'>hello@numablue.com</a> · <a href='tel:+34613079475'>+34 613 07 94 75</a><br><a href='https://numablue.com' target='_blank'>numablue.com</a> · © NUMA Blue 2026"
+  },
+
 };
 
 let currentLang = null; // null on boot → setLang('es') never skipped on first load
@@ -705,6 +976,12 @@ window.addEventListener('DOMContentLoaded', () => {
     <button class="lang-btn" data-lang="pt" onclick="setLang('pt')">
       <span class="flag">🇵🇹</span> PT
     </button>
+        <button class="lang-btn" data-lang="it" onclick="setLang('it')">
+          <span class="flag">🇮🇹</span> IT
+        </button>
+        <button class="lang-btn" data-lang="de" onclick="setLang('de')">
+          <span class="flag">🇩🇪</span> DE
+        </button>
   </div>
 </nav>
 
@@ -812,6 +1089,49 @@ window.addEventListener('DOMContentLoaded', () => {
       <li><span data-i18n="li4"></span></li>
     </ul>
   </div>
+
+  <!-- EDAD METABÓLICA ESTIMADA -->
+  <h3 data-i18n="sec2_h3e"></h3>
+  <p data-i18n="sec2_age_p"></p>
+  <div class="card" style="margin-top:1rem">
+    <p style="font-size:13px;font-weight:700;color:var(--numa-slate);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.5rem" data-i18n="sec2_age_how"></p>
+    <code style="display:block;background:var(--numa-off);border:1px solid var(--numa-border);border-radius:8px;padding:.75rem 1rem;font-size:13px;color:var(--numa-blue);font-family:var(--mono)" data-i18n="sec2_age_formula"></code>
+    <p style="margin-top:.75rem;font-size:13px;color:var(--numa-slate);line-height:1.6" data-i18n="sec2_age_note"></p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-top:1rem">
+      <div style="background:var(--numa-light-blue);border-radius:8px;padding:.75rem">
+        <p style="font-size:11px;font-weight:700;color:var(--numa-electric);text-transform:uppercase;margin-bottom:.3rem" data-i18n="age_ex1_lbl"></p>
+        <p style="font-size:13px;color:var(--numa-dark)" data-i18n="age_ex1_txt"></p>
+      </div>
+      <div style="background:#fff3f3;border-radius:8px;padding:.75rem">
+        <p style="font-size:11px;font-weight:700;color:var(--numa-red);text-transform:uppercase;margin-bottom:.3rem" data-i18n="age_ex2_lbl"></p>
+        <p style="font-size:13px;color:var(--numa-dark)" data-i18n="age_ex2_txt"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- REE RELATIVO AL PESO -->
+  <h3 data-i18n="sec2_h3f"></h3>
+  <p data-i18n="sec2_nmi_p"></p>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th data-i18n="th_nmi_range"></th><th data-i18n="th_nmi_class"></th><th data-i18n="th_nmi_what"></th></tr></thead>
+    <tbody>
+      <tr><td><code data-i18n="nmi_r1_range"></code></td><td><span class="badge badge-green" data-i18n="nmi_r1_class"></span></td><td data-i18n="nmi_r1_what"></td></tr>
+      <tr><td><code data-i18n="nmi_r2_range"></code></td><td><span class="badge badge-sky" data-i18n="nmi_r2_class"></span></td><td data-i18n="nmi_r2_what"></td></tr>
+      <tr><td><code data-i18n="nmi_r3_range"></code></td><td><span class="badge badge-amber" data-i18n="nmi_r3_class"></span></td><td data-i18n="nmi_r3_what"></td></tr>
+      <tr><td><code data-i18n="nmi_r4_range"></code></td><td><span class="badge badge-red" data-i18n="nmi_r4_class"></span></td><td data-i18n="nmi_r4_what"></td></tr>
+    </tbody>
+  </table></div>
+  <div class="alert alert-info"><div class="alert-ico">💡</div><div class="alert-txt"><strong data-i18n="nmi_alert_t"></strong><span data-i18n="nmi_alert_x"></span></div></div>
+
+  <!-- REE POR SUPERFICIE CORPORAL (BSA) -->
+  <h3 data-i18n="sec2_h3g"></h3>
+  <p data-i18n="sec2_bsa_p"></p>
+  <div class="card" style="margin-top:1rem">
+    <code style="display:block;background:var(--numa-off);border:1px solid var(--numa-border);border-radius:8px;padding:.75rem 1rem;font-size:13px;color:var(--numa-blue);font-family:var(--mono);margin-bottom:.75rem" data-i18n="sec2_bsa_formula"></code>
+    <p style="font-size:14px;color:var(--numa-dark)" data-i18n="sec2_bsa_ref"></p>
+  </div>
+  <div class="alert alert-tip" style="margin-top:1rem"><div class="alert-ico">⚖️</div><div class="alert-txt"><strong data-i18n="sec2_bsa_vs"></strong><span data-i18n="sec2_bsa_vs_p"></span></div></div>
+
 </div>
 
 <hr class="divider">
