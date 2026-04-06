@@ -6,504 +6,222 @@
 <title>NUMA SmartLAB · Guía de Análisis Metabólico en Reposo</title>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-/* ===================== NUMA BLUE PALETTE ===================== */
 :root {
-  /* Core NUMA colors from numablue.com */
-  --numa-blue:       #003865;   /* Deep navy — primary brand */
-  --numa-electric:   #0078D4;   /* Electric blue — CTA / accent */
-  --numa-sky:        #00AEEF;   /* Sky blue — highlights */
-  --numa-light-blue: #E8F4FD;   /* Very light blue — backgrounds */
+  --numa-blue:       #003865;
+  --numa-electric:   #0078D4;
+  --numa-sky:        #00AEEF;
+  --numa-light-blue: #E8F4FD;
   --numa-white:      #FFFFFF;
-  --numa-off:        #F5F8FC;   /* Off-white sections */
-  --numa-dark:       #0A1628;   /* Almost black for text */
-  --numa-slate:      #4A6580;   /* Secondary text */
-  --numa-border:     #C8DCF0;   /* Borders */
-  --numa-orange:     #FF6B35;   /* Alert / warm accent */
-  --numa-green:      #00C48C;   /* Success */
-  --numa-amber:      #FFB020;   /* Warning */
-  --numa-red:        #E03A3A;   /* Danger */
-
-  /* Typography */
+  --numa-off:        #F5F8FC;
+  --numa-dark:       #0A1628;
+  --numa-slate:      #4A6580;
+  --numa-border:     #C8DCF0;
+  --numa-orange:     #FF6B35;
+  --numa-green:      #00C48C;
+  --numa-amber:      #FFB020;
+  --numa-red:        #E03A3A;
   --font: 'Outfit', sans-serif;
   --mono: 'JetBrains Mono', monospace;
 }
-
 * { box-sizing: border-box; margin: 0; padding: 0; }
-
 html { scroll-behavior: smooth; }
+body { font-family: var(--font); background: var(--numa-white); color: var(--numa-dark); line-height: 1.65; font-size: 15px; }
 
-body {
-  font-family: var(--font);
-  background: var(--numa-white);
-  color: var(--numa-dark);
-  line-height: 1.65;
-  font-size: 15px;
-}
-
-/* ===================== TOPBAR ===================== */
-.topbar {
-  background: var(--numa-blue);
-  color: rgba(255,255,255,0.7);
-  font-size: 12px;
-  text-align: center;
-  padding: 8px 20px;
-  letter-spacing: 0.04em;
-}
+/* TOPBAR */
+.topbar { background: var(--numa-blue); color: rgba(255,255,255,0.65); font-size: 12px; text-align: center; padding: 8px 20px; letter-spacing: 0.03em; }
 .topbar a { color: var(--numa-sky); text-decoration: none; }
 
-/* ===================== NAV ===================== */
-nav {
-  position: sticky; top: 0; z-index: 200;
-  background: var(--numa-white);
-  border-bottom: 1px solid var(--numa-border);
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 0 48px; height: 68px;
-  box-shadow: 0 2px 16px rgba(0,56,101,0.08);
-}
-
-.nav-logo {
-  display: flex; align-items: center; gap: 10px;
-  text-decoration: none;
-}
-
-/* SVG-style logo mark */
-.logo-mark {
-  width: 40px; height: 40px;
-  background: var(--numa-blue);
-  border-radius: 10px;
-  display: flex; align-items: center; justify-content: center;
-  position: relative; overflow: hidden;
-}
-.logo-mark::before {
-  content: '';
-  position: absolute;
-  bottom: -4px; right: -4px;
-  width: 20px; height: 20px;
-  background: var(--numa-sky);
-  border-radius: 50%;
-  opacity: 0.5;
-}
-.logo-mark span {
-  font-family: var(--font);
-  font-weight: 800; font-size: 20px;
-  color: white; position: relative; z-index: 1;
-  letter-spacing: -1px;
-}
-
-.logo-text {
-  display: flex; flex-direction: column; line-height: 1.1;
-}
-.logo-text .brand {
-  font-size: 17px; font-weight: 800;
-  color: var(--numa-blue); letter-spacing: -0.5px;
-}
+/* NAV */
+nav { position: sticky; top: 0; z-index: 200; background: var(--numa-white); border-bottom: 1px solid var(--numa-border); display: flex; align-items: center; justify-content: space-between; padding: 0 48px; height: 68px; box-shadow: 0 2px 16px rgba(0,56,101,0.08); gap: 12px; }
+.nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; flex-shrink: 0; }
+.logo-mark { width: 40px; height: 40px; background: var(--numa-blue); border-radius: 10px; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
+.logo-mark::before { content: ''; position: absolute; bottom: -4px; right: -4px; width: 20px; height: 20px; background: var(--numa-sky); border-radius: 50%; opacity: 0.5; }
+.logo-mark span { font-family: var(--font); font-weight: 800; font-size: 20px; color: white; position: relative; z-index: 1; letter-spacing: -1px; }
+.logo-text { display: flex; flex-direction: column; line-height: 1.1; }
+.logo-text .brand { font-size: 17px; font-weight: 800; color: var(--numa-blue); letter-spacing: -0.5px; }
 .logo-text .brand em { color: var(--numa-sky); font-style: normal; }
-.logo-text .sub {
-  font-size: 10px; font-weight: 500;
-  color: var(--numa-slate); letter-spacing: 0.1em; text-transform: uppercase;
-}
-
-.nav-links {
-  display: flex; align-items: center; gap: 2px; list-style: none;
-}
-.nav-links a {
-  color: var(--numa-slate);
-  text-decoration: none; font-size: 13px; font-weight: 500;
-  padding: 7px 13px; border-radius: 7px;
-  transition: all 0.15s;
-  white-space: nowrap;
-}
+.logo-text .sub { font-size: 10px; font-weight: 500; color: var(--numa-slate); letter-spacing: 0.1em; text-transform: uppercase; }
+.nav-links { display: flex; align-items: center; gap: 2px; list-style: none; flex-wrap: nowrap; }
+.nav-links a { color: var(--numa-slate); text-decoration: none; font-size: 12px; font-weight: 500; padding: 6px 10px; border-radius: 7px; transition: all 0.15s; white-space: nowrap; }
 .nav-links a:hover { background: var(--numa-light-blue); color: var(--numa-blue); }
-.nav-links .nav-bib a {
-  background: var(--numa-blue); color: white; font-weight: 600;
-}
+.nav-links .nav-bib a { background: var(--numa-blue); color: white; font-weight: 600; }
 .nav-links .nav-bib a:hover { background: var(--numa-electric); }
 
-/* ===================== HERO ===================== */
-.hero {
-  background: var(--numa-blue);
-  padding: 72px 48px 0;
-  overflow: hidden;
-  position: relative;
-}
+/* LANGUAGE SWITCHER */
+.lang-switcher { display: flex; align-items: center; gap: 4px; flex-shrink: 0; background: var(--numa-off); border: 1px solid var(--numa-border); border-radius: 8px; padding: 3px; }
+.lang-btn { display: flex; align-items: center; gap: 5px; padding: 5px 10px; border-radius: 6px; border: none; cursor: pointer; font-family: var(--font); font-size: 12px; font-weight: 600; background: none; color: var(--numa-slate); transition: all 0.15s; white-space: nowrap; }
+.lang-btn .flag { font-size: 14px; }
+.lang-btn:hover { background: white; color: var(--numa-blue); }
+.lang-btn.active { background: var(--numa-blue); color: white; }
+.lang-btn.active .flag { filter: none; }
 
-/* Geometric accent shapes */
-.hero-geo {
-  position: absolute; top: 0; right: 0; bottom: 0;
-  width: 55%; pointer-events: none;
-}
-.hero-geo-circle {
-  position: absolute;
-  border-radius: 50%;
-  border: 1px solid rgba(0,174,239,0.15);
-}
-.hero-geo-circle:nth-child(1) { width:600px;height:600px; top:-100px; right:-150px; }
-.hero-geo-circle:nth-child(2) { width:420px;height:420px; top:40px; right:-30px; }
-.hero-geo-circle:nth-child(3) { width:240px;height:240px; top:120px; right:90px; }
-.hero-geo-dot {
-  position: absolute; border-radius: 50%;
-  background: var(--numa-sky); opacity: 0.25;
-}
-.hero-geo-dot:nth-child(4) { width:8px;height:8px; top:180px; right:280px; }
-.hero-geo-dot:nth-child(5) { width:5px;height:5px; top:80px; right:200px; }
-.hero-geo-dot:nth-child(6) { width:12px;height:12px; top:300px; right:140px; }
-
-.hero-inner {
-  max-width: 980px; margin: 0 auto;
-  position: relative; z-index: 2;
-}
-
-.hero-chip {
-  display: inline-flex; align-items: center; gap: 8px;
-  background: rgba(0,174,239,0.12);
-  border: 1px solid rgba(0,174,239,0.25);
-  color: var(--numa-sky); font-size: 11px; font-weight: 700;
-  letter-spacing: 0.12em; text-transform: uppercase;
-  padding: 5px 14px; border-radius: 100px;
-  margin-bottom: 22px;
-}
+/* HERO */
+.hero { background: var(--numa-blue); padding: 72px 48px 0; overflow: hidden; position: relative; }
+.hero-geo { position: absolute; top: 0; right: 0; bottom: 0; width: 55%; pointer-events: none; }
+.hero-geo-circle { position: absolute; border-radius: 50%; border: 1px solid rgba(0,174,239,0.15); }
+.hero-geo-circle:nth-child(1) { width:600px;height:600px;top:-100px;right:-150px; }
+.hero-geo-circle:nth-child(2) { width:420px;height:420px;top:40px;right:-30px; }
+.hero-geo-circle:nth-child(3) { width:240px;height:240px;top:120px;right:90px; }
+.hero-geo-dot { position: absolute; border-radius: 50%; background: var(--numa-sky); opacity: 0.25; }
+.hero-geo-dot:nth-child(4) { width:8px;height:8px;top:180px;right:280px; }
+.hero-geo-dot:nth-child(5) { width:5px;height:5px;top:80px;right:200px; }
+.hero-geo-dot:nth-child(6) { width:12px;height:12px;top:300px;right:140px; }
+.hero-inner { max-width: 980px; margin: 0 auto; position: relative; z-index: 2; }
+.hero-chip { display: inline-flex; align-items: center; gap: 8px; background: rgba(0,174,239,0.12); border: 1px solid rgba(0,174,239,0.25); color: var(--numa-sky); font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; padding: 5px 14px; border-radius: 100px; margin-bottom: 22px; }
 .hero-chip::before { content: '●'; font-size: 7px; }
-
-.hero h1 {
-  font-size: 52px; font-weight: 900; line-height: 1.05;
-  color: white; margin-bottom: 18px;
-  letter-spacing: -1.5px;
-}
-.hero h1 em {
-  color: var(--numa-sky); font-style: normal;
-  display: block;
-}
-
-.hero-desc {
-  font-size: 16px; color: rgba(255,255,255,0.6);
-  max-width: 520px; margin-bottom: 40px; line-height: 1.7;
-  font-weight: 400;
-}
-
-.hero-kpis {
-  display: flex; gap: 0; margin-bottom: 52px;
-}
-.hero-kpi {
-  padding: 20px 28px; border-left: 1px solid rgba(255,255,255,0.1);
-}
+.hero h1 { font-size: 50px; font-weight: 900; line-height: 1.05; color: white; margin-bottom: 18px; letter-spacing: -1.5px; }
+.hero h1 em { color: var(--numa-sky); font-style: normal; display: block; }
+.hero-desc { font-size: 16px; color: rgba(255,255,255,0.6); max-width: 520px; margin-bottom: 40px; line-height: 1.7; font-weight: 400; }
+.hero-kpis { display: flex; gap: 0; margin-bottom: 52px; flex-wrap: wrap; }
+.hero-kpi { padding: 20px 28px; border-left: 1px solid rgba(255,255,255,0.1); }
 .hero-kpi:first-child { border-left: none; padding-left: 0; }
-.hero-kpi-val {
-  font-family: var(--mono);
-  font-size: 28px; font-weight: 700; color: white;
-  display: block; line-height: 1;
-}
-.hero-kpi-lbl {
-  font-size: 11px; color: rgba(255,255,255,0.4);
-  text-transform: uppercase; letter-spacing: 0.08em;
-  margin-top: 5px; display: block;
-}
-
-/* Wave separator */
-.hero-wave {
-  height: 56px; margin-top: 0;
-}
+.hero-kpi-val { font-family: var(--mono); font-size: 28px; font-weight: 700; color: white; display: block; line-height: 1; }
+.hero-kpi-lbl { font-size: 11px; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 5px; display: block; }
+.hero-wave { height: 56px; }
 .hero-wave svg { display: block; }
 
-/* ===================== MAIN LAYOUT ===================== */
-.page-wrap {
-  max-width: 980px; margin: 0 auto; padding: 60px 48px;
-}
+/* MAIN */
+.page-wrap { max-width: 980px; margin: 0 auto; padding: 60px 48px; }
+.sec-head { display: flex; align-items: center; gap: 16px; margin-bottom: 32px; }
+.sec-num { width: 44px; height: 44px; flex-shrink: 0; background: var(--numa-blue); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-family: var(--mono); font-size: 13px; font-weight: 700; color: var(--numa-sky); }
+.sec-title { font-size: 26px; font-weight: 800; color: var(--numa-blue); letter-spacing: -0.5px; }
+hr.divider { border: none; border-top: 1px solid var(--numa-border); margin: 56px 0; }
 
-/* ===================== SECTION TITLES ===================== */
-.sec-head {
-  display: flex; align-items: center; gap: 16px; margin-bottom: 32px;
-}
-.sec-num {
-  width: 44px; height: 44px; flex-shrink: 0;
-  background: var(--numa-blue); border-radius: 12px;
-  display: flex; align-items: center; justify-content: center;
-  font-family: var(--mono); font-size: 13px; font-weight: 700;
-  color: var(--numa-sky);
-}
-.sec-title {
-  font-size: 26px; font-weight: 800;
-  color: var(--numa-blue); letter-spacing: -0.5px;
-}
-
-hr.divider {
-  border: none; border-top: 1px solid var(--numa-border);
-  margin: 56px 0;
-}
-
-/* ===================== CARDS ===================== */
-.card {
-  background: var(--numa-white);
-  border: 1px solid var(--numa-border);
-  border-radius: 14px; padding: 24px 28px; margin-bottom: 20px;
-}
+/* CARDS */
+.card { background: var(--numa-white); border: 1px solid var(--numa-border); border-radius: 14px; padding: 24px 28px; margin-bottom: 20px; }
 .card-blue  { border-left: 4px solid var(--numa-electric); }
 .card-sky   { border-left: 4px solid var(--numa-sky); }
-.card-green { border-left: 4px solid var(--numa-green); }
-.card-amber { border-left: 4px solid var(--numa-amber); }
-.card-red   { border-left: 4px solid var(--numa-red); }
-.card-orange{ border-left: 4px solid var(--numa-orange); }
 
-/* ===================== METRIC BOXES ===================== */
-.metric-row {
-  display: grid; grid-template-columns: repeat(4, 1fr);
-  gap: 16px; margin: 28px 0;
-}
-.metric-box {
-  background: var(--numa-off);
-  border: 1px solid var(--numa-border);
-  border-radius: 12px; padding: 20px 16px; text-align: center;
-}
-.metric-box .lbl {
-  font-size: 10px; font-weight: 700; text-transform: uppercase;
-  letter-spacing: 0.1em; color: var(--numa-sky); margin-bottom: 8px; display: block;
-}
-.metric-box .val {
-  font-family: var(--mono); font-size: 28px; font-weight: 700;
-  color: var(--numa-blue); display: block; line-height: 1;
-}
-.metric-box .unit {
-  font-size: 11px; color: var(--numa-slate); margin-top: 6px; display: block;
-}
+/* METRICS */
+.metric-row { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; margin: 28px 0; }
+.metric-box { background: var(--numa-off); border: 1px solid var(--numa-border); border-radius: 12px; padding: 20px 16px; text-align: center; }
+.metric-box .lbl { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--numa-sky); margin-bottom: 8px; display: block; }
+.metric-box .val { font-family: var(--mono); font-size: 28px; font-weight: 700; color: var(--numa-blue); display: block; line-height: 1; }
+.metric-box .unit { font-size: 11px; color: var(--numa-slate); margin-top: 6px; display: block; }
 
-/* ===================== TABLES ===================== */
+/* TABLES */
 .tbl-wrap { border-radius: 12px; overflow: hidden; border: 1px solid var(--numa-border); margin: 24px 0; }
 table { width: 100%; border-collapse: collapse; }
-thead th {
-  background: var(--numa-blue); color: white;
-  font-size: 11px; font-weight: 700; text-transform: uppercase;
-  letter-spacing: 0.06em; padding: 13px 18px; text-align: left;
-}
+thead th { background: var(--numa-blue); color: white; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; padding: 13px 18px; text-align: left; }
 tbody tr { border-bottom: 1px solid var(--numa-border); }
 tbody tr:last-child { border-bottom: none; }
 tbody td { padding: 13px 18px; font-size: 14px; vertical-align: top; }
 tbody tr:nth-child(even) { background: var(--numa-off); }
 
-/* ===================== BADGES ===================== */
-.badge {
-  display: inline-block; padding: 3px 11px;
-  border-radius: 100px; font-size: 11px; font-weight: 700;
-}
+/* BADGES */
+.badge { display: inline-block; padding: 3px 11px; border-radius: 100px; font-size: 11px; font-weight: 700; }
 .badge-green  { background: #D1FAE5; color: #065F46; }
 .badge-amber  { background: #FEF3C7; color: #92400E; }
 .badge-red    { background: #FEE2E2; color: #991B1B; }
-.badge-blue   { background: var(--numa-light-blue); color: var(--numa-blue); }
 .badge-sky    { background: #E0F7FF; color: #006494; }
-.badge-orange { background: #FFF0EB; color: #C94B00; }
 
-/* ===================== SCALE BAR ===================== */
-.scale-bar {
-  display: flex; border-radius: 10px; overflow: hidden;
-  height: 40px; margin: 18px 0;
-  border: 1px solid var(--numa-border);
-}
-.scale-seg {
-  display: flex; align-items: center; justify-content: center;
-  font-size: 11px; font-weight: 700; color: white;
-  flex: 1; text-align: center; line-height: 1.25;
-}
+/* SCALE BAR */
+.scale-bar { display: flex; border-radius: 10px; overflow: hidden; height: 40px; margin: 18px 0; border: 1px solid var(--numa-border); }
+.scale-seg { display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: white; flex: 1; text-align: center; line-height: 1.25; }
 
-/* ===================== STEPS ===================== */
+/* STEPS */
 .steps { display: flex; flex-direction: column; gap: 20px; }
-.step {
-  display: flex; gap: 18px; align-items: flex-start;
-}
-.step-dot {
-  width: 38px; height: 38px; flex-shrink: 0;
-  background: var(--numa-blue); border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  font-family: var(--mono); font-size: 14px; font-weight: 700;
-  color: var(--numa-sky);
-}
+.step { display: flex; gap: 18px; align-items: flex-start; }
+.step-dot { width: 38px; height: 38px; flex-shrink: 0; background: var(--numa-blue); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: var(--mono); font-size: 14px; font-weight: 700; color: var(--numa-sky); }
 .step-body h4 { font-size: 15px; font-weight: 700; color: var(--numa-blue); margin-bottom: 5px; }
 .step-body p  { font-size: 13.5px; color: var(--numa-slate); line-height: 1.65; }
 
-/* ===================== COMPARE ===================== */
+/* COMPARE */
 .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin: 24px 0; }
 .compare-col { border-radius: 12px; padding: 22px 24px; }
 .compare-col.old { background: #FFF8F5; border: 1px solid #FECDB8; }
 .compare-col.new { background: #F0FDF9; border: 1px solid #A7F3D0; }
-.compare-col h4 {
-  font-size: 12px; font-weight: 800; text-transform: uppercase;
-  letter-spacing: 0.08em; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;
-}
+.compare-col h4 { font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 16px; }
 .compare-col.old h4 { color: #C94B00; }
 .compare-col.new h4 { color: #065F46; }
 .compare-col ul { list-style: none; }
-.compare-col li {
-  font-size: 13.5px; padding: 7px 0;
-  border-bottom: 1px solid rgba(0,0,0,0.06);
-  display: flex; gap: 8px; align-items: flex-start;
-}
+.compare-col li { font-size: 13.5px; padding: 7px 0; border-bottom: 1px solid rgba(0,0,0,0.06); display: flex; gap: 8px; align-items: flex-start; }
 .compare-col li:last-child { border-bottom: none; }
 .compare-col.old li .ic { color: #E03A3A; }
 .compare-col.new li .ic { color: #00C48C; }
 
-/* ===================== ALERT BOXES ===================== */
-.alert {
-  display: flex; gap: 14px; align-items: flex-start;
-  border-radius: 11px; padding: 16px 20px; margin: 20px 0;
-}
+/* ALERTS */
+.alert { display: flex; gap: 14px; align-items: flex-start; border-radius: 11px; padding: 16px 20px; margin: 20px 0; }
 .alert-ico { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
 .alert-txt strong { display: block; font-size: 14px; margin-bottom: 4px; }
 .alert-txt { font-size: 13.5px; line-height: 1.65; }
-.alert-info    { background: var(--numa-light-blue); border: 1px solid #BAD8F5; }
-.alert-warn    { background: #FFFBEB; border: 1px solid #FDE68A; }
-.alert-danger  { background: #FFF5F5; border: 1px solid #FCA5A5; }
-.alert-success { background: #F0FDF9; border: 1px solid #6EE7C7; }
+.alert-info   { background: var(--numa-light-blue); border: 1px solid #BAD8F5; }
+.alert-warn   { background: #FFFBEB; border: 1px solid #FDE68A; }
+.alert-danger { background: #FFF5F5; border: 1px solid #FCA5A5; }
 
-/* ===================== HIGHLIGHT BLOCK ===================== */
-.highlight {
-  background: var(--numa-blue);
-  border-radius: 16px; padding: 32px 36px; margin: 28px 0;
-  color: white; position: relative; overflow: hidden;
-}
-.highlight::after {
-  content: '';
-  position: absolute; bottom: -40px; right: -40px;
-  width: 200px; height: 200px;
-  background: var(--numa-sky); opacity: 0.06; border-radius: 50%;
-}
+/* HIGHLIGHT */
+.highlight { background: var(--numa-blue); border-radius: 16px; padding: 32px 36px; margin: 28px 0; color: white; position: relative; overflow: hidden; }
+.highlight::after { content: ''; position: absolute; bottom: -40px; right: -40px; width: 200px; height: 200px; background: var(--numa-sky); opacity: 0.06; border-radius: 50%; }
 .highlight h3 { color: var(--numa-sky); font-size: 17px; font-weight: 700; margin-bottom: 10px; }
 .highlight p  { color: rgba(255,255,255,0.7); font-size: 14px; line-height: 1.7; margin: 0; }
 
-/* ===================== FAQ ===================== */
+/* FAQ */
 .faq-list { display: flex; flex-direction: column; gap: 10px; }
 .faq-item { border: 1px solid var(--numa-border); border-radius: 12px; overflow: hidden; background: white; }
-.faq-btn {
-  width: 100%; background: none; border: none; cursor: pointer;
-  padding: 18px 22px; text-align: left;
-  font-family: var(--font); font-size: 14.5px; font-weight: 600;
-  color: var(--numa-blue); display: flex; justify-content: space-between; align-items: center;
-  transition: background 0.15s;
-}
+.faq-btn { width: 100%; background: none; border: none; cursor: pointer; padding: 18px 22px; text-align: left; font-family: var(--font); font-size: 14.5px; font-weight: 600; color: var(--numa-blue); display: flex; justify-content: space-between; align-items: center; transition: background 0.15s; }
 .faq-btn:hover { background: var(--numa-off); }
 .faq-ico { font-size: 22px; color: var(--numa-sky); transition: transform 0.25s; flex-shrink: 0; }
 .faq-btn.open .faq-ico { transform: rotate(45deg); }
-.faq-ans {
-  display: none; padding: 0 22px 18px; padding-top: 14px;
-  font-size: 13.5px; color: var(--numa-slate); line-height: 1.7;
-  border-top: 1px solid var(--numa-border);
-}
+.faq-ans { display: none; padding: 14px 22px 18px; font-size: 13.5px; color: var(--numa-slate); line-height: 1.7; border-top: 1px solid var(--numa-border); }
 .faq-ans.open { display: block; }
 
-/* ===================== GLOSSARY ===================== */
+/* GLOSSARY */
 .gloss-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 20px; }
-.gloss-card {
-  background: var(--numa-off);
-  border: 1px solid var(--numa-border); border-radius: 10px; padding: 16px 18px;
-}
-.gloss-term {
-  font-family: var(--mono); font-size: 12px; font-weight: 700;
-  color: var(--numa-electric); margin-bottom: 6px;
-}
+.gloss-card { background: var(--numa-off); border: 1px solid var(--numa-border); border-radius: 10px; padding: 16px 18px; }
+.gloss-term { font-family: var(--mono); font-size: 12px; font-weight: 700; color: var(--numa-electric); margin-bottom: 6px; }
 .gloss-def { font-size: 12.5px; color: var(--numa-slate); line-height: 1.6; }
 
-/* ===================== BIBLIOGRAPHY SECTION ===================== */
-.bib-section {
-  background: var(--numa-blue); padding: 60px 0;
-}
+/* BIBLIOGRAPHY */
+.bib-section { background: var(--numa-blue); padding: 60px 0; }
 .bib-wrap { max-width: 980px; margin: 0 auto; padding: 0 48px; }
 .bib-block { margin-bottom: 36px; }
-.bib-block-title {
-  display: flex; align-items: center; gap: 12px; margin-bottom: 18px;
-}
+.bib-block-title { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
 .bib-block-bar { width: 4px; height: 32px; border-radius: 2px; flex-shrink: 0; }
-.bib-block-lbl {
-  font-size: 12px; font-weight: 800; text-transform: uppercase;
-  letter-spacing: 0.1em;
-}
+.bib-block-lbl { font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; }
 .bib-cards { display: flex; flex-direction: column; gap: 10px; }
-.bib-card {
-  display: flex; gap: 14px; align-items: flex-start;
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 10px; padding: 16px 18px;
-  transition: border-color 0.2s;
-}
+.bib-card { display: flex; gap: 14px; align-items: flex-start; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 16px 18px; transition: border-color 0.2s; }
 .bib-card:hover { border-color: rgba(0,174,239,0.4); }
-.bib-n {
-  font-family: var(--mono); font-size: 10px; font-weight: 700;
-  color: var(--numa-sky); background: rgba(0,174,239,0.15);
-  padding: 3px 8px; border-radius: 4px; flex-shrink: 0; white-space: nowrap;
-}
+.bib-n { font-family: var(--mono); font-size: 10px; font-weight: 700; color: var(--numa-sky); background: rgba(0,174,239,0.15); padding: 3px 8px; border-radius: 4px; flex-shrink: 0; white-space: nowrap; }
 .bib-body { flex: 1; }
 .bib-ttl { color: white; font-size: 13.5px; font-weight: 600; margin-bottom: 4px; }
 .bib-auth { color: rgba(255,255,255,0.45); font-size: 12px; margin-bottom: 7px; }
 .bib-note { color: rgba(255,255,255,0.33); font-size: 11.5px; line-height: 1.65; margin-bottom: 8px; }
-.bib-link {
-  display: inline-block; color: var(--numa-sky);
-  font-size: 11px; font-weight: 600;
-  border: 1px solid rgba(0,174,239,0.25);
-  padding: 3px 9px; border-radius: 5px; text-decoration: none;
-  margin-right: 6px; transition: background 0.15s;
-}
+.bib-link { display: inline-block; color: var(--numa-sky); font-size: 11px; font-weight: 600; border: 1px solid rgba(0,174,239,0.25); padding: 3px 9px; border-radius: 5px; text-decoration: none; margin-right: 6px; transition: background 0.15s; }
 .bib-link:hover { background: rgba(0,174,239,0.15); }
-
-/* ===================== IBANEZ FEATURED ===================== */
-.ibanez-card {
-  background: rgba(0,174,239,0.07);
-  border: 1px solid rgba(0,174,239,0.2);
-  border-radius: 14px; padding: 24px 28px; margin-bottom: 16px;
-}
-.ibanez-header {
-  display: flex; gap: 16px; align-items: flex-start;
-}
-.ibanez-badge {
-  background: var(--numa-sky); color: var(--numa-blue);
-  font-weight: 800; font-size: 11px; letter-spacing: 0.06em;
-  text-transform: uppercase; padding: 6px 12px; border-radius: 6px;
-  flex-shrink: 0; margin-top: 2px;
-}
+.ibanez-card { background: rgba(0,174,239,0.07); border: 1px solid rgba(0,174,239,0.2); border-radius: 14px; padding: 24px 28px; margin-bottom: 16px; }
+.ibanez-badge { background: var(--numa-sky); color: var(--numa-blue); font-weight: 800; font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; padding: 6px 12px; border-radius: 6px; flex-shrink: 0; margin-top: 2px; }
+.ibanez-header { display: flex; gap: 16px; align-items: flex-start; }
 .ibanez-ttl { color: white; font-size: 15px; font-weight: 700; margin-bottom: 5px; }
 .ibanez-sub { color: rgba(255,255,255,0.5); font-size: 12px; margin-bottom: 8px; }
 .ibanez-bio { color: rgba(255,255,255,0.4); font-size: 11.5px; line-height: 1.7; margin-bottom: 10px; }
 .ibanez-tags { display: flex; flex-wrap: wrap; gap: 6px; }
-.ibanez-tag {
-  background: rgba(0,174,239,0.1); color: var(--numa-sky);
-  font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 4px;
-  border: 1px solid rgba(0,174,239,0.2);
-}
-
-/* ===================== BIB NOTE ===================== */
-.bib-note-box {
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 10px; padding: 16px 20px; margin-top: 8px;
-}
+.ibanez-tag { background: rgba(0,174,239,0.1); color: var(--numa-sky); font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 4px; border: 1px solid rgba(0,174,239,0.2); }
+.bib-note-box { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 16px 20px; margin-top: 8px; }
 .bib-note-box p { color: rgba(255,255,255,0.4); font-size: 11.5px; line-height: 1.8; margin: 0; }
 
-/* ===================== FOOTER ===================== */
-footer {
-  background: var(--numa-dark);
-  padding: 32px 48px; text-align: center;
-}
-footer p {
-  color: rgba(255,255,255,0.35); font-size: 12px; line-height: 2;
-  margin: 0;
-}
+/* FOOTER */
+footer { background: var(--numa-dark); padding: 32px 48px; text-align: center; }
+footer p { color: rgba(255,255,255,0.35); font-size: 12px; line-height: 2; margin: 0; }
 footer strong { color: var(--numa-sky); }
 footer a { color: rgba(255,255,255,0.35); text-decoration: none; }
 footer a:hover { color: var(--numa-sky); }
 
-/* ===================== MISC ===================== */
+/* MISC */
 p { margin-bottom: 13px; }
 h3 { font-size: 17px; font-weight: 700; color: var(--numa-blue); margin: 24px 0 10px; }
 h4 { font-size: 14.5px; font-weight: 700; margin: 14px 0 7px; }
-code {
-  font-family: var(--mono);
-  background: var(--numa-light-blue); color: var(--numa-electric);
-  padding: 2px 7px; border-radius: 4px; font-size: 12.5px;
-}
+code { font-family: var(--mono); background: var(--numa-light-blue); color: var(--numa-electric); padding: 2px 7px; border-radius: 4px; font-size: 12.5px; }
 ul.dot-list { list-style: none; }
-ul.dot-list li {
-  padding: 6px 0; border-bottom: 1px solid var(--numa-border);
-  font-size: 14px; display: flex; gap: 10px; align-items: flex-start;
-}
+ul.dot-list li { padding: 6px 0; border-bottom: 1px solid var(--numa-border); font-size: 14px; display: flex; gap: 10px; align-items: flex-start; }
 ul.dot-list li:last-child { border-bottom: none; }
 ul.dot-list li::before { content: '→'; color: var(--numa-sky); font-weight: 700; flex-shrink: 0; }
 
-@media (max-width: 720px) {
-  nav { padding: 0 20px; }
+/* LANGUAGE TRANSITION */
+[data-i18n] { transition: opacity 0.18s ease; }
+body.lang-switching [data-i18n] { opacity: 0; }
+
+@media (max-width: 860px) {
+  nav { padding: 0 16px; flex-wrap: wrap; height: auto; padding-top: 10px; padding-bottom: 10px; gap: 8px; }
   .nav-links { display: none; }
   .hero { padding: 48px 20px 0; }
   .hero h1 { font-size: 34px; }
@@ -518,10 +236,443 @@ ul.dot-list li::before { content: '→'; color: var(--numa-sky); font-weight: 70
 </head>
 <body>
 
+<!-- ══════════════════════════════════════════════════════════
+     i18n TRANSLATIONS
+══════════════════════════════════════════════════════════ -->
+<script>
+const i18n = {
+  es: {
+    /* META */
+    html_lang: "es",
+    page_title: "NUMA SmartLAB · Guía de Análisis Metabólico en Reposo",
+    topbar: 'Análisis Metabólico en Reposo · NUMA SmartLAB · <a href="https://numablue.com" target="_blank">numablue.com</a> · hello@numablue.com',
+    logo_sub: "Smart Lab",
+
+    /* NAV */
+    nav_what: "¿Qué mide?",
+    nav_metrics: "Métricas",
+    nav_report: "Tu informe",
+    nav_compare: "vs Fórmulas",
+    nav_faq: "FAQ",
+    nav_glossary: "Glosario",
+    nav_bib: "📚 Bibliografía",
+
+    /* HERO */
+    hero_chip: "Guía de Análisis Metabólico en Reposo",
+    hero_h1a: "Tu metabolismo real,",
+    hero_h1b: "medido con precisión.",
+    hero_desc: "Entiende cada número de tu informe NUMA SmartLAB. Una guía completa para profesionales de la salud y pacientes que quieren tomar decisiones basadas en datos fisiológicos reales.",
+    kpi1_val: "±3%", kpi1_lbl: "Precisión medición",
+    kpi2_val: "30%", kpi2_lbl: "Menos error vs fórmulas",
+    kpi3_val: "Gold", kpi3_lbl: "Standard clínico",
+    kpi4_val: "15 min", kpi4_lbl: "Duración test",
+
+    /* SEC 01 */
+    sec1_num: "01",
+    sec1_title: "¿Qué mide realmente este test?",
+    sec1_p1: "La <strong>calorimetría indirecta en reposo</strong> es el estándar de oro clínico para medir cuánta energía consume tu cuerpo sin moverse. No es una estimación matemática: es una medición directa de lo que está ocurriendo en tus células en ese preciso momento.",
+    m1_lbl:"Mide", m1_val:"O₂", m1_unit:"Oxígeno consumido · VO₂ (mL/min)",
+    m2_lbl:"Mide", m2_val:"CO₂", m2_unit:"CO₂ producido · VCO₂ (mL/min)",
+    m3_lbl:"Calcula", m3_val:"REE", m3_unit:"Gasto energético basal · kcal/día",
+    m4_lbl:"Determina", m4_val:"RQ", m4_unit:"Combustible en uso · VCO₂ / VO₂",
+    sec1_card_h: "🔬 ¿Cómo funciona el dispositivo Breezing Pro?",
+    sec1_card_p1: "Respiras a través de una mascarilla durante aproximadamente 15 minutos en reposo absoluto. El sensor electroquímico analiza el aire que exhalas, midiendo la diferencia de concentración de O₂ y CO₂ entre el aire inspirado y el espirado. De esa diferencia se calcula en tiempo real cuánta energía está produciendo tu metabolismo.",
+    sec1_card_p2: "<strong>Dato clave:</strong> Las fórmulas predictivas (Harris-Benedict, Mifflin-St. Jeor) pueden equivocarse hasta 950 kcal/día por encima o 660 kcal/día por debajo del metabolismo real en individuos concretos. El dispositivo Breezing elimina ese error.",
+
+    /* SEC 02 */
+    sec2_num: "02",
+    sec2_title: "Las métricas clave de tu informe",
+    sec2_h3a: "📊 Gasto Energético Basal (REE) e Índice de Adaptación Metabólica (IAM)",
+    sec2_p1: "El <strong>REE</strong> es la energía mínima que necesita tu cuerpo en reposo absoluto para mantener las funciones vitales. El <strong>IAM</strong> compara tu REE real con el que predice la fórmula estándar para alguien de tu mismo peso, talla y edad.",
+    th_iam:"IAM", th_diag:"Diagnóstico", th_means:"¿Qué significa para ti?", th_status:"Estado",
+    iam_r1_code:"> 1.15", iam_r1_diag:"Motor acelerado", iam_r1_txt:"Gastas más energía de lo esperado. Propio de atletas con alta masa muscular, hipertiroidismo o sobreentrenamiento crónico con alerta autonómica sostenida.", iam_r1_badge:"Vigilar",
+    iam_r2_code:"0.85 – 1.15", iam_r2_diag:"Eficiente / Normal", iam_r2_txt:"Tu motor metabólico coincide con tu biometría. Sistema sano y responsivo. Ideal para pautar planes nutricionales con total seguridad y aplicar déficits de hasta el 20%.", iam_r2_badge:"Óptimo",
+    iam_r3_code:"< 0.85", iam_r3_diag:"Conservador (Ahorro)", iam_r3_txt:"Supresión metabólica severa. El cuerpo ha entrado en modo \"supervivencia\" tras dietas extremas, estrés crónico o hipotiroidismo. Altísima predisposición al efecto yoyó.", iam_r3_badge:"Atención",
+    alert1_title:"IAM < 0.85 — No iniciar dieta restrictiva todavía",
+    alert1_txt:"Aplicar un déficit calórico con el metabolismo deprimido agrava el estancamiento y acelera la pérdida de masa muscular (gluconeogénesis). Primero se restaura el metabolismo con dieta normocalórica o refeed 4–8 semanas, luego se pauta el déficit.",
+    sec2_h3b: "🔥 Cociente Respiratorio (RQ) y Flexibilidad Metabólica (IFM)",
+    sec2_p2: "El <strong>RQ</strong> = VCO₂ / VO₂. Es la huella digital de lo que está quemando tu cuerpo. La grasa produce RQ ≈ 0.70; los carbohidratos, RQ ≈ 1.00. El <strong>IFM</strong> clasifica tu capacidad real para alternar combustibles.",
+    ifm4_seg:"IFM 4 · Óptimo\n≤ 0.78", ifm3_seg:"IFM 3 · Excelente\n0.79 – 0.85", ifm2_seg:"IFM 2 · Mixta\n0.86 – 0.92", ifm1_seg:"IFM 1 · Baja\n> 0.92",
+    th_scale:"Escala", th_rq:"RQ", th_physio:"Fisiología", th_fast:"Ayuno recomendado",
+    ifm4_label:"IFM 4 — Óptimo", ifm4_rq:"≤ 0.78", ifm4_txt:"Predominio absoluto de oxidación de grasas. Mitocondrias extremadamente eficientes. Ahorro completo de glucógeno para situaciones de estrés.", ifm4_badge:"Hasta 18h",
+    ifm3_label:"IFM 3 — Excelente", ifm3_rq:"0.79 – 0.85", ifm3_txt:"Quema grasas eficientemente con protección del tejido magro. Estado ideal de mantenimiento. Ayuno 16–18h con máximos beneficios en autofagia y biogénesis mitocondrial.", ifm3_badge:"14 – 18h",
+    ifm2_label:"IFM 2 — Mixta", ifm2_rq:"0.86 – 0.92", ifm2_txt:"Uso equilibrado de grasas y glucosa. Normal si se ha comido recientemente. En ayunas prolongado, indica inicio de inflexibilidad metabólica.", ifm2_badge:"14 – 16h",
+    ifm1_label:"IFM 1 — Baja", ifm1_rq:"> 0.92", ifm1_txt:"Glucodependencia. El cuerpo depende del azúcar incluso sentado. Incapaz de acceder a reservas de grasa. Propensión a fatiga, hambre constante y resistencia a la insulina.", ifm1_badge:"Máx. 12h",
+    alert2_title:"¿Por qué los gráficos de \"donut\" parecen distintos?",
+    alert2_txt:"La grasa aporta 9 kcal/g, pero carbohidratos y proteínas sólo 4 kcal/g. Por eso el gráfico de <em>distribución energética</em> muestra más % de grasas que el de <em>gramos</em>. Siempre lee ambos gráficos juntos.",
+    sec2_h3c: "💨 Eficiencia Respiratoria y Acoplamiento Cardiopulmonar (EqCO₂)",
+    sec2_p3: "El <strong>EqCO₂ = VE / VCO₂</strong> mide cuántos litros de aire debes mover para eliminar 1 litro de CO₂ celular. Cuanto más bajo, más eficiente eres respiratoriamente.",
+    th_eq:"EqCO₂", th_class:"Clasificación", th_impact:"Impacto fisiológico",
+    eq1_code:"< 30", eq1_class:"Excelente", eq1_txt:"Acoplamiento cardiopulmonar óptimo. Bajo estrés metabólico basal. La limpieza de CO₂ es rápida y energéticamente barata.",
+    eq2_code:"30 – 35", eq2_class:"Límite / Regular", eq2_txt:"Forma respiratoria mejorable. El cuerpo ventila un poco más de la cuenta. En personas sanas, refleja sedentarismo prolongado.",
+    eq3_code:"36 – 44", eq3_class:"Pobre", eq3_txt:"Ineficiencia respiratoria subclínica. El sistema parasimpático está anulado y el paciente hiperventila ligeramente en reposo para compensar.",
+    eq4_code:"≥ 45", eq4_class:"Riesgo Clínico", eq4_txt:"Estrés ventilatorio severo. Típico en patologías obstructivas o insuficiencias. Requiere evaluación médica antes de cualquier intervención nutricional.",
+    sec2_h3d: "❤️ Frecuencia Cardíaca en Reposo (% FC Máx)",
+    li1:"<strong>FC Máx teórica = 220 − edad.</strong> El sistema evalúa el % que alcanza tu corazón en reposo absoluto.",
+    li2:"<strong>&lt; 40% FC Máx en reposo:</strong> Bradicardia saludable. Corazón fuerte que bombea mucha sangre por latido. Excelente estado de recuperación.",
+    li3:"<strong>40–55% FC Máx:</strong> Zona intermedia. Revisar calidad del sueño, estrés crónico y estado de sobreentrenamiento.",
+    li4:"<strong>&gt; 55% FC Máx en reposo:</strong> El paciente sufre estrés simpático o falta severa de descanso. Contraindicado el déficit calórico agresivo.",
+
+    /* SEC 03 */
+    sec3_num:"03", sec3_title:"Cómo interpretar tu informe paso a paso",
+    s1_h:"Localiza tu REE medido y compáralo con el esperado", s1_p:"Verás dos valores: el <strong>REE medido</strong> (tu metabolismo real) y el <strong>REE Mifflin-St. Jeor</strong> (predicción estándar). Si el real es notablemente inferior al esperado, hay supresión metabólica.",
+    s2_h:"Lee el IAM: ¿cuál es el estado de tu motor metabólico?", s2_p:"El IAM (medido ÷ esperado) determina si eres candidato a déficit calórico de inmediato o si primero necesitas restauración metabólica. Es el dato más importante del informe.",
+    s3_h:"Identifica tu RQ y tu escala IFM", s3_p:"¿RQ bajo (&lt;0.80)? Eres un quemador de grasas eficiente. ¿RQ alto (&gt;0.92)? Tu cuerpo vive del azúcar. Esto define el tipo de dieta, el protocolo de ayuno ideal y la zona de ejercicio más efectiva.",
+    s4_h:"Revisa la eficiencia respiratoria (EqCO₂)", s4_p:"Un EqCO₂ elevado (&gt;35) puede indicar estrés crónico, hiperventilación leve o inflamación sistémica silenciosa. En ese caso, el déficit calórico debe ser muy suave hasta normalizar la ventilación.",
+    s5_h:"Lee la prescripción nutricional con los macros reales", s5_p:"El informe incluye gramos exactos de grasas, carbohidratos y proteínas calculados desde <em>tu</em> metabolismo medido, no desde tablas genéricas.",
+    s6_h:"Verifica el protocolo de ayuno intermitente personalizado", s6_p:"Según tu IFM e IAM, el informe recomienda una ventana de ayuno personalizada. IFM 4 → 16–18h con máximos beneficios en autofagia. IFM 1 → el ayuno prolongado puede destruir músculo.",
+    s7_h:"Planifica tu re-test en 4–6 semanas", s7_p:"El metabolismo cambia. Una re-medición después de implementar el protocolo confirmará si el IAM ha mejorado, si el RQ ha bajado y si la eficiencia respiratoria ha progresado.",
+    hl_h:"📋 Datos del informe de ejemplo analizado",
+    hl_p:"El informe procesado corresponde a un paciente de <strong>30 años, hombre, 70 kg, 170 cm</strong>, objetivo pérdida de peso/grasa. REE medido <strong>1.500 kcal/día</strong> (esperado: 1.618 kcal) → IAM <strong>0.93</strong> (Eficiente). RQ <strong>0.85</strong> → IFM 3 (Excelente). FC reposo <strong>65 bpm</strong>. EqCO₂ <strong>38.1</strong> → zona Pobre. Diagnóstico: metabolismo conservador con eficiencia respiratoria mejorable. Déficit suave recomendado: −180 kcal/día.",
+
+    /* SEC 04 */
+    sec4_num:"04", sec4_title:"Calorimetría real vs. Fórmulas clásicas",
+    sec4_p1:"Las fórmulas como <strong>Harris-Benedict</strong> o <strong>Mifflin-St. Jeor</strong> fueron creadas con datos poblacionales medios. Pueden errar hasta <strong>±950 kcal/día</strong> en individuos concretos con composición corporal atípica, hipotiroidismo, o adaptación metabólica.",
+    old_h:"❌ Fórmulas predictivas",
+    old_li1:"Estimación matemática, no medición", old_li2:"Error individual hasta ±950 kcal/día", old_li3:"No detecta supresión metabólica (IAM)", old_li4:"Ignora la flexibilidad metabólica (RQ)", old_li5:"No diferencia músculo de grasa", old_li6:"No mide eficiencia respiratoria", old_li7:"Misma estimación para igual peso, distinta composición", old_li8:"No cambia con dieta, estrés o enfermedad",
+    new_h:"✅ Calorimetría NUMA SmartLAB",
+    new_li1:"Medición directa de tu metabolismo real", new_li2:"Precisión ±3% (Gold Standard clínico)", new_li3:"Detecta y cuantifica el IAM", new_li4:"Mide qué combustible usas (RQ/IFM)", new_li5:"Refleja tu composición funcional real", new_li6:"Mide EqCO₂ y acoplamiento cardiopulmonar", new_li7:"Completamente personalizada e irrepetible", new_li8:"Cambia con cada intervención nutricional",
+    card4_h:"📌 El ejemplo concreto de la diferencia",
+    card4_p1:"El paciente de ejemplo tiene un REE <strong>medido de 1.500 kcal/día</strong>. Mifflin-St. Jeor estimaba <strong>1.618 kcal/día</strong>. Si se hubiera diseñado la dieta sobre la fórmula, se habrían asignado 118 kcal/día de más — equivalente a acumular aproximadamente <strong>6 kg de grasa adicionales al año</strong>.",
+    alert4_title:"¿Cuándo usar fórmulas entonces?",
+    alert4_txt:"En screening rápido sin acceso a calorimetría, las fórmulas son una referencia aceptable. En situaciones clínicas serias — pérdida de peso, rendimiento deportivo, patología metabólica, ayuno terapéutico o cirugía bariátrica — la calorimetría indirecta es una necesidad diagnóstica.",
+
+    /* SEC 05 FAQ */
+    sec5_num:"05", sec5_title:"Preguntas frecuentes",
+    faq1_q:"¿Necesito estar en ayunas para hacer el test?",
+    faq1_a:"Sí. Se recomienda un mínimo de 4–6 horas de ayuno, aunque idealmente 8–12 horas (por la mañana antes del desayuno). Comer antes altera el RQ porque el cuerpo metaboliza activamente los nutrientes ingeridos. Tampoco debes haber hecho ejercicio intenso en las 24h previas.",
+    faq2_q:"¿Qué pasa si mi REE es mucho más bajo que la fórmula?",
+    faq2_a:"Significa supresión metabólica (IAM < 0.85). Puede ocurrir tras dietas restrictivas repetidas, estrés elevado sostenido, disfunción tiroidea subclínica o sedentarismo extremo. La solución <strong>no</strong> es comer menos, sino restaurar el metabolismo con nutrición normocalórica durante 4–8 semanas.",
+    faq3_q:"¿Un RQ alto significa que estoy engordando?",
+    faq3_a:"No directamente: significa que tu cuerpo usa azúcar como combustible principal incluso en reposo. A largo plazo, la glucodependencia favorece la resistencia a la insulina, la fatiga crónica y la dificultad para perder grasa.",
+    faq4_q:"¿Puedo hacer ayuno intermitente si mi IFM es baja?",
+    faq4_a:"Depende del IAM. Si el metabolismo está deprimido (IAM < 0.85), el ayuno prolongado es contraproducente: sin acceso eficiente a grasas, el cuerpo destruye proteína muscular para mantener la glucemia (gluconeogénesis). Se recomienda solo el ayuno fisiológico nocturno (máx. 12h).",
+    faq5_q:"¿Por qué puede estar elevado mi EqCO₂ si me encuentro bien?",
+    faq5_a:"El EqCO₂ elevado en reposo suele ser silencioso. Indica que el sistema nervioso autónomo está en modo simpático de forma crónica. Causas frecuentes: estrés laboral, mala calidad del sueño, sedentarismo o un sistema respiratorio sin entrenar.",
+    faq6_q:"¿Con qué frecuencia debo repetir el test?",
+    faq6_a:"Con protocolo activo (dieta, ejercicio, ayuno): cada <strong>4–6 semanas</strong>. Una vez estabilizado: cada 3–6 meses. También se indica re-test ante cambios bruscos de peso (>5%), inicio de medicación hormonal o períodos de estrés intenso.",
+    faq7_q:"¿La hipoxia intermitente puede mejorar mi metabolismo?",
+    faq7_a:"Sí. La hipoxia intermitente (protocolos IHH/IHHT con dispositivos como Mitovit) actúa directamente sobre la biogénesis mitocondrial a través de la vía HIF-1α. Una mitocondria más eficiente se refleja en un mejor RQ, mayor capacidad de oxidación de grasas y un IAM más estable. La calorimetría NUMA SmartLAB es la herramienta objetiva de referencia para monitorizar estos cambios.",
+
+    /* SEC 06 GLOSSARY */
+    sec6_num:"06", sec6_title:"Glosario de términos",
+    g1:"Resting Energy Expenditure / Tasa Metabólica en Reposo. Energía mínima que el cuerpo necesita para mantener funciones vitales sin actividad.",
+    g2:"Total Energy Expenditure. Gasto energético total diario: REE + actividad física + termogénesis del efecto de los alimentos (TEF).",
+    g3:"Cociente Respiratorio (VCO₂/VO₂). Oscila entre 0.70 (quema pura de grasa) y 1.00 (quema pura de carbohidratos).",
+    g4:"Volumen de oxígeno consumido por minuto (mL/min). Indicador directo de la actividad metabólica oxidativa celular en reposo.",
+    g5:"Volumen de CO₂ producido por minuto (mL/min). Refleja los metabolitos gaseosos que el organismo genera y debe eliminar por ventilación.",
+    g6:"Índice de Adaptación Metabólica. Ratio REE medido / REE predicho. Indica si el metabolismo está deprimido, normal o acelerado.",
+    g7:"Índice de Flexibilidad Metabólica. Escala 1–4 que evalúa la capacidad del cuerpo para alternar eficientemente entre grasas y glucosa.",
+    g8:"VE/VCO₂. Litros de aire necesarios para eliminar 1 L de CO₂. Mide la eficiencia respiratoria y el acoplamiento cardiopulmonar en reposo.",
+    g9:"VE/VO₂. Eficiencia en la captación de oxígeno por el sistema ventilatorio. Complementa al EqCO₂ en la evaluación respiratoria basal.",
+    g10:"Síntesis hepática de glucosa usando aminoácidos (proteína muscular). Ocurre en ayunos prolongados cuando la flexibilidad metabólica es baja (IFM 1).",
+    g11:"Reciclaje celular de componentes dañados. Se activa con ayunos ≥14–16h en personas con buena flexibilidad metabólica (IFM 3–4).",
+    g12:"Formación de nuevas mitocondrias en la célula. Inducida por ejercicio, ayuno e hipoxia intermitente. Mejora el RQ y el IAM a largo plazo.",
+    g13:"Intensidad de ejercicio a la que el cuerpo quema el máximo de grasa en valores absolutos (g/min). Se estima desde el test de reposo.",
+    g14:"Índice de fiabilidad del test (0–100). Valora la estabilidad respiratoria durante la medición. Score <70 puede indicar fugas en la mascarilla.",
+    g15:"Edad biológica calculada desde el estado real del metabolismo (IAM) y la eficiencia respiratoria (EqCO₂). Puede diferir de la edad cronológica.",
+    g16:"Recuperación rápida de peso perdido tras dieta. Ocurre cuando el IAM estaba deprimido y el cuerpo convierte cualquier exceso calórico en grasa prioritariamente.",
+
+    /* SEC 07 BIB */
+    sec7_num:"07", sec7_title:"Bibliografía científica de referencia",
+    bib_intro:"Evidencia publicada en revistas peer-reviewed indexadas en PubMed/PMC y fuentes especializadas en calorimetría indirecta, validación de dispositivos y flexibilidad metabólica.",
+    bib_ib_label:"🇪🇸 Referencia española clave — Dr. Iván Ibáñez García",
+    bib_valid_label:"🔬 Validación del dispositivo Breezing Pro",
+    bib_formula_label:"📐 Limitaciones de fórmulas predictivas vs. calorimetría",
+    bib_flex_label:"🔥 Flexibilidad metabólica, RQ y ayuno",
+    bib_note:"<strong style='color:var(--numa-sky)'>Nota:</strong> Guía elaborada por NUMA SmartLAB con fines divulgativos y de apoyo clínico. Guía actualizada: abril 2026 · <a href='https://numablue.com' target='_blank' class='bib-link'>numablue.com</a>",
+
+    /* FOOTER */
+    footer_txt:"<strong>NUMA Blue · Smart Lab</strong> · Sistema de Análisis Metabólico y Respiratorio en Reposo<br>Av. Manoteras 12, Piso 6, Oficina 661, 28050 Madrid · <a href='mailto:hello@numablue.com'>hello@numablue.com</a> · <a href='tel:+34613079475'>+34 613 07 94 75</a><br><a href='https://numablue.com' target='_blank'>numablue.com</a> · © NUMA Blue 2026"
+  },
+
+  /* ═══════════════════ ENGLISH ═══════════════════ */
+  en: {
+    html_lang: "en",
+    page_title: "NUMA SmartLAB · Resting Metabolic Analysis Guide",
+    topbar: 'Resting Metabolic Analysis · NUMA SmartLAB · <a href="https://numablue.com" target="_blank">numablue.com</a> · hello@numablue.com',
+    logo_sub: "Smart Lab",
+    nav_what: "What it measures",
+    nav_metrics: "Metrics",
+    nav_report: "Your report",
+    nav_compare: "vs Formulas",
+    nav_faq: "FAQ",
+    nav_glossary: "Glossary",
+    nav_bib: "📚 References",
+    hero_chip: "Resting Metabolic Analysis Guide",
+    hero_h1a: "Your real metabolism,",
+    hero_h1b: "measured with precision.",
+    hero_desc: "Understand every number in your NUMA SmartLAB report. A complete guide for healthcare professionals and patients who want to make decisions based on real physiological data.",
+    kpi1_val:"±3%", kpi1_lbl:"Measurement accuracy",
+    kpi2_val:"30%", kpi2_lbl:"Less error vs formulas",
+    kpi3_val:"Gold", kpi3_lbl:"Clinical standard",
+    kpi4_val:"15 min", kpi4_lbl:"Test duration",
+    sec1_num:"01", sec1_title:"What does this test really measure?",
+    sec1_p1:"<strong>Resting indirect calorimetry</strong> is the clinical gold standard for measuring how much energy your body uses at rest. It is not a mathematical estimate — it is a direct measurement of what is happening in your cells at that precise moment.",
+    m1_lbl:"Measures", m1_val:"O₂", m1_unit:"Oxygen consumed · VO₂ (mL/min)",
+    m2_lbl:"Measures", m2_val:"CO₂", m2_unit:"CO₂ produced · VCO₂ (mL/min)",
+    m3_lbl:"Calculates", m3_val:"REE", m3_unit:"Resting energy expenditure · kcal/day",
+    m4_lbl:"Determines", m4_val:"RQ", m4_unit:"Fuel being used · VCO₂ / VO₂",
+    sec1_card_h:"🔬 How does the Breezing Pro device work?",
+    sec1_card_p1:"You breathe through a mask for approximately 15 minutes in complete rest. The electrochemical sensor analyses the air you exhale, measuring the difference in O₂ and CO₂ concentration between inhaled and exhaled air. From this difference, your metabolic energy production is calculated in real time.",
+    sec1_card_p2:"<strong>Key fact:</strong> Predictive formulas (Harris-Benedict, Mifflin-St. Jeor) can be off by up to 950 kcal/day above or 660 kcal/day below a person's actual metabolism. The Breezing device eliminates that error.",
+    sec2_num:"02", sec2_title:"Key metrics in your report",
+    sec2_h3a:"📊 Resting Energy Expenditure (REE) and Metabolic Adaptation Index (MAI)",
+    sec2_p1:"<strong>REE</strong> is the minimum energy your body needs at complete rest to sustain vital functions. The <strong>MAI</strong> compares your actual REE against what a standard formula predicts for someone with your weight, height and age.",
+    th_iam:"MAI", th_diag:"Diagnosis", th_means:"What it means for you", th_status:"Status",
+    iam_r1_code:"> 1.15", iam_r1_diag:"Accelerated metabolism", iam_r1_txt:"You burn more energy than expected. Typical in athletes with high muscle mass, hyperthyroidism or chronic overtraining with sustained autonomic arousal.", iam_r1_badge:"Monitor",
+    iam_r2_code:"0.85 – 1.15", iam_r2_diag:"Efficient / Normal", iam_r2_txt:"Your metabolic engine matches your biometrics. Healthy and responsive system. Ideal for nutritional planning with total safety and caloric deficits of up to 20%.", iam_r2_badge:"Optimal",
+    iam_r3_code:"< 0.85", iam_r3_diag:"Conservative (Saving)", iam_r3_txt:"Severe metabolic suppression. The body has entered \"survival mode\" after extreme diets, chronic stress or hypothyroidism. Very high predisposition to yo-yo effect.", iam_r3_badge:"Caution",
+    alert1_title:"MAI < 0.85 — Do not start a restrictive diet yet",
+    alert1_txt:"Applying a caloric deficit with a suppressed metabolism worsens the stagnation and accelerates muscle mass loss (gluconeogenesis). First restore metabolism with a normocaloric diet or refeed for 4–8 weeks, then implement the deficit.",
+    sec2_h3b:"🔥 Respiratory Quotient (RQ) and Metabolic Flexibility Index (MFI)",
+    sec2_p2:"<strong>RQ</strong> = VCO₂ / VO₂. It is the fingerprint of what your body is burning. Fat produces RQ ≈ 0.70; carbohydrates, RQ ≈ 1.00. The <strong>MFI</strong> classifies your real ability to switch between fuels.",
+    ifm4_seg:"MFI 4 · Optimal\n≤ 0.78", ifm3_seg:"MFI 3 · Excellent\n0.79 – 0.85", ifm2_seg:"MFI 2 · Mixed\n0.86 – 0.92", ifm1_seg:"MFI 1 · Low\n> 0.92",
+    th_scale:"Scale", th_rq:"RQ", th_physio:"Physiology", th_fast:"Recommended fasting",
+    ifm4_label:"MFI 4 — Optimal", ifm4_rq:"≤ 0.78", ifm4_txt:"Absolute predominance of fat oxidation. Extremely efficient mitochondria. Complete glycogen savings for stress situations.", ifm4_badge:"Up to 18h",
+    ifm3_label:"MFI 3 — Excellent", ifm3_rq:"0.79 – 0.85", ifm3_txt:"Burns fat efficiently with protection of lean tissue. Ideal maintenance state. 16–18h fasting with maximum benefits in autophagy and mitochondrial biogenesis.", ifm3_badge:"14 – 18h",
+    ifm2_label:"MFI 2 — Mixed", ifm2_rq:"0.86 – 0.92", ifm2_txt:"Balanced use of fat and glucose. Normal if eaten recently. In prolonged fasting, it indicates the onset of metabolic inflexibility.", ifm2_badge:"14 – 16h",
+    ifm1_label:"MFI 1 — Low", ifm1_rq:"> 0.92", ifm1_txt:"Glucose dependency. The body relies on sugar even at rest. Unable to access fat reserves. Prone to fatigue, constant hunger and insulin resistance.", ifm1_badge:"Max. 12h",
+    alert2_title:"Why do the 'donut' charts look different?",
+    alert2_txt:"Fat provides 9 kcal/g, but carbohydrates and protein only 4 kcal/g. That is why the <em>energy distribution</em> chart shows a higher % of fat than the <em>grams</em> chart. Always read both charts together.",
+    sec2_h3c:"💨 Respiratory Efficiency and Cardiopulmonary Coupling (EqCO₂)",
+    sec2_p3:"<strong>EqCO₂ = VE / VCO₂</strong> measures how many litres of air you must move to eliminate 1 litre of cellular CO₂. The lower the value, the more respiratory efficient you are.",
+    th_eq:"EqCO₂", th_class:"Classification", th_impact:"Physiological impact",
+    eq1_code:"< 30", eq1_class:"Excellent", eq1_txt:"Optimal cardiopulmonary coupling. Low basal metabolic stress. CO₂ clearance is rapid and energetically inexpensive.",
+    eq2_code:"30 – 35", eq2_class:"Borderline / Regular", eq2_txt:"Improvable respiratory form. The body ventilates slightly more than needed. In healthy individuals, reflects prolonged sedentary lifestyle.",
+    eq3_code:"36 – 44", eq3_class:"Poor", eq3_txt:"Subclinical respiratory inefficiency. The parasympathetic system is suppressed and the patient mildly hyperventilates at rest to compensate.",
+    eq4_code:"≥ 45", eq4_class:"Clinical Risk", eq4_txt:"Severe ventilatory stress. Typical in obstructive pathologies or insufficiencies. Requires medical assessment before any nutritional intervention.",
+    sec2_h3d:"❤️ Resting Heart Rate (% HR Max)",
+    li1:"<strong>Theoretical HR Max = 220 − age.</strong> The system evaluates the % your heart reaches at complete rest.",
+    li2:"<strong>&lt; 40% HR Max at rest:</strong> Healthy bradycardia. Strong heart that pumps a large stroke volume. Excellent recovery state.",
+    li3:"<strong>40–55% HR Max:</strong> Intermediate zone. Review sleep quality, chronic stress and overtraining state.",
+    li4:"<strong>&gt; 55% HR Max at rest:</strong> Patient is experiencing sympathetic stress or severe lack of rest. Aggressive caloric deficit contraindicated.",
+    sec3_num:"03", sec3_title:"How to interpret your report step by step",
+    s1_h:"Locate your measured REE and compare it to the expected value", s1_p:"You will see two values: the <strong>measured REE</strong> (your real metabolism) and the <strong>Mifflin-St. Jeor REE</strong> (standard prediction). If the real value is notably lower, there is metabolic suppression.",
+    s2_h:"Read the MAI: what is the state of your metabolic engine?", s2_p:"The MAI (measured ÷ predicted) determines whether you are a candidate for an immediate caloric deficit or whether you first need metabolic restoration. It is the most important data point in the report.",
+    s3_h:"Identify your RQ and MFI scale", s3_p:"Low RQ (&lt;0.80)? You are an efficient fat burner. High RQ (&gt;0.92)? Your body runs on sugar. This defines your ideal diet type, fasting protocol and most effective exercise zone.",
+    s4_h:"Review respiratory efficiency (EqCO₂)", s4_p:"A high EqCO₂ (&gt;35) may indicate chronic stress, mild hyperventilation or silent systemic inflammation. In that case, the caloric deficit should be very gentle until ventilation normalises.",
+    s5_h:"Read the nutritional prescription with your real macros", s5_p:"The report includes exact grams of fat, carbohydrates and protein calculated from <em>your</em> measured metabolism, not from generic tables.",
+    s6_h:"Check your personalised intermittent fasting protocol", s6_p:"Based on your MFI and MAI, the report recommends a personalised fasting window. MFI 4 → 16–18h with maximum autophagy benefits. MFI 1 → prolonged fasting can destroy muscle.",
+    s7_h:"Schedule your re-test in 4–6 weeks", s7_p:"Metabolism changes. A re-measurement after implementing the protocol will confirm if the MAI has improved, if RQ has dropped and if respiratory efficiency has progressed.",
+    hl_h:"📋 Sample report data analysed",
+    hl_p:"The report processed corresponds to a patient aged <strong>30 years, male, 70 kg, 170 cm</strong>, goal: weight/fat loss. Measured REE <strong>1,500 kcal/day</strong> (expected: 1,618 kcal) → MAI <strong>0.93</strong> (Efficient). RQ <strong>0.85</strong> → MFI 3 (Excellent). Resting HR <strong>65 bpm</strong>. EqCO₂ <strong>38.1</strong> → Poor zone. Diagnosis: conservative metabolism with improvable respiratory efficiency. Recommended mild deficit: −180 kcal/day.",
+    sec4_num:"04", sec4_title:"Real calorimetry vs. classic formulas",
+    sec4_p1:"Formulas such as <strong>Harris-Benedict</strong> or <strong>Mifflin-St. Jeor</strong> were built from population averages. They can be off by up to <strong>±950 kcal/day</strong> in individuals with atypical body composition, hypothyroidism or metabolic adaptation.",
+    old_h:"❌ Predictive formulas",
+    old_li1:"Mathematical estimate, not a measurement", old_li2:"Individual error up to ±950 kcal/day", old_li3:"Does not detect metabolic suppression (MAI)", old_li4:"Ignores metabolic flexibility (RQ)", old_li5:"Does not differentiate muscle from fat", old_li6:"Does not measure respiratory efficiency", old_li7:"Same estimate for same weight, different composition", old_li8:"Does not change with diet, stress or illness",
+    new_h:"✅ NUMA SmartLAB Calorimetry",
+    new_li1:"Direct measurement of your real metabolism", new_li2:"±3% accuracy (clinical Gold Standard)", new_li3:"Detects and quantifies the MAI", new_li4:"Measures which fuel you use (RQ/MFI)", new_li5:"Reflects your real functional composition", new_li6:"Measures EqCO₂ and cardiopulmonary coupling", new_li7:"Completely personalised and unique", new_li8:"Changes with every nutritional intervention",
+    card4_h:"📌 A concrete example of the difference",
+    card4_p1:"The sample patient has a <strong>measured REE of 1,500 kcal/day</strong>. Mifflin-St. Jeor estimated <strong>1,618 kcal/day</strong>. If the diet had been based on the formula, 118 extra kcal/day would have been prescribed — equivalent to accumulating approximately <strong>6 extra kg of fat per year</strong>.",
+    alert4_title:"When should formulas be used then?",
+    alert4_txt:"For rapid screening without access to calorimetry, formulas are an acceptable reference. In serious clinical situations — weight loss, sports performance, metabolic pathology, therapeutic fasting or bariatric surgery — indirect calorimetry is a diagnostic necessity.",
+    sec5_num:"05", sec5_title:"Frequently asked questions",
+    faq1_q:"Do I need to fast before the test?",
+    faq1_a:"Yes. A minimum of 4–6 hours of fasting is recommended, ideally 8–12 hours (morning, before breakfast). Eating beforehand alters the RQ because the body is actively metabolising ingested nutrients. Avoid intense exercise in the 24 hours prior.",
+    faq2_q:"What happens if my REE is much lower than the formula?",
+    faq2_a:"This indicates metabolic suppression (MAI < 0.85). It can occur after repeated restrictive diets, sustained high stress, subclinical thyroid dysfunction or extreme sedentary lifestyle. The solution is <strong>not</strong> to eat less but to restore metabolism with well-structured normocaloric nutrition for 4–8 weeks.",
+    faq3_q:"Does a high RQ mean I am gaining weight?",
+    faq3_a:"Not directly: it means your body uses sugar as its main fuel even at rest. Long-term glucose dependency promotes insulin resistance, chronic fatigue and difficulty losing body fat.",
+    faq4_q:"Can I do intermittent fasting if my MFI is low?",
+    faq4_a:"It depends on the MAI. If metabolism is suppressed (MAI < 0.85), prolonged fasting is counterproductive: without efficient access to fat, the body breaks down muscle protein to maintain blood glucose (gluconeogenesis). Only physiological overnight fasting (max. 12h) is recommended.",
+    faq5_q:"Why can my EqCO₂ be elevated if I feel fine?",
+    faq5_a:"Elevated resting EqCO₂ is usually silent. It indicates that the autonomic nervous system is chronically in sympathetic mode. Common causes: work or emotional stress, poor sleep quality, sedentary lifestyle or an untrained respiratory system.",
+    faq6_q:"How often should I repeat the test?",
+    faq6_a:"With an active protocol (diet, exercise, fasting): every <strong>4–6 weeks</strong>. Once stabilised: every 3–6 months. Also indicated after abrupt weight changes (>5%), initiation of hormonal medication or periods of intense stress.",
+    faq7_q:"Can intermittent hypoxia improve my metabolism?",
+    faq7_a:"Yes. Intermittent hypoxia (IHH/IHHT protocols with devices such as Mitovit) acts directly on mitochondrial biogenesis via the HIF-1α pathway. More efficient mitochondria translate into a better RQ, greater fat oxidation capacity and a more stable MAI. NUMA SmartLAB calorimetry is the objective reference tool to monitor these changes.",
+    sec6_num:"06", sec6_title:"Glossary of terms",
+    g1:"Resting Energy Expenditure. Minimum energy the body needs to sustain vital functions without any activity.",
+    g2:"Total Energy Expenditure. Total daily energy expenditure: REE + physical activity + thermic effect of food (TEF).",
+    g3:"Respiratory Quotient (VCO₂/VO₂). Ranges from 0.70 (pure fat oxidation) to 1.00 (pure carbohydrate oxidation).",
+    g4:"Volume of oxygen consumed per minute (mL/min). Direct indicator of cellular oxidative metabolic activity at rest.",
+    g5:"Volume of CO₂ produced per minute (mL/min). Reflects the gaseous metabolites generated by the body that must be eliminated through ventilation.",
+    g6:"Metabolic Adaptation Index. Ratio of measured REE / predicted REE. Indicates whether metabolism is suppressed, normal or accelerated.",
+    g7:"Metabolic Flexibility Index. Scale 1–4 evaluating the body's ability to efficiently switch between fat and glucose as fuel.",
+    g8:"VE/VCO₂. Litres of air needed to eliminate 1 L of CO₂. Measures respiratory efficiency and cardiopulmonary coupling at rest.",
+    g9:"VE/VO₂. Efficiency of oxygen uptake by the ventilatory system. Complements EqCO₂ in basal respiratory evaluation.",
+    g10:"Hepatic synthesis of glucose using amino acids (muscle protein). Occurs during prolonged fasting when metabolic flexibility is low (MFI 1).",
+    g11:"Cellular recycling of damaged or aged components. Activated with fasting ≥14–16h in people with good metabolic flexibility (MFI 3–4).",
+    g12:"Formation of new mitochondria in the cell. Induced by exercise, fasting and intermittent hypoxia. Improves RQ and MAI long-term.",
+    g13:"Exercise intensity at which the body burns the maximum amount of fat in absolute values (g/min). Estimated mathematically from the resting test.",
+    g14:"Test reliability index (0–100). Assesses respiratory stability during the measurement. Score <70 may indicate mask leaks or movement.",
+    g15:"Biological age calculated from the actual metabolic state (MAI) and respiratory efficiency (EqCO₂). May differ from chronological age.",
+    g16:"Rapid recovery of weight lost after a diet. Occurs when the MAI was suppressed and the body converts any caloric excess into fat as a priority.",
+    sec7_num:"07", sec7_title:"Scientific references",
+    bib_intro:"Evidence published in peer-reviewed journals indexed in PubMed/PMC and specialised sources in indirect calorimetry, device validation and metabolic flexibility.",
+    bib_ib_label:"🇪🇸 Key Spanish reference — Dr. Iván Ibáñez García",
+    bib_valid_label:"🔬 Breezing Pro device validation",
+    bib_formula_label:"📐 Limitations of predictive formulas vs. calorimetry",
+    bib_flex_label:"🔥 Metabolic flexibility, RQ and fasting",
+    bib_note:"<strong style='color:var(--numa-sky)'>Note:</strong> Guide produced by NUMA SmartLAB for informational and clinical support purposes. Updated: April 2026 · <a href='https://numablue.com' target='_blank' class='bib-link'>numablue.com</a>",
+    footer_txt:"<strong>NUMA Blue · Smart Lab</strong> · Resting Metabolic and Respiratory Analysis System<br>Av. Manoteras 12, 6th Floor, Office 661, 28050 Madrid · <a href='mailto:hello@numablue.com'>hello@numablue.com</a> · <a href='tel:+34613079475'>+34 613 07 94 75</a><br><a href='https://numablue.com' target='_blank'>numablue.com</a> · © NUMA Blue 2026"
+  },
+
+  /* ═══════════════════ PORTUGUÊS ═══════════════════ */
+  pt: {
+    html_lang: "pt",
+    page_title: "NUMA SmartLAB · Guia de Análise Metabólica em Repouso",
+    topbar: 'Análise Metabólica em Repouso · NUMA SmartLAB · <a href="https://numablue.com" target="_blank">numablue.com</a> · hello@numablue.com',
+    logo_sub: "Smart Lab",
+    nav_what: "O que mede?",
+    nav_metrics: "Métricas",
+    nav_report: "O seu relatório",
+    nav_compare: "vs Fórmulas",
+    nav_faq: "FAQ",
+    nav_glossary: "Glossário",
+    nav_bib: "📚 Referências",
+    hero_chip: "Guia de Análise Metabólica em Repouso",
+    hero_h1a: "O seu metabolismo real,",
+    hero_h1b: "medido com precisão.",
+    hero_desc: "Compreenda cada número do seu relatório NUMA SmartLAB. Um guia completo para profissionais de saúde e pacientes que querem tomar decisões baseadas em dados fisiológicos reais.",
+    kpi1_val:"±3%", kpi1_lbl:"Precisão da medição",
+    kpi2_val:"30%", kpi2_lbl:"Menos erro vs fórmulas",
+    kpi3_val:"Gold", kpi3_lbl:"Standard clínico",
+    kpi4_val:"15 min", kpi4_lbl:"Duração do teste",
+    sec1_num:"01", sec1_title:"O que mede realmente este teste?",
+    sec1_p1:"A <strong>calorimetria indireta em repouso</strong> é o padrão ouro clínico para medir quanta energia o seu corpo consome em repouso. Não é uma estimativa matemática — é uma medição direta do que está acontecendo nas suas células naquele preciso momento.",
+    m1_lbl:"Mede", m1_val:"O₂", m1_unit:"Oxigénio consumido · VO₂ (mL/min)",
+    m2_lbl:"Mede", m2_val:"CO₂", m2_unit:"CO₂ produzido · VCO₂ (mL/min)",
+    m3_lbl:"Calcula", m3_val:"REE", m3_unit:"Gasto energético basal · kcal/dia",
+    m4_lbl:"Determina", m4_val:"RQ", m4_unit:"Combustível em uso · VCO₂ / VO₂",
+    sec1_card_h:"🔬 Como funciona o dispositivo Breezing Pro?",
+    sec1_card_p1:"Respira através de uma máscara durante aproximadamente 15 minutos em repouso absoluto. O sensor electroquímico analisa o ar exalado, medindo a diferença de concentração de O₂ e CO₂ entre o ar inspirado e o expirado. A partir dessa diferença, calcula-se em tempo real quanta energia o seu metabolismo está produzindo.",
+    sec1_card_p2:"<strong>Dado fundamental:</strong> As fórmulas preditivas (Harris-Benedict, Mifflin-St. Jeor) podem errar até 950 kcal/dia acima ou 660 kcal/dia abaixo do metabolismo real em indivíduos concretos. O dispositivo Breezing elimina esse erro.",
+    sec2_num:"02", sec2_title:"As métricas chave do seu relatório",
+    sec2_h3a:"📊 Gasto Energético em Repouso (REE) e Índice de Adaptação Metabólica (IAM)",
+    sec2_p1:"O <strong>REE</strong> é a energia mínima que o seu corpo necessita em repouso absoluto para manter as funções vitais. O <strong>IAM</strong> compara o seu REE real com o que a fórmula padrão prevê para alguém com o seu peso, altura e idade.",
+    th_iam:"IAM", th_diag:"Diagnóstico", th_means:"O que significa para si", th_status:"Estado",
+    iam_r1_code:"> 1.15", iam_r1_diag:"Motor acelerado", iam_r1_txt:"Gasta mais energia do que o esperado. Típico em atletas com alta massa muscular, hipertiroidismo ou sobretreinamento crónico com alerta autonómica sustentada.", iam_r1_badge:"Monitorizar",
+    iam_r2_code:"0.85 – 1.15", iam_r2_diag:"Eficiente / Normal", iam_r2_txt:"O seu motor metabólico coincide com a sua biometria. Sistema saudável e responsivo. Ideal para prescrever planos nutricionais com total segurança e défices de até 20%.", iam_r2_badge:"Óptimo",
+    iam_r3_code:"< 0.85", iam_r3_diag:"Conservador (Poupança)", iam_r3_txt:"Supressão metabólica severa. O corpo entrou em modo \"sobrevivência\" após dietas extremas, stresse crónico ou hipotiroidismo. Altíssima predisposição ao efeito yo-yo.", iam_r3_badge:"Atenção",
+    alert1_title:"IAM < 0.85 — Não iniciar dieta restritiva ainda",
+    alert1_txt:"Aplicar um défice calórico com o metabolismo suprimido agrava o estagnamento e acelera a perda de massa muscular (gliconeogénese). Primeiro restaura-se o metabolismo com dieta normocalórica ou refeed 4–8 semanas, depois prescreve-se o défice.",
+    sec2_h3b:"🔥 Quociente Respiratório (QR) e Flexibilidade Metabólica (IFM)",
+    sec2_p2:"O <strong>QR</strong> = VCO₂ / VO₂. É a impressão digital do que o seu corpo está a queimar. A gordura produz QR ≈ 0,70; os hidratos de carbono, QR ≈ 1,00. O <strong>IFM</strong> classifica a sua capacidade real de alternar combustíveis.",
+    ifm4_seg:"IFM 4 · Óptimo\n≤ 0,78", ifm3_seg:"IFM 3 · Excelente\n0,79 – 0,85", ifm2_seg:"IFM 2 · Mista\n0,86 – 0,92", ifm1_seg:"IFM 1 · Baixo\n> 0,92",
+    th_scale:"Escala", th_rq:"QR", th_physio:"Fisiologia", th_fast:"Jejum recomendado",
+    ifm4_label:"IFM 4 — Óptimo", ifm4_rq:"≤ 0,78", ifm4_txt:"Predomínio absoluto de oxidação de gorduras. Mitocôndrias extremamente eficientes. Poupança completa de glicogénio para situações de stresse.", ifm4_badge:"Até 18h",
+    ifm3_label:"IFM 3 — Excelente", ifm3_rq:"0,79 – 0,85", ifm3_txt:"Queima gorduras eficientemente com proteção do tecido magro. Estado ideal de manutenção. Jejum 16–18h com máximos benefícios em autofagia e biogénese mitocondrial.", ifm3_badge:"14 – 18h",
+    ifm2_label:"IFM 2 — Mista", ifm2_rq:"0,86 – 0,92", ifm2_txt:"Uso equilibrado de gorduras e glicose. Normal se comeu recentemente. Em jejum prolongado, indica início de inflexibilidade metabólica.", ifm2_badge:"14 – 16h",
+    ifm1_label:"IFM 1 — Baixo", ifm1_rq:"> 0,92", ifm1_txt:"Glicosedependência. O corpo depende do açúcar mesmo sentado. Incapaz de aceder às reservas de gordura. Propensão à fadiga, fome constante e resistência à insulina.", ifm1_badge:"Máx. 12h",
+    alert2_title:"Porque é que os gráficos de \"donut\" parecem diferentes?",
+    alert2_txt:"A gordura fornece 9 kcal/g, mas hidratos de carbono e proteínas apenas 4 kcal/g. Por isso o gráfico de <em>distribuição energética</em> mostra maior % de gorduras do que o de <em>gramas</em>. Leia sempre os dois gráficos em conjunto.",
+    sec2_h3c:"💨 Eficiência Respiratória e Acoplamento Cardiopulmonar (EqCO₂)",
+    sec2_p3:"O <strong>EqCO₂ = VE / VCO₂</strong> mede quantos litros de ar deve mover para eliminar 1 litro de CO₂ celular. Quanto mais baixo, mais eficiente é respiratoriamente.",
+    th_eq:"EqCO₂", th_class:"Classificação", th_impact:"Impacto fisiológico",
+    eq1_code:"< 30", eq1_class:"Excelente", eq1_txt:"Acoplamento cardiopulmonar óptimo. Baixo stresse metabólico basal. A limpeza de CO₂ é rápida e energeticamente barata.",
+    eq2_code:"30 – 35", eq2_class:"Limite / Regular", eq2_txt:"Forma respiratória melhorável. O corpo ventila um pouco mais do que necessário. Em pessoas saudáveis, reflecte sedentarismo prolongado.",
+    eq3_code:"36 – 44", eq3_class:"Fraco", eq3_txt:"Ineficiência respiratória subclínica. O sistema parassimpático está anulado e o paciente hiperventicula ligeiramente em repouso para compensar.",
+    eq4_code:"≥ 45", eq4_class:"Risco Clínico", eq4_txt:"Stresse ventilatório severo. Típico em patologias obstrutivas ou insuficiências. Requer avaliação médica antes de qualquer intervenção nutricional.",
+    sec2_h3d:"❤️ Frequência Cardíaca em Repouso (% FC Máx)",
+    li1:"<strong>FC Máx teórica = 220 − idade.</strong> O sistema avalia a % que o seu coração atinge em repouso absoluto.",
+    li2:"<strong>&lt; 40% FC Máx em repouso:</strong> Bradicardia saudável. Coração forte que bombeia muito sangue por batimento. Excelente estado de recuperação.",
+    li3:"<strong>40–55% FC Máx:</strong> Zona intermédia. Rever qualidade do sono, stresse crónico e estado de sobretreinamento.",
+    li4:"<strong>&gt; 55% FC Máx em repouso:</strong> O paciente sofre de stresse simpático ou falta severa de descanso. Défice calórico agressivo contraindicado.",
+    sec3_num:"03", sec3_title:"Como interpretar o seu relatório passo a passo",
+    s1_h:"Localize o seu REE medido e compare-o com o esperado", s1_p:"Verá dois valores: o <strong>REE medido</strong> (o seu metabolismo real) e o <strong>REE Mifflin-St. Jeor</strong> (previsão padrão). Se o real for notavelmente inferior ao esperado, existe supressão metabólica.",
+    s2_h:"Leia o IAM: qual é o estado do seu motor metabólico?", s2_p:"O IAM (medido ÷ previsto) determina se é candidato a um défice calórico imediato ou se primeiro necessita de restauração metabólica. É o dado mais importante do relatório.",
+    s3_h:"Identifique o seu QR e a sua escala IFM", s3_p:"QR baixo (&lt;0,80)? É um queimador de gorduras eficiente. QR alto (&gt;0,92)? O seu corpo vive do açúcar. Isso define o tipo de dieta, o protocolo de jejum ideal e a zona de exercício mais eficaz.",
+    s4_h:"Reveja a eficiência respiratória (EqCO₂)", s4_p:"Um EqCO₂ elevado (&gt;35) pode indicar stresse crónico, hiperventilação leve ou inflamação sistémica silenciosa. Nesse caso, o défice calórico deve ser muito suave até normalizar a ventilação.",
+    s5_h:"Leia a prescrição nutricional com os macros reais", s5_p:"O relatório inclui gramas exactas de gorduras, hidratos de carbono e proteínas calculadas a partir do <em>seu</em> metabolismo medido, não de tabelas genéricas.",
+    s6_h:"Verifique o protocolo de jejum intermitente personalizado", s6_p:"De acordo com o seu IFM e IAM, o relatório recomenda uma janela de jejum personalizada. IFM 4 → 16–18h com máximos benefícios em autofagia. IFM 1 → o jejum prolongado pode destruir músculo.",
+    s7_h:"Planeie o seu re-teste em 4–6 semanas", s7_p:"O metabolismo muda. Uma nova medição após implementar o protocolo confirmará se o IAM melhorou, se o QR baixou e se a eficiência respiratória progrediu.",
+    hl_h:"📋 Dados do relatório de exemplo analisado",
+    hl_p:"O relatório processado corresponde a um paciente de <strong>30 anos, masculino, 70 kg, 170 cm</strong>, objectivo perda de peso/gordura. REE medido <strong>1.500 kcal/dia</strong> (esperado: 1.618 kcal) → IAM <strong>0,93</strong> (Eficiente). QR <strong>0,85</strong> → IFM 3 (Excelente). FC repouso <strong>65 bpm</strong>. EqCO₂ <strong>38,1</strong> → zona Fraca. Diagnóstico: metabolismo conservador com eficiência respiratória melhorável. Défice suave recomendado: −180 kcal/dia.",
+    sec4_num:"04", sec4_title:"Calorimetria real vs. Fórmulas clássicas",
+    sec4_p1:"As fórmulas como <strong>Harris-Benedict</strong> ou <strong>Mifflin-St. Jeor</strong> foram criadas com dados populacionais médios. Podem errar até <strong>±950 kcal/dia</strong> em indivíduos concretos com composição corporal atípica, hipotiroidismo ou adaptação metabólica.",
+    old_h:"❌ Fórmulas preditivas",
+    old_li1:"Estimativa matemática, não medição", old_li2:"Erro individual até ±950 kcal/dia", old_li3:"Não detecta supressão metabólica (IAM)", old_li4:"Ignora a flexibilidade metabólica (QR)", old_li5:"Não diferencia músculo de gordura", old_li6:"Não mede eficiência respiratória", old_li7:"Mesma estimativa para igual peso, composição diferente", old_li8:"Não muda com dieta, stresse ou doença",
+    new_h:"✅ Calorimetria NUMA SmartLAB",
+    new_li1:"Medição directa do seu metabolismo real", new_li2:"Precisão ±3% (Gold Standard clínico)", new_li3:"Detecta e quantifica o IAM", new_li4:"Mede que combustível usa (QR/IFM)", new_li5:"Reflecte a sua composição funcional real", new_li6:"Mede EqCO₂ e acoplamento cardiopulmonar", new_li7:"Completamente personalizada e irrepetível", new_li8:"Muda com cada intervenção nutricional",
+    card4_h:"📌 O exemplo concreto da diferença",
+    card4_p1:"O paciente de exemplo tem um REE <strong>medido de 1.500 kcal/dia</strong>. O Mifflin-St. Jeor estimava <strong>1.618 kcal/dia</strong>. Se a dieta tivesse sido baseada na fórmula, teriam sido prescritas 118 kcal/dia a mais — equivalente a acumular aproximadamente <strong>6 kg de gordura extra por ano</strong>.",
+    alert4_title:"Quando usar fórmulas então?",
+    alert4_txt:"Para rastreio rápido sem acesso a calorimetria, as fórmulas são uma referência aceitável. Em situações clínicas sérias — perda de peso, rendimento desportivo, patologia metabólica, jejum terapêutico ou cirurgia bariátrica — a calorimetria indireta é uma necessidade diagnóstica.",
+    sec5_num:"05", sec5_title:"Perguntas frequentes",
+    faq1_q:"Preciso de estar em jejum para fazer o teste?",
+    faq1_a:"Sim. Recomenda-se um mínimo de 4–6 horas de jejum, idealmente 8–12 horas (de manhã, antes do pequeno-almoço). Comer antes altera o QR porque o corpo está a metabolizar activamente os nutrientes ingeridos. Evite também exercício intenso nas 24h anteriores.",
+    faq2_q:"O que acontece se o meu REE for muito inferior ao da fórmula?",
+    faq2_a:"Significa supressão metabólica (IAM < 0,85). Pode ocorrer após dietas restritivas repetidas, stresse elevado sustentado, disfunção tiroideia subclínica ou sedentarismo extremo. A solução <strong>não</strong> é comer menos, mas restaurar o metabolismo com nutrição normocalórica bem estruturada durante 4–8 semanas.",
+    faq3_q:"Um QR alto significa que estou a engordar?",
+    faq3_a:"Não directamente: significa que o seu corpo usa açúcar como combustível principal mesmo em repouso. A longo prazo, a glicosedependência favorece a resistência à insulina, a fadiga crónica e a dificuldade em perder gordura corporal.",
+    faq4_q:"Posso fazer jejum intermitente se o meu IFM for baixo?",
+    faq4_a:"Depende do IAM. Se o metabolismo estiver suprimido (IAM < 0,85), o jejum prolongado é contraproducente: sem acesso eficiente a gorduras, o corpo destrói proteína muscular para manter a glicemia (gliconeogénese). Recomenda-se apenas o jejum fisiológico nocturno (máx. 12h).",
+    faq5_q:"Porque pode o meu EqCO₂ estar elevado se me sinto bem?",
+    faq5_a:"O EqCO₂ elevado em repouso costuma ser silencioso. Indica que o sistema nervoso autónomo está cronicamente em modo simpático. Causas frequentes: stresse laboral ou emocional sustentado, má qualidade do sono, sedentarismo ou um sistema respiratório não treinado.",
+    faq6_q:"Com que frequência devo repetir o teste?",
+    faq6_a:"Com protocolo activo (dieta, exercício, jejum): cada <strong>4–6 semanas</strong>. Uma vez estabilizado: cada 3–6 meses. Também se indica re-teste após mudanças abruptas de peso (>5%), início de medicação hormonal ou períodos de stresse intenso.",
+    faq7_q:"A hipóxia intermitente pode melhorar o meu metabolismo?",
+    faq7_a:"Sim. A hipóxia intermitente (protocolos IHH/IHHT com dispositivos como o Mitovit) actua directamente na biogénese mitocondrial através da via HIF-1α. Mitocôndrias mais eficientes traduzem-se num melhor QR, maior capacidade de oxidação de gorduras e um IAM mais estável. A calorimetria NUMA SmartLAB é a ferramenta objectiva de referência para monitorizar estas mudanças.",
+    sec6_num:"06", sec6_title:"Glossário de termos",
+    g1:"Resting Energy Expenditure / Taxa Metabólica em Repouso. Energia mínima que o corpo necessita para manter funções vitais sem actividade.",
+    g2:"Total Energy Expenditure. Gasto energético total diário: REE + actividade física + efeito térmico dos alimentos (TEF).",
+    g3:"Quociente Respiratório (VCO₂/VO₂). Varia entre 0,70 (queima pura de gordura) e 1,00 (queima pura de hidratos de carbono).",
+    g4:"Volume de oxigénio consumido por minuto (mL/min). Indicador directo da actividade metabólica oxidativa celular em repouso.",
+    g5:"Volume de CO₂ produzido por minuto (mL/min). Reflecte os metabolitos gasosos que o organismo gera e deve eliminar por ventilação.",
+    g6:"Índice de Adaptação Metabólica. Rácio REE medido / REE previsto. Indica se o metabolismo está suprimido, normal ou acelerado.",
+    g7:"Índice de Flexibilidade Metabólica. Escala 1–4 que avalia a capacidade do corpo para alternar eficientemente entre gorduras e glicose.",
+    g8:"VE/VCO₂. Litros de ar necessários para eliminar 1 L de CO₂. Mede a eficiência respiratória e o acoplamento cardiopulmonar em repouso.",
+    g9:"VE/VO₂. Eficiência na captação de oxigénio pelo sistema ventilatório. Complementa o EqCO₂ na avaliação respiratória basal.",
+    g10:"Síntese hepática de glicose usando aminoácidos (proteína muscular). Ocorre em jejuns prolongados quando a flexibilidade metabólica é baixa (IFM 1).",
+    g11:"Reciclagem celular de componentes danificados. Activada com jejuns ≥14–16h em pessoas com boa flexibilidade metabólica (IFM 3–4).",
+    g12:"Formação de novas mitocôndrias na célula. Induzida por exercício, jejum e hipóxia intermitente. Melhora o QR e o IAM a longo prazo.",
+    g13:"Intensidade de exercício à qual o corpo queima o máximo de gordura em valores absolutos (g/min). Estimada a partir do teste de repouso.",
+    g14:"Índice de fiabilidade do teste (0–100). Avalia a estabilidade respiratória durante a medição. Score <70 pode indicar fugas na máscara.",
+    g15:"Idade biológica calculada a partir do estado real do metabolismo (IAM) e da eficiência respiratória (EqCO₂). Pode diferir da idade cronológica.",
+    g16:"Recuperação rápida do peso perdido após dieta. Ocorre quando o IAM estava suprimido e o corpo converte qualquer excesso calórico em gordura prioritariamente.",
+    sec7_num:"07", sec7_title:"Referências científicas",
+    bib_intro:"Evidência publicada em revistas peer-reviewed indexadas no PubMed/PMC e fontes especializadas em calorimetria indireta, validação de dispositivos e flexibilidade metabólica.",
+    bib_ib_label:"🇪🇸 Referência espanhola chave — Dr. Iván Ibáñez García",
+    bib_valid_label:"🔬 Validação do dispositivo Breezing Pro",
+    bib_formula_label:"📐 Limitações das fórmulas preditivas vs. calorimetria",
+    bib_flex_label:"🔥 Flexibilidade metabólica, QR e jejum",
+    bib_note:"<strong style='color:var(--numa-sky)'>Nota:</strong> Guia elaborado pela NUMA SmartLAB para fins divulgativos e de apoio clínico. Actualizado: abril 2026 · <a href='https://numablue.com' target='_blank' class='bib-link'>numablue.com</a>",
+    footer_txt:"<strong>NUMA Blue · Smart Lab</strong> · Sistema de Análise Metabólica e Respiratória em Repouso<br>Av. Manoteras 12, Piso 6, Escritório 661, 28050 Madrid · <a href='mailto:hello@numablue.com'>hello@numablue.com</a> · <a href='tel:+34613079475'>+34 613 07 94 75</a><br><a href='https://numablue.com' target='_blank'>numablue.com</a> · © NUMA Blue 2026"
+  }
+};
+
+let currentLang = 'es';
+
+function setLang(lang) {
+  if (lang === currentLang) return;
+  currentLang = lang;
+  const t = i18n[lang];
+
+  // HTML lang attr & title
+  document.documentElement.lang = t.html_lang;
+  document.title = t.page_title;
+
+  // Update all [data-i18n] elements
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (t[key] !== undefined) el.innerHTML = t[key];
+  });
+
+  // Active button state
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
+  });
+
+  // Save preference
+  try { localStorage.setItem('numa_lang', lang); } catch(e) {}
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  let savedLang = 'es';
+  try { savedLang = localStorage.getItem('numa_lang') || 'es'; } catch(e) {}
+  const urlLang = new URLSearchParams(window.location.search).get('lang');
+  setLang(urlLang || savedLang);
+});
+</script>
+
+<!-- ══════════════════════════════════════════════════════════
+     HTML STRUCTURE — all text via data-i18n
+══════════════════════════════════════════════════════════ -->
+
 <!-- TOPBAR -->
-<div class="topbar">
-  Análisis Metabólico en Reposo · NUMA SmartLAB · <a href="https://numablue.com" target="_blank">numablue.com</a> · hello@numablue.com
-</div>
+<div class="topbar"><span data-i18n="topbar"></span></div>
 
 <!-- NAV -->
 <nav>
@@ -529,482 +680,280 @@ ul.dot-list li::before { content: '→'; color: var(--numa-sky); font-weight: 70
     <div class="logo-mark"><span>N</span></div>
     <div class="logo-text">
       <span class="brand">NUMA<em>Blue</em></span>
-      <span class="sub">Smart Lab</span>
+      <span class="sub" data-i18n="logo_sub">Smart Lab</span>
     </div>
   </a>
   <ul class="nav-links">
-    <li><a href="#que-mide">¿Qué mide?</a></li>
-    <li><a href="#metricas">Métricas</a></li>
-    <li><a href="#informe">Tu informe</a></li>
-    <li><a href="#comparativa">vs Fórmulas</a></li>
-    <li><a href="#faq">FAQ</a></li>
-    <li><a href="#glosario">Glosario</a></li>
-    <li class="nav-bib"><a href="#bibliografia">📚 Bibliografía</a></li>
+    <li><a href="#sec1" data-i18n="nav_what"></a></li>
+    <li><a href="#sec2" data-i18n="nav_metrics"></a></li>
+    <li><a href="#sec3" data-i18n="nav_report"></a></li>
+    <li><a href="#sec4" data-i18n="nav_compare"></a></li>
+    <li><a href="#sec5" data-i18n="nav_faq"></a></li>
+    <li><a href="#sec6" data-i18n="nav_glossary"></a></li>
+    <li class="nav-bib"><a href="#sec7" data-i18n="nav_bib"></a></li>
   </ul>
+  <!-- LANGUAGE SWITCHER -->
+  <div class="lang-switcher">
+    <button class="lang-btn active" data-lang="es" onclick="setLang('es')">
+      <span class="flag">🇪🇸</span> ES
+    </button>
+    <button class="lang-btn" data-lang="en" onclick="setLang('en')">
+      <span class="flag">🇬🇧</span> EN
+    </button>
+    <button class="lang-btn" data-lang="pt" onclick="setLang('pt')">
+      <span class="flag">🇵🇹</span> PT
+    </button>
+  </div>
 </nav>
 
 <!-- HERO -->
 <div class="hero">
   <div class="hero-geo">
-    <div class="hero-geo-circle"></div>
-    <div class="hero-geo-circle"></div>
-    <div class="hero-geo-circle"></div>
-    <div class="hero-geo-dot"></div>
-    <div class="hero-geo-dot"></div>
-    <div class="hero-geo-dot"></div>
+    <div class="hero-geo-circle"></div><div class="hero-geo-circle"></div><div class="hero-geo-circle"></div>
+    <div class="hero-geo-dot"></div><div class="hero-geo-dot"></div><div class="hero-geo-dot"></div>
   </div>
   <div class="hero-inner">
-    <div class="hero-chip">Guía de Análisis Metabólico en Reposo</div>
-    <h1>Tu metabolismo real,<em>medido con precisión.</em></h1>
-    <p class="hero-desc">Entiende cada número de tu informe NUMA SmartLAB. Una guía completa para profesionales de la salud y pacientes que quieren tomar decisiones basadas en datos fisiológicos reales.</p>
+    <div class="hero-chip" data-i18n="hero_chip"></div>
+    <h1><span data-i18n="hero_h1a"></span><em data-i18n="hero_h1b"></em></h1>
+    <p class="hero-desc" data-i18n="hero_desc"></p>
     <div class="hero-kpis">
-      <div class="hero-kpi">
-        <span class="hero-kpi-val">±3%</span>
-        <span class="hero-kpi-lbl">Precisión medición</span>
-      </div>
-      <div class="hero-kpi">
-        <span class="hero-kpi-val">30%</span>
-        <span class="hero-kpi-lbl">Menos error vs fórmulas</span>
-      </div>
-      <div class="hero-kpi">
-        <span class="hero-kpi-val">Gold</span>
-        <span class="hero-kpi-lbl">Standard clínico</span>
-      </div>
-      <div class="hero-kpi">
-        <span class="hero-kpi-val">15 min</span>
-        <span class="hero-kpi-lbl">Duración test</span>
-      </div>
+      <div class="hero-kpi"><span class="hero-kpi-val" data-i18n="kpi1_val"></span><span class="hero-kpi-lbl" data-i18n="kpi1_lbl"></span></div>
+      <div class="hero-kpi"><span class="hero-kpi-val" data-i18n="kpi2_val"></span><span class="hero-kpi-lbl" data-i18n="kpi2_lbl"></span></div>
+      <div class="hero-kpi"><span class="hero-kpi-val" data-i18n="kpi3_val"></span><span class="hero-kpi-lbl" data-i18n="kpi3_lbl"></span></div>
+      <div class="hero-kpi"><span class="hero-kpi-val" data-i18n="kpi4_val"></span><span class="hero-kpi-lbl" data-i18n="kpi4_lbl"></span></div>
     </div>
   </div>
-  <div class="hero-wave">
-    <svg viewBox="0 0 1440 56" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" width="100%" height="56">
-      <path d="M0 0 C360 56 1080 0 1440 40 L1440 56 L0 56 Z" fill="#FFFFFF"/>
-    </svg>
-  </div>
+  <div class="hero-wave"><svg viewBox="0 0 1440 56" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" width="100%" height="56"><path d="M0 0 C360 56 1080 0 1440 40 L1440 56 L0 56 Z" fill="#FFFFFF"/></svg></div>
 </div>
 
 <!-- MAIN -->
 <div class="page-wrap">
 
-<!-- ═══════════════════════════════ 01 ═══════════════════════════════ -->
-<div id="que-mide">
+<!-- ── SEC 01 ── -->
+<div id="sec1">
   <div class="sec-head">
-    <div class="sec-num">01</div>
-    <div class="sec-title">¿Qué mide realmente este test?</div>
+    <div class="sec-num" data-i18n="sec1_num"></div>
+    <div class="sec-title" data-i18n="sec1_title"></div>
   </div>
-
-  <p>La <strong>calorimetría indirecta en reposo</strong> es el estándar de oro clínico para medir cuánta energía consume tu cuerpo sin moverse. No es una estimación matemática: es una medición directa de lo que está ocurriendo en tus células en ese preciso momento.</p>
-
+  <p data-i18n="sec1_p1"></p>
   <div class="metric-row">
-    <div class="metric-box">
-      <span class="lbl">Mide</span>
-      <span class="val">O₂</span>
-      <span class="unit">Oxígeno consumido · VO₂ (mL/min)</span>
-    </div>
-    <div class="metric-box">
-      <span class="lbl">Mide</span>
-      <span class="val">CO₂</span>
-      <span class="unit">CO₂ producido · VCO₂ (mL/min)</span>
-    </div>
-    <div class="metric-box">
-      <span class="lbl">Calcula</span>
-      <span class="val">REE</span>
-      <span class="unit">Gasto energético basal · kcal/día</span>
-    </div>
-    <div class="metric-box">
-      <span class="lbl">Determina</span>
-      <span class="val">RQ</span>
-      <span class="unit">Combustible en uso · VCO₂ / VO₂</span>
-    </div>
+    <div class="metric-box"><span class="lbl" data-i18n="m1_lbl"></span><span class="val" data-i18n="m1_val"></span><span class="unit" data-i18n="m1_unit"></span></div>
+    <div class="metric-box"><span class="lbl" data-i18n="m2_lbl"></span><span class="val" data-i18n="m2_val"></span><span class="unit" data-i18n="m2_unit"></span></div>
+    <div class="metric-box"><span class="lbl" data-i18n="m3_lbl"></span><span class="val" data-i18n="m3_val"></span><span class="unit" data-i18n="m3_unit"></span></div>
+    <div class="metric-box"><span class="lbl" data-i18n="m4_lbl"></span><span class="val" data-i18n="m4_val"></span><span class="unit" data-i18n="m4_unit"></span></div>
   </div>
-
   <div class="card card-blue">
-    <h4>🔬 ¿Cómo funciona el dispositivo Breezing Pro?</h4>
-    <p>Respiras a través de una mascarilla durante aproximadamente 15 minutos en reposo absoluto. El sensor electroquímico analiza el aire que exhalas, midiendo la diferencia de concentración de O₂ y CO₂ entre el aire inspirado y el espirado. De esa diferencia se calcula en tiempo real cuánta energía está produciendo tu metabolismo.</p>
-    <p style="margin:0"><strong>Dato clave:</strong> Las fórmulas predictivas (Harris-Benedict, Mifflin-St. Jeor) pueden equivocarse hasta 950 kcal/día por encima o 660 kcal/día por debajo del metabolismo real en individuos concretos. El dispositivo Breezing elimina ese error.</p>
+    <h4 data-i18n="sec1_card_h"></h4>
+    <p data-i18n="sec1_card_p1"></p>
+    <p style="margin:0" data-i18n="sec1_card_p2"></p>
   </div>
 </div>
 
 <hr class="divider">
 
-<!-- ═══════════════════════════════ 02 ═══════════════════════════════ -->
-<div id="metricas">
+<!-- ── SEC 02 ── -->
+<div id="sec2">
   <div class="sec-head">
-    <div class="sec-num">02</div>
-    <div class="sec-title">Las métricas clave de tu informe</div>
+    <div class="sec-num" data-i18n="sec2_num"></div>
+    <div class="sec-title" data-i18n="sec2_title"></div>
   </div>
 
-  <!-- REE + IAM -->
-  <h3>📊 Gasto Energético Basal (REE) e Índice de Adaptación Metabólica (IAM)</h3>
-  <p>El <strong>REE</strong> es la energía mínima que necesita tu cuerpo en reposo absoluto para mantener las funciones vitales. El <strong>IAM</strong> compara tu REE real con el que predice la fórmula estándar para alguien de tu mismo peso, talla y edad.</p>
+  <h3 data-i18n="sec2_h3a"></h3>
+  <p data-i18n="sec2_p1"></p>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th data-i18n="th_iam"></th><th data-i18n="th_diag"></th><th data-i18n="th_means"></th><th data-i18n="th_status"></th></tr></thead>
+    <tbody>
+      <tr><td><code data-i18n="iam_r1_code"></code></td><td><strong data-i18n="iam_r1_diag"></strong></td><td data-i18n="iam_r1_txt"></td><td><span class="badge badge-amber" data-i18n="iam_r1_badge"></span></td></tr>
+      <tr><td><code data-i18n="iam_r2_code"></code></td><td><strong data-i18n="iam_r2_diag"></strong></td><td data-i18n="iam_r2_txt"></td><td><span class="badge badge-green" data-i18n="iam_r2_badge"></span></td></tr>
+      <tr><td><code data-i18n="iam_r3_code"></code></td><td><strong data-i18n="iam_r3_diag"></strong></td><td data-i18n="iam_r3_txt"></td><td><span class="badge badge-red" data-i18n="iam_r3_badge"></span></td></tr>
+    </tbody>
+  </table></div>
+  <div class="alert alert-danger"><div class="alert-ico">⛔</div><div class="alert-txt"><strong data-i18n="alert1_title"></strong><span data-i18n="alert1_txt"></span></div></div>
 
-  <div class="tbl-wrap">
-    <table>
-      <thead>
-        <tr>
-          <th>IAM</th>
-          <th>Diagnóstico</th>
-          <th>¿Qué significa para ti?</th>
-          <th>Estado</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><code>&gt; 1.15</code></td>
-          <td><strong>Motor acelerado</strong></td>
-          <td>Gastas más energía de lo esperado. Propio de atletas con alta masa muscular, hipertiroidismo o sobreentrenamiento crónico con alerta autonómica sostenida.</td>
-          <td><span class="badge badge-amber">Vigilar</span></td>
-        </tr>
-        <tr>
-          <td><code>0.85 – 1.15</code></td>
-          <td><strong>Eficiente / Normal</strong></td>
-          <td>Tu motor metabólico coincide con tu biometría. Sistema sano y responsivo. Ideal para pautar planes nutricionales con total seguridad y aplicar déficits de hasta el 20%.</td>
-          <td><span class="badge badge-green">Óptimo</span></td>
-        </tr>
-        <tr>
-          <td><code>&lt; 0.85</code></td>
-          <td><strong>Conservador (Ahorro)</strong></td>
-          <td>Supresión metabólica severa. El cuerpo ha entrado en modo "supervivencia" tras dietas extremas, estrés crónico o hipotiroidismo. Altísima predisposición al efecto yoyó.</td>
-          <td><span class="badge badge-red">Atención</span></td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <div class="alert alert-danger">
-    <div class="alert-ico">⛔</div>
-    <div class="alert-txt">
-      <strong>IAM &lt; 0.85 — No iniciar dieta restrictiva todavía</strong>
-      Aplicar un déficit calórico con el metabolismo deprimido agrava el estancamiento y acelera la pérdida de masa muscular (gluconeogénesis). Primero se restaura el metabolismo con dieta normocalórica o refeed 4–8 semanas, luego se pauta el déficit.
-    </div>
-  </div>
-
-  <!-- RQ + IFM -->
-  <h3>🔥 Cociente Respiratorio (RQ) y Flexibilidad Metabólica (IFM)</h3>
-  <p>El <strong>RQ</strong> = VCO₂ / VO₂. Es la huella digital de lo que está quemando tu cuerpo. La grasa produce RQ ≈ 0.70; los carbohidratos, RQ ≈ 1.00. El <strong>IFM</strong> clasifica tu capacidad real para alternar combustibles.</p>
-
+  <h3 data-i18n="sec2_h3b"></h3>
+  <p data-i18n="sec2_p2"></p>
   <div class="scale-bar">
-    <div class="scale-seg" style="background:#00C48C">IFM 4 · Óptimo<br>≤ 0.78</div>
-    <div class="scale-seg" style="background:#00AEEF">IFM 3 · Excelente<br>0.79 – 0.85</div>
-    <div class="scale-seg" style="background:#FFB020">IFM 2 · Mixta<br>0.86 – 0.92</div>
-    <div class="scale-seg" style="background:#E03A3A">IFM 1 · Baja<br>&gt; 0.92</div>
+    <div class="scale-seg" style="background:#00C48C" data-i18n="ifm4_seg"></div>
+    <div class="scale-seg" style="background:#00AEEF" data-i18n="ifm3_seg"></div>
+    <div class="scale-seg" style="background:#FFB020" data-i18n="ifm2_seg"></div>
+    <div class="scale-seg" style="background:#E03A3A" data-i18n="ifm1_seg"></div>
   </div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th data-i18n="th_scale"></th><th data-i18n="th_rq"></th><th data-i18n="th_physio"></th><th data-i18n="th_fast"></th></tr></thead>
+    <tbody>
+      <tr><td><strong data-i18n="ifm4_label"></strong></td><td data-i18n="ifm4_rq"></td><td data-i18n="ifm4_txt"></td><td><span class="badge badge-green" data-i18n="ifm4_badge"></span></td></tr>
+      <tr><td><strong data-i18n="ifm3_label"></strong></td><td data-i18n="ifm3_rq"></td><td data-i18n="ifm3_txt"></td><td><span class="badge badge-sky" data-i18n="ifm3_badge"></span></td></tr>
+      <tr><td><strong data-i18n="ifm2_label"></strong></td><td data-i18n="ifm2_rq"></td><td data-i18n="ifm2_txt"></td><td><span class="badge badge-amber" data-i18n="ifm2_badge"></span></td></tr>
+      <tr><td><strong data-i18n="ifm1_label"></strong></td><td data-i18n="ifm1_rq"></td><td data-i18n="ifm1_txt"></td><td><span class="badge badge-red" data-i18n="ifm1_badge"></span></td></tr>
+    </tbody>
+  </table></div>
+  <div class="alert alert-info"><div class="alert-ico">💡</div><div class="alert-txt"><strong data-i18n="alert2_title"></strong><span data-i18n="alert2_txt"></span></div></div>
 
-  <div class="tbl-wrap">
-    <table>
-      <thead>
-        <tr><th>Escala</th><th>RQ</th><th>Fisiología</th><th>Ayuno recomendado</th></tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><strong>IFM 4 — Óptimo</strong></td>
-          <td>≤ 0.78</td>
-          <td>Predominio absoluto de oxidación de grasas. Mitocondrias extremadamente eficientes. Ahorro completo de glucógeno para situaciones de estrés.</td>
-          <td><span class="badge badge-green">Hasta 18h</span></td>
-        </tr>
-        <tr>
-          <td><strong>IFM 3 — Excelente</strong></td>
-          <td>0.79 – 0.85</td>
-          <td>Quema grasas eficientemente con protección del tejido magro. Estado ideal de mantenimiento. Ayuno 16–18h con máximos beneficios en autofagia y biogénesis mitocondrial.</td>
-          <td><span class="badge badge-sky">14 – 18h</span></td>
-        </tr>
-        <tr>
-          <td><strong>IFM 2 — Mixta</strong></td>
-          <td>0.86 – 0.92</td>
-          <td>Uso equilibrado de grasas y glucosa. Normal si se ha comido recientemente. En ayunas prolongado, indica inicio de inflexibilidad metabólica.</td>
-          <td><span class="badge badge-amber">14 – 16h</span></td>
-        </tr>
-        <tr>
-          <td><strong>IFM 1 — Baja</strong></td>
-          <td>&gt; 0.92</td>
-          <td>Glucodependencia. El cuerpo depende del azúcar incluso sentado. Incapaz de acceder a reservas de grasa. Propensión a fatiga, hambre constante y resistencia a la insulina.</td>
-          <td><span class="badge badge-red">Máx. 12h</span></td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+  <h3 data-i18n="sec2_h3c"></h3>
+  <p data-i18n="sec2_p3"></p>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th data-i18n="th_eq"></th><th data-i18n="th_class"></th><th data-i18n="th_impact"></th></tr></thead>
+    <tbody>
+      <tr><td><code data-i18n="eq1_code"></code></td><td><span class="badge badge-green" data-i18n="eq1_class"></span></td><td data-i18n="eq1_txt"></td></tr>
+      <tr><td><code data-i18n="eq2_code"></code></td><td><span class="badge badge-sky" data-i18n="eq2_class"></span></td><td data-i18n="eq2_txt"></td></tr>
+      <tr><td><code data-i18n="eq3_code"></code></td><td><span class="badge badge-amber" data-i18n="eq3_class"></span></td><td data-i18n="eq3_txt"></td></tr>
+      <tr><td><code data-i18n="eq4_code"></code></td><td><span class="badge badge-red" data-i18n="eq4_class"></span></td><td data-i18n="eq4_txt"></td></tr>
+    </tbody>
+  </table></div>
 
-  <div class="alert alert-info">
-    <div class="alert-ico">💡</div>
-    <div class="alert-txt">
-      <strong>¿Por qué los gráficos de "donut" parecen distintos?</strong>
-      La grasa aporta 9 kcal/g, pero carbohidratos y proteínas sólo 4 kcal/g. Por eso el gráfico de <em>distribución energética</em> muestra más % de grasas que el de <em>gramos</em>. No te confundas: estás quemando más grasa de lo que parece a simple vista. Siempre lee ambos gráficos juntos.
-    </div>
-  </div>
-
-  <!-- EFICIENCIA RESPIRATORIA -->
-  <h3>💨 Eficiencia Respiratoria y Acoplamiento Cardiopulmonar (EqCO₂)</h3>
-  <p>El <strong>EqCO₂ = VE / VCO₂</strong> mide cuántos litros de aire debes mover para eliminar 1 litro de CO₂ celular. Cuanto más bajo, más eficiente eres respiratoriamente y menor estrés basal soporta tu sistema.</p>
-
-  <div class="tbl-wrap">
-    <table>
-      <thead>
-        <tr><th>EqCO₂</th><th>Clasificación</th><th>Impacto fisiológico</th></tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><code>&lt; 30</code></td>
-          <td><span class="badge badge-green">Excelente</span></td>
-          <td>Acoplamiento cardiopulmonar óptimo. Bajo estrés metabólico basal. La limpieza de CO₂ es rápida y energéticamente barata. Máxima eficiencia ventilatoria.</td>
-        </tr>
-        <tr>
-          <td><code>30 – 35</code></td>
-          <td><span class="badge badge-sky">Límite / Regular</span></td>
-          <td>Forma respiratoria mejorable. El cuerpo ventila un poco más de la cuenta. En personas sanas, refleja sedentarismo prolongado. Mejorable con ejercicio aeróbico.</td>
-        </tr>
-        <tr>
-          <td><code>36 – 44</code></td>
-          <td><span class="badge badge-amber">Pobre</span></td>
-          <td>Ineficiencia respiratoria subclínica. El sistema parasimpático está anulado y el paciente hiperventila ligeramente en reposo para compensar. Aplicar sólo déficit muy suave (10%).</td>
-        </tr>
-        <tr>
-          <td><code>≥ 45</code></td>
-          <td><span class="badge badge-red">Riesgo Clínico</span></td>
-          <td>Estrés ventilatorio severo. Típico en patologías obstructivas, insuficiencias o estrés autonómico extremo. Requiere evaluación médica antes de cualquier intervención nutricional.</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <h3>❤️ Frecuencia Cardíaca en Reposo (% FC Máx)</h3>
+  <h3 data-i18n="sec2_h3d"></h3>
   <div class="card">
     <ul class="dot-list">
-      <li><strong>FC Máx teórica = 220 − edad.</strong> El sistema evalúa el % que alcanza tu corazón en reposo absoluto.</li>
-      <li><strong>&lt; 40% FC Máx en reposo:</strong> Bradicardia saludable. Corazón fuerte que bombea mucha sangre por latido. Excelente estado de recuperación.</li>
-      <li><strong>40–55% FC Máx:</strong> Zona intermedia. Revisar calidad del sueño, estrés crónico y estado de sobreentrenamiento.</li>
-      <li><strong>&gt; 55% FC Máx en reposo:</strong> El paciente sufre estrés simpático o falta severa de descanso. Contraindicado el déficit calórico agresivo.</li>
+      <li><span data-i18n="li1"></span></li>
+      <li><span data-i18n="li2"></span></li>
+      <li><span data-i18n="li3"></span></li>
+      <li><span data-i18n="li4"></span></li>
     </ul>
   </div>
 </div>
 
 <hr class="divider">
 
-<!-- ═══════════════════════════════ 03 ═══════════════════════════════ -->
-<div id="informe">
+<!-- ── SEC 03 ── -->
+<div id="sec3">
   <div class="sec-head">
-    <div class="sec-num">03</div>
-    <div class="sec-title">Cómo interpretar tu informe paso a paso</div>
+    <div class="sec-num" data-i18n="sec3_num"></div>
+    <div class="sec-title" data-i18n="sec3_title"></div>
   </div>
-
   <div class="steps">
-    <div class="step">
-      <div class="step-dot">1</div>
-      <div class="step-body">
-        <h4>Localiza tu REE medido y compáralo con el esperado</h4>
-        <p>Verás dos valores: el <strong>REE medido</strong> (tu metabolismo real) y el <strong>REE Mifflin-St. Jeor</strong> (predicción estándar). Si el real es notablemente inferior al esperado, hay supresión metabólica. Si es superior, hay hipermetabolismo.</p>
-      </div>
-    </div>
-    <div class="step">
-      <div class="step-dot">2</div>
-      <div class="step-body">
-        <h4>Lee el IAM: ¿cuál es el estado de tu motor metabólico?</h4>
-        <p>El IAM (medido ÷ esperado) determina si eres candidato a déficit calórico de inmediato o si primero necesitas restauración metabólica. Es el dato más importante del informe.</p>
-      </div>
-    </div>
-    <div class="step">
-      <div class="step-dot">3</div>
-      <div class="step-body">
-        <h4>Identifica tu RQ y tu escala IFM</h4>
-        <p>¿RQ bajo (&lt;0.80)? Eres un quemador de grasas eficiente. ¿RQ alto (&gt;0.92)? Tu cuerpo vive del azúcar. Esto define el tipo de dieta, el protocolo de ayuno ideal y la zona de ejercicio más efectiva para ti.</p>
-      </div>
-    </div>
-    <div class="step">
-      <div class="step-dot">4</div>
-      <div class="step-body">
-        <h4>Revisa la eficiencia respiratoria (EqCO₂)</h4>
-        <p>Un EqCO₂ elevado (&gt;35) puede indicar estrés crónico, hiperventilación leve o inflamación sistémica silenciosa. En ese caso, el déficit calórico debe ser muy suave hasta normalizar la ventilación.</p>
-      </div>
-    </div>
-    <div class="step">
-      <div class="step-dot">5</div>
-      <div class="step-body">
-        <h4>Lee la prescripción nutricional con los macros reales</h4>
-        <p>El informe incluye gramos exactos de grasas, carbohidratos y proteínas calculados desde <em>tu</em> metabolismo medido, no desde tablas genéricas. Úsalos como base real de tu plan dietético.</p>
-      </div>
-    </div>
-    <div class="step">
-      <div class="step-dot">6</div>
-      <div class="step-body">
-        <h4>Verifica el protocolo de ayuno intermitente personalizado</h4>
-        <p>Según tu IFM e IAM, el informe recomienda una ventana de ayuno personalizada. IFM 4 → 16–18h con máximos beneficios en autofagia. IFM 1 → el ayuno prolongado es contraproducente y puede destruir músculo.</p>
-      </div>
-    </div>
-    <div class="step">
-      <div class="step-dot">7</div>
-      <div class="step-body">
-        <h4>Planifica tu re-test en 4–6 semanas</h4>
-        <p>El metabolismo cambia. Una re-medición después de implementar el protocolo confirmará si el IAM ha mejorado, si el RQ ha bajado (más quema de grasa) y si la eficiencia respiratoria ha progresado. Esos cambios son tu evidencia objetiva.</p>
-      </div>
-    </div>
+    <div class="step"><div class="step-dot">1</div><div class="step-body"><h4 data-i18n="s1_h"></h4><p data-i18n="s1_p"></p></div></div>
+    <div class="step"><div class="step-dot">2</div><div class="step-body"><h4 data-i18n="s2_h"></h4><p data-i18n="s2_p"></p></div></div>
+    <div class="step"><div class="step-dot">3</div><div class="step-body"><h4 data-i18n="s3_h"></h4><p data-i18n="s3_p"></p></div></div>
+    <div class="step"><div class="step-dot">4</div><div class="step-body"><h4 data-i18n="s4_h"></h4><p data-i18n="s4_p"></p></div></div>
+    <div class="step"><div class="step-dot">5</div><div class="step-body"><h4 data-i18n="s5_h"></h4><p data-i18n="s5_p"></p></div></div>
+    <div class="step"><div class="step-dot">6</div><div class="step-body"><h4 data-i18n="s6_h"></h4><p data-i18n="s6_p"></p></div></div>
+    <div class="step"><div class="step-dot">7</div><div class="step-body"><h4 data-i18n="s7_h"></h4><p data-i18n="s7_p"></p></div></div>
   </div>
-
-  <div class="highlight">
-    <h3>📋 Datos del informe de ejemplo analizado</h3>
-    <p>El informe procesado corresponde a un paciente de <strong>30 años, hombre, 70 kg, 170 cm</strong>, objetivo pérdida de peso/grasa. REE medido <strong>1.500 kcal/día</strong> (esperado: 1.618 kcal) → IAM <strong>0.93</strong> (Eficiente). RQ <strong>0.85</strong> → IFM 3 (Excelente). FC reposo <strong>65 bpm</strong>. EqCO₂ <strong>38.1</strong> → zona Pobre/Ineficiente. Diagnóstico: metabolismo conservador con eficiencia respiratoria mejorable. Ayuno 16–18h posible pero monitorizar ventilación. Déficit suave recomendado: −180 kcal/día.</p>
-  </div>
+  <div class="highlight"><h3 data-i18n="hl_h"></h3><p data-i18n="hl_p"></p></div>
 </div>
 
 <hr class="divider">
 
-<!-- ═══════════════════════════════ 04 ═══════════════════════════════ -->
-<div id="comparativa">
+<!-- ── SEC 04 ── -->
+<div id="sec4">
   <div class="sec-head">
-    <div class="sec-num">04</div>
-    <div class="sec-title">Calorimetría real vs. Fórmulas clásicas</div>
+    <div class="sec-num" data-i18n="sec4_num"></div>
+    <div class="sec-title" data-i18n="sec4_title"></div>
   </div>
-
-  <p>Las fórmulas como <strong>Harris-Benedict</strong> o <strong>Mifflin-St. Jeor</strong> fueron creadas con datos poblacionales medios. Funcionan razonablemente bien a nivel estadístico de grupo, pero pueden errar hasta <strong>±950 kcal/día</strong> en individuos concretos con composición corporal atípica, hipotiroidismo, o adaptación metabólica.</p>
-
+  <p data-i18n="sec4_p1"></p>
   <div class="compare-grid">
     <div class="compare-col old">
-      <h4>❌ Fórmulas predictivas</h4>
+      <h4 data-i18n="old_h"></h4>
       <ul>
-        <li><span class="ic">✗</span> Estimación matemática, no medición</li>
-        <li><span class="ic">✗</span> Error individual hasta ±950 kcal/día</li>
-        <li><span class="ic">✗</span> No detecta supresión metabólica (IAM)</li>
-        <li><span class="ic">✗</span> Ignora la flexibilidad metabólica (RQ)</li>
-        <li><span class="ic">✗</span> No diferencia músculo de grasa</li>
-        <li><span class="ic">✗</span> No mide eficiencia respiratoria</li>
-        <li><span class="ic">✗</span> Misma estimación para dos personas con igual peso pero distinta composición</li>
-        <li><span class="ic">✗</span> No cambia con dieta, estrés o enfermedad</li>
+        <li><span class="ic">✗</span><span data-i18n="old_li1"></span></li>
+        <li><span class="ic">✗</span><span data-i18n="old_li2"></span></li>
+        <li><span class="ic">✗</span><span data-i18n="old_li3"></span></li>
+        <li><span class="ic">✗</span><span data-i18n="old_li4"></span></li>
+        <li><span class="ic">✗</span><span data-i18n="old_li5"></span></li>
+        <li><span class="ic">✗</span><span data-i18n="old_li6"></span></li>
+        <li><span class="ic">✗</span><span data-i18n="old_li7"></span></li>
+        <li><span class="ic">✗</span><span data-i18n="old_li8"></span></li>
       </ul>
     </div>
     <div class="compare-col new">
-      <h4>✅ Calorimetría NUMA SmartLAB</h4>
+      <h4 data-i18n="new_h"></h4>
       <ul>
-        <li><span class="ic">✓</span> Medición directa de tu metabolismo real</li>
-        <li><span class="ic">✓</span> Precisión ±3% (Gold Standard clínico)</li>
-        <li><span class="ic">✓</span> Detecta y cuantifica el IAM</li>
-        <li><span class="ic">✓</span> Mide qué combustible usas (RQ/IFM)</li>
-        <li><span class="ic">✓</span> Refleja tu composición funcional real</li>
-        <li><span class="ic">✓</span> Mide EqCO₂ y acoplamiento cardiopulmonar</li>
-        <li><span class="ic">✓</span> Completamente personalizada e irrepetible</li>
-        <li><span class="ic">✓</span> Cambia con cada intervención nutricional</li>
+        <li><span class="ic">✓</span><span data-i18n="new_li1"></span></li>
+        <li><span class="ic">✓</span><span data-i18n="new_li2"></span></li>
+        <li><span class="ic">✓</span><span data-i18n="new_li3"></span></li>
+        <li><span class="ic">✓</span><span data-i18n="new_li4"></span></li>
+        <li><span class="ic">✓</span><span data-i18n="new_li5"></span></li>
+        <li><span class="ic">✓</span><span data-i18n="new_li6"></span></li>
+        <li><span class="ic">✓</span><span data-i18n="new_li7"></span></li>
+        <li><span class="ic">✓</span><span data-i18n="new_li8"></span></li>
       </ul>
     </div>
   </div>
-
-  <div class="card card-sky">
-    <h4>📌 El ejemplo concreto de la diferencia</h4>
-    <p>El paciente de ejemplo tiene un REE <strong>medido de 1.500 kcal/día</strong>. Mifflin-St. Jeor estimaba <strong>1.618 kcal/día</strong>. Si se hubiera diseñado la dieta sobre la fórmula, se habrían asignado 118 kcal/día de más — equivalente a acumular aproximadamente <strong>6 kg de grasa adicionales al año</strong> de forma invisible.</p>
-    <p style="margin:0">A escala poblacional, estudios independientes muestran que las fórmulas pueden subestimar o sobreestimar el REE real entre 600 y 950 kcal/día en pacientes individuales (Breezing Co., datos clínicos, 2021).</p>
-  </div>
-
-  <div class="alert alert-warn">
-    <div class="alert-ico">📐</div>
-    <div class="alert-txt">
-      <strong>¿Cuándo usar fórmulas entonces?</strong>
-      En contextos de screening rápido sin acceso a calorimetría, las fórmulas son una referencia aceptable. En situaciones clínicas serias — pérdida de peso, rendimiento deportivo, patología metabólica, planificación de ayuno terapéutico o antes de cirugía bariátrica — la calorimetría indirecta no es un lujo: es una necesidad diagnóstica.
-    </div>
-  </div>
+  <div class="card card-sky"><h4 data-i18n="card4_h"></h4><p data-i18n="card4_p1"></p></div>
+  <div class="alert alert-warn"><div class="alert-ico">📐</div><div class="alert-txt"><strong data-i18n="alert4_title"></strong><span data-i18n="alert4_txt"></span></div></div>
 </div>
 
 <hr class="divider">
 
-<!-- ═══════════════════════════════ 05 ═══════════════════════════════ -->
-<div id="faq">
+<!-- ── SEC 05 FAQ ── -->
+<div id="sec5">
   <div class="sec-head">
-    <div class="sec-num">05</div>
-    <div class="sec-title">Preguntas frecuentes</div>
+    <div class="sec-num" data-i18n="sec5_num"></div>
+    <div class="sec-title" data-i18n="sec5_title"></div>
   </div>
-
   <div class="faq-list">
-    <div class="faq-item">
-      <button class="faq-btn" onclick="tglFaq(this)">¿Necesito estar en ayunas para hacer el test? <span class="faq-ico">+</span></button>
-      <div class="faq-ans">Sí. Se recomienda un mínimo de 4–6 horas de ayuno, aunque idealmente 8–12 horas (por la mañana antes del desayuno). Comer antes altera el RQ porque el cuerpo metaboliza activamente los nutrientes ingeridos, y el resultado no reflejará tu estado basal real. Tampoco debes haber hecho ejercicio intenso en las 24h previas.</div>
-    </div>
-    <div class="faq-item">
-      <button class="faq-btn" onclick="tglFaq(this)">¿Qué pasa si mi REE es mucho más bajo que la fórmula? <span class="faq-ico">+</span></button>
-      <div class="faq-ans">Significa supresión metabólica (IAM &lt; 0.85). Es más común de lo que parece: ocurre tras dietas restrictivas repetidas, estrés elevado sostenido, disfunción tiroidea subclínica o sedentarismo extremo. La solución <strong>no</strong> es comer menos, sino restaurar el metabolismo con nutrición normocalórica bien estructurada durante 4–8 semanas antes de aplicar cualquier déficit.</div>
-    </div>
-    <div class="faq-item">
-      <button class="faq-btn" onclick="tglFaq(this)">¿Un RQ alto significa que estoy engordando? <span class="faq-ico">+</span></button>
-      <div class="faq-ans">No directamente: significa que tu cuerpo usa azúcar como combustible principal incluso en reposo. A largo plazo, la glucodependencia favorece la resistencia a la insulina, la fatiga crónica y la dificultad para perder grasa. El objetivo es bajar el RQ progresivamente mediante entrenamiento, ajuste de macronutrientes y ayuno gradual.</div>
-    </div>
-    <div class="faq-item">
-      <button class="faq-btn" onclick="tglFaq(this)">¿Puedo hacer ayuno intermitente si mi IFM es baja? <span class="faq-ico">+</span></button>
-      <div class="faq-ans">Depende del IAM. Si el metabolismo está deprimido (IAM &lt; 0.85), el ayuno prolongado es contraproducente: sin acceso eficiente a grasas, el cuerpo destruye proteína muscular para mantener la glucemia (gluconeogénesis). Se recomienda solo el ayuno fisiológico nocturno (máx. 12h). Si el IAM es normal pero el IFM es bajo, se puede iniciar un protocolo de 14h con seguimiento.</div>
-    </div>
-    <div class="faq-item">
-      <button class="faq-btn" onclick="tglFaq(this)">¿Por qué puede estar elevado mi EqCO₂ si me encuentro bien? <span class="faq-ico">+</span></button>
-      <div class="faq-ans">El EqCO₂ elevado en reposo suele ser silencioso: no produce síntomas evidentes pero indica que el sistema nervioso autónomo está en modo simpático de forma crónica. Causas frecuentes: estrés laboral o emocional sostenido, mala calidad del sueño, sedentarismo o un sistema respiratorio sin entrenar. El entrenamiento aeróbico regular y los ejercicios de tolerancia al CO₂ lo mejoran notablemente en 4–8 semanas.</div>
-    </div>
-    <div class="faq-item">
-      <button class="faq-btn" onclick="tglFaq(this)">¿Con qué frecuencia debo repetir el test? <span class="faq-ico">+</span></button>
-      <div class="faq-ans">Con protocolo activo (dieta, ejercicio, ayuno): cada <strong>4–6 semanas</strong>. Una vez estabilizado en zona óptima: cada 3–6 meses. También se indica re-test ante: cambios bruscos de peso (&gt;5%), inicio de medicación hormonal, períodos de estrés intenso, o cambio de objetivo clínico.</div>
-    </div>
-    <div class="faq-item">
-      <button class="faq-btn" onclick="tglFaq(this)">¿La hipoxia intermitente puede mejorar mi metabolismo? <span class="faq-ico">+</span></button>
-      <div class="faq-ans">Sí. La hipoxia intermitente (protocolos IHH/IHHT con dispositivos como Mitovit) actúa directamente sobre la biogénesis mitocondrial a través de la vía HIF-1α. Una mitocondria más eficiente produce más energía con menos oxígeno, lo que se refleja en un mejor RQ, mayor capacidad de oxidación de grasas y un IAM más estable. La calorimetría en reposo NUMA SmartLAB es la herramienta objetiva de referencia para monitorizar estos cambios antes y después del protocolo.</div>
-    </div>
+    <div class="faq-item"><button class="faq-btn" onclick="tglFaq(this)"><span data-i18n="faq1_q"></span><span class="faq-ico">+</span></button><div class="faq-ans" data-i18n="faq1_a"></div></div>
+    <div class="faq-item"><button class="faq-btn" onclick="tglFaq(this)"><span data-i18n="faq2_q"></span><span class="faq-ico">+</span></button><div class="faq-ans" data-i18n="faq2_a"></div></div>
+    <div class="faq-item"><button class="faq-btn" onclick="tglFaq(this)"><span data-i18n="faq3_q"></span><span class="faq-ico">+</span></button><div class="faq-ans" data-i18n="faq3_a"></div></div>
+    <div class="faq-item"><button class="faq-btn" onclick="tglFaq(this)"><span data-i18n="faq4_q"></span><span class="faq-ico">+</span></button><div class="faq-ans" data-i18n="faq4_a"></div></div>
+    <div class="faq-item"><button class="faq-btn" onclick="tglFaq(this)"><span data-i18n="faq5_q"></span><span class="faq-ico">+</span></button><div class="faq-ans" data-i18n="faq5_a"></div></div>
+    <div class="faq-item"><button class="faq-btn" onclick="tglFaq(this)"><span data-i18n="faq6_q"></span><span class="faq-ico">+</span></button><div class="faq-ans" data-i18n="faq6_a"></div></div>
+    <div class="faq-item"><button class="faq-btn" onclick="tglFaq(this)"><span data-i18n="faq7_q"></span><span class="faq-ico">+</span></button><div class="faq-ans" data-i18n="faq7_a"></div></div>
   </div>
 </div>
 
 <hr class="divider">
 
-<!-- ═══════════════════════════════ 06 ═══════════════════════════════ -->
-<div id="glosario">
+<!-- ── SEC 06 GLOSSARY ── -->
+<div id="sec6">
   <div class="sec-head">
-    <div class="sec-num">06</div>
-    <div class="sec-title">Glosario de términos</div>
+    <div class="sec-num" data-i18n="sec6_num"></div>
+    <div class="sec-title" data-i18n="sec6_title"></div>
   </div>
-
   <div class="gloss-grid">
-    <div class="gloss-card"><div class="gloss-term">REE / TMR</div><div class="gloss-def">Resting Energy Expenditure / Tasa Metabólica en Reposo. Energía mínima que el cuerpo necesita para mantener funciones vitales sin actividad.</div></div>
-    <div class="gloss-card"><div class="gloss-term">TEE</div><div class="gloss-def">Total Energy Expenditure. Gasto energético total diario: REE + actividad física + termogénesis del efecto de los alimentos (TEF).</div></div>
-    <div class="gloss-card"><div class="gloss-term">RQ / RER</div><div class="gloss-def">Cociente Respiratorio (VCO₂/VO₂). Oscila entre 0.70 (quema pura de grasa) y 1.00 (quema pura de carbohidratos).</div></div>
-    <div class="gloss-card"><div class="gloss-term">VO₂</div><div class="gloss-def">Volumen de oxígeno consumido por minuto (mL/min). Indicador directo de la actividad metabólica oxidativa celular en reposo.</div></div>
-    <div class="gloss-card"><div class="gloss-term">VCO₂</div><div class="gloss-def">Volumen de CO₂ producido por minuto (mL/min). Refleja los metabolitos gaseosos que el organismo genera y debe eliminar por ventilación.</div></div>
-    <div class="gloss-card"><div class="gloss-term">IAM</div><div class="gloss-def">Índice de Adaptación Metabólica. Ratio REE medido / REE predicho. Indica si el metabolismo está deprimido, normal o acelerado respecto a la biometría.</div></div>
-    <div class="gloss-card"><div class="gloss-term">IFM</div><div class="gloss-def">Índice de Flexibilidad Metabólica. Escala 1–4 que evalúa la capacidad del cuerpo para alternar eficientemente entre grasas y glucosa como combustible.</div></div>
-    <div class="gloss-card"><div class="gloss-term">EqCO₂</div><div class="gloss-def">VE/VCO₂. Litros de aire necesarios para eliminar 1 L de CO₂. Mide la eficiencia respiratoria y el acoplamiento cardiopulmonar en reposo.</div></div>
-    <div class="gloss-card"><div class="gloss-term">EqO₂</div><div class="gloss-def">VE/VO₂. Eficiencia en la captación de oxígeno por el sistema ventilatorio. Complementa al EqCO₂ en la evaluación respiratoria basal.</div></div>
-    <div class="gloss-card"><div class="gloss-term">Gluconeogénesis</div><div class="gloss-def">Síntesis hepática de glucosa usando aminoácidos (proteína muscular). Ocurre en ayunos prolongados cuando la flexibilidad metabólica es baja (IFM 1).</div></div>
-    <div class="gloss-card"><div class="gloss-term">Autofagia</div><div class="gloss-def">Reciclaje celular de componentes dañados o envejecidos. Se activa con ayunos ≥14–16h en personas con buena flexibilidad metabólica (IFM 3–4).</div></div>
-    <div class="gloss-card"><div class="gloss-term">Biogénesis Mitocondrial</div><div class="gloss-def">Formación de nuevas mitocondrias en la célula. Inducida por ejercicio, ayuno e hipoxia intermitente. Mejora el RQ y el IAM a largo plazo.</div></div>
-    <div class="gloss-card"><div class="gloss-term">FatMax</div><div class="gloss-def">Intensidad de ejercicio a la que el cuerpo quema el máximo de grasa en valores absolutos (g/min). Se estima matemáticamente desde el test de reposo.</div></div>
-    <div class="gloss-card"><div class="gloss-term">RPU Score</div><div class="gloss-def">Índice de fiabilidad del test (0–100). Valora la estabilidad respiratoria durante la medición. Score &lt;70 puede indicar ansiedad, movimiento o fugas en la mascarilla.</div></div>
-    <div class="gloss-card"><div class="gloss-term">Edad Metabólica</div><div class="gloss-def">Edad biológica calculada desde el estado real del metabolismo (IAM) y la eficiencia respiratoria (EqCO₂). Puede ser mayor o menor que la edad cronológica.</div></div>
-    <div class="gloss-card"><div class="gloss-term">Efecto Rebote</div><div class="gloss-def">Recuperación rápida de peso perdido tras dieta. Ocurre cuando el IAM estaba deprimido y el cuerpo convierte cualquier exceso calórico en grasa de forma inmediata y prioritaria.</div></div>
+    <div class="gloss-card"><div class="gloss-term">REE / TMR</div><div class="gloss-def" data-i18n="g1"></div></div>
+    <div class="gloss-card"><div class="gloss-term">TEE</div><div class="gloss-def" data-i18n="g2"></div></div>
+    <div class="gloss-card"><div class="gloss-term">RQ / RER / QR</div><div class="gloss-def" data-i18n="g3"></div></div>
+    <div class="gloss-card"><div class="gloss-term">VO₂</div><div class="gloss-def" data-i18n="g4"></div></div>
+    <div class="gloss-card"><div class="gloss-term">VCO₂</div><div class="gloss-def" data-i18n="g5"></div></div>
+    <div class="gloss-card"><div class="gloss-term">IAM / MAI</div><div class="gloss-def" data-i18n="g6"></div></div>
+    <div class="gloss-card"><div class="gloss-term">IFM / MFI</div><div class="gloss-def" data-i18n="g7"></div></div>
+    <div class="gloss-card"><div class="gloss-term">EqCO₂</div><div class="gloss-def" data-i18n="g8"></div></div>
+    <div class="gloss-card"><div class="gloss-term">EqO₂</div><div class="gloss-def" data-i18n="g9"></div></div>
+    <div class="gloss-card"><div class="gloss-term">Gluconeogenesis</div><div class="gloss-def" data-i18n="g10"></div></div>
+    <div class="gloss-card"><div class="gloss-term">Autophagy / Autofagia</div><div class="gloss-def" data-i18n="g11"></div></div>
+    <div class="gloss-card"><div class="gloss-term">Mitochondrial Biogenesis</div><div class="gloss-def" data-i18n="g12"></div></div>
+    <div class="gloss-card"><div class="gloss-term">FatMax</div><div class="gloss-def" data-i18n="g13"></div></div>
+    <div class="gloss-card"><div class="gloss-term">RPU Score</div><div class="gloss-def" data-i18n="g14"></div></div>
+    <div class="gloss-card"><div class="gloss-term">Metabolic Age / Edad Metabólica</div><div class="gloss-def" data-i18n="g15"></div></div>
+    <div class="gloss-card"><div class="gloss-term">Rebound Effect / Efecto Rebote</div><div class="gloss-def" data-i18n="g16"></div></div>
   </div>
 </div>
 
 </div><!-- /page-wrap -->
 
-<!-- ═══════════════════════════════ 07 BIBLIOGRAPHY ═══════════════════════════════ -->
-<div id="bibliografia" class="bib-section">
+<!-- ── SEC 07 BIBLIOGRAPHY (dark section) ── -->
+<div id="sec7" class="bib-section">
   <div class="bib-wrap">
-
     <div class="sec-head" style="margin-bottom:10px;">
-      <div class="sec-num">07</div>
-      <div class="sec-title" style="color:white;">Bibliografía científica de referencia</div>
+      <div class="sec-num" data-i18n="sec7_num"></div>
+      <div class="sec-title" style="color:white;" data-i18n="sec7_title"></div>
     </div>
-    <p style="color:rgba(255,255,255,0.45); font-size:13px; margin-bottom:40px;">Evidencia publicada en revistas peer-reviewed indexadas en PubMed/PMC y fuentes especializadas en calorimetría indirecta, validación de dispositivos y flexibilidad metabólica.</p>
+    <p style="color:rgba(255,255,255,0.45);font-size:13px;margin-bottom:40px;" data-i18n="bib_intro"></p>
 
-    <!-- IBÁÑEZ -->
+    <!-- DR. IBÁÑEZ -->
     <div class="bib-block">
       <div class="bib-block-title">
         <div class="bib-block-bar" style="background:var(--numa-sky);"></div>
-        <span class="bib-block-lbl" style="color:var(--numa-sky);">🇪🇸 Referencia española clave — Dr. Iván Ibáñez García</span>
+        <span class="bib-block-lbl" style="color:var(--numa-sky);" data-i18n="bib_ib_label"></span>
       </div>
       <div class="ibanez-card">
         <div class="ibanez-header">
-          <div class="ibanez-badge">LIBRO</div>
+          <div class="ibanez-badge">LIBRO / BOOK</div>
           <div>
             <div class="ibanez-ttl">El aporte del estudio del metabolismo en el sobrepeso: Calorimetría Indirecta en Reposo</div>
-            <div class="ibanez-sub">Ibáñez García, I. (2023) · Registro de Propiedad Intelectual Nº GI-306-19 · Método Metabólico Dr. Ibáñez©</div>
-            <div class="ibanez-bio">Obra de referencia nacional en calorimetría indirecta clínica. El Dr. Ibáñez es pionero en estudios de metabolismo energético en reposo y ejercicio para el tratamiento del sobrepeso y obesidad en España. Presidente de la European Society of Calorimetry &amp; Respirometry (ESCAR), director y fundador del Máster en Medicina Anti-envejecimiento y Longevidad (IL-3 · Universidad de Barcelona), y director de la Unidad de Medicina Nutricional, Ejercicio Físico y Antiaging de la Clínica Planas (Barcelona). Co-autor del libro "Medicina personalizada posgenómica. Conceptos prácticos para clínicos" (Elsevier, 2010, ISBN: 978-84-458-2025-4).</div>
+            <div class="ibanez-sub">Ibáñez García, I. (2023) · Reg. PI Nº GI-306-19 · Método Metabólico Dr. Ibáñez©</div>
+            <div class="ibanez-bio">Obra de referencia nacional en calorimetría indirecta clínica. Pionero en estudios de metabolismo energético en reposo y ejercicio en España. Presidente de la European Society of Calorimetry &amp; Respirometry (ESCAR). Director del Máster en Medicina Anti-envejecimiento y Longevidad (IL-3 · Universidad de Barcelona). Co-autor: "Medicina personalizada posgenómica" (Elsevier, 2010, ISBN: 978-84-458-2025-4).</div>
             <div class="ibanez-tags">
               <span class="ibanez-tag">Calorimetría Indirecta</span>
               <span class="ibanez-tag">Metabolismo Basal</span>
-              <span class="ibanez-tag">Sobrepeso</span>
-              <span class="ibanez-tag">Medicina Anti-aging</span>
               <span class="ibanez-tag">ESCAR President</span>
               <span class="ibanez-tag">Método Metabólico Dr. Ibáñez©</span>
+              <span class="ibanez-tag">Medicina Anti-aging</span>
             </div>
             <div style="margin-top:12px;">
-              <a href="https://www.amazon.es/APORTE-DEL-ESTUDIO-METABOLISMO-SOBREPESO/dp/B0C6BT78N4" target="_blank" class="bib-link">Ver en Amazon →</a>
-              <a href="https://drivanibanez.es/perfil/" target="_blank" class="bib-link">Perfil del Dr. Ibáñez →</a>
+              <a href="https://www.amazon.es/APORTE-DEL-ESTUDIO-METABOLISMO-SOBREPESO/dp/B0C6BT78N4" target="_blank" class="bib-link">Amazon →</a>
+              <a href="https://drivanibanez.es/perfil/" target="_blank" class="bib-link">Perfil Dr. Ibáñez →</a>
               <a href="https://www.topdoctors.es/doctor/ivan-ibanez-garcia-doctor/" target="_blank" class="bib-link">Top Doctors →</a>
             </div>
           </div>
@@ -1012,160 +961,54 @@ ul.dot-list li::before { content: '→'; color: var(--numa-sky); font-weight: 70
       </div>
     </div>
 
-    <!-- BREEZING -->
+    <!-- BREEZING VALIDATION -->
     <div class="bib-block">
       <div class="bib-block-title">
         <div class="bib-block-bar" style="background:#00C48C;"></div>
-        <span class="bib-block-lbl" style="color:#00C48C;">🔬 Validación del dispositivo Breezing Pro</span>
+        <span class="bib-block-lbl" style="color:#00C48C;" data-i18n="bib_valid_label"></span>
       </div>
       <div class="bib-cards">
-        <div class="bib-card">
-          <span class="bib-n">[1]</span>
-          <div class="bib-body">
-            <div class="bib-ttl">Personalized Indirect Calorimeter for Energy Expenditure (EE) Measurement</div>
-            <div class="bib-auth">Xian X, et al. (2015). Global Journal of Obesity, Diabetes and Metabolic Syndrome. DOI: 10.17352/2455-8583.000039</div>
-            <div class="bib-note">Validación original de Breezing® vs. Douglas Bag (Gold Standard). N=12 sujetos, 314 mediciones. R²=0.9976 (VO₂), 0.9986 (VCO₂), 0.9981 (EE), 0.9980 (RQ). Acuerdo excelente en todas las métricas.</div>
-            <a href="https://www.researchgate.net/publication/281411142" target="_blank" class="bib-link">ResearchGate →</a>
-          </div>
-        </div>
-        <div class="bib-card">
-          <span class="bib-n">[2]</span>
-          <div class="bib-body">
-            <div class="bib-ttl">Comparative study of a novel portable indirect calorimeter to a reference breath-by-breath instrument and its use in telemedicine settings</div>
-            <div class="bib-auth">Mora SJ, Mann S, Tipparaju VV, et al. (2021). Clinical Nutrition ESPEN. PMID: 34857221. PMC: PMC8646957. Colaboración Mayo Clinic.</div>
-            <div class="bib-note">Validación Breezing Med vs. MGC CPX Ultima™ (dispositivo FDA 510k). N=20 sujetos en reposo. R²=0.88 (REE), 0.84 (VO₂), 0.92 (VCO₂). Equivalencia clínica demostrada. Pacientes tratados con Breezing: 2× más pérdida de peso y 70% mejor adherencia.</div>
-            <a href="https://pubmed.ncbi.nlm.nih.gov/34857221/" target="_blank" class="bib-link">PubMed →</a>
-            <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC8646957/" target="_blank" class="bib-link">PMC →</a>
-          </div>
-        </div>
-        <div class="bib-card">
-          <span class="bib-n">[3]</span>
-          <div class="bib-body">
-            <div class="bib-ttl">Feasibility and user acceptability of Breezing™, a mobile indirect calorimetry device, in pregnant women with overweight or obesity</div>
-            <div class="bib-auth">Leonard KS, Pauley AM, Hohman EE, et al. (2023). Obesity Research & Clinical Practice. PMID: 36687500. PMC: PMC9851426.</div>
-            <div class="bib-note">Estudio de viabilidad clínica de Breezing™. N=27 mujeres embarazadas, seguimiento semanal 8–36 semanas. Compliance mediana: 68–71%. Confirma usabilidad en monitorización continua de REE y aplicaciones de telemedicina.</div>
-            <a href="https://pubmed.ncbi.nlm.nih.gov/36687500/" target="_blank" class="bib-link">PubMed →</a>
-          </div>
-        </div>
-        <div class="bib-card">
-          <span class="bib-n">[4]</span>
-          <div class="bib-body">
-            <div class="bib-ttl">Breezing Clinical Studies — Collaborations with Mayo Clinic, University of Arizona &amp; Arizona State University</div>
-            <div class="bib-auth">Breezing Co. (2021). Estudios clínicos multicéntricos.</div>
-            <div class="bib-note">Precisión ~100% con IC95% vs. Gold Standard. Las fórmulas predictivas pueden errar entre 660 y 950 kcal/día vs. el REE real medido con Breezing en individuos concretos.</div>
-            <a href="https://breezing.com/clinical-studies/" target="_blank" class="bib-link">Ver estudios →</a>
-          </div>
-        </div>
+        <div class="bib-card"><span class="bib-n">[1]</span><div class="bib-body"><div class="bib-ttl">Personalized Indirect Calorimeter for Energy Expenditure (EE) Measurement</div><div class="bib-auth">Xian X, et al. (2015). Global J Obesity Diabetes Metab Syndr. DOI: 10.17352/2455-8583.000039</div><div class="bib-note">Validación Breezing® vs. Douglas Bag. N=12, 314 mediciones. R²=0.9976 (VO₂), 0.9986 (VCO₂), 0.9981 (EE), 0.9980 (RQ).</div><a href="https://www.researchgate.net/publication/281411142" target="_blank" class="bib-link">ResearchGate →</a></div></div>
+        <div class="bib-card"><span class="bib-n">[2]</span><div class="bib-body"><div class="bib-ttl">Comparative study of a novel portable indirect calorimeter to a reference breath-by-breath instrument and its use in telemedicine settings</div><div class="bib-auth">Mora SJ, Mann S, Tipparaju VV, et al. (2021). Clinical Nutrition ESPEN. PMID: 34857221. PMC: PMC8646957. Colaboración Mayo Clinic.</div><div class="bib-note">N=20 sujetos. R²=0.88 (REE), 0.84 (VO₂), 0.92 (VCO₂). Equivalencia clínica demostrada vs. MGC CPX Ultima™ (FDA 510k).</div><a href="https://pubmed.ncbi.nlm.nih.gov/34857221/" target="_blank" class="bib-link">PubMed →</a><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC8646957/" target="_blank" class="bib-link">PMC →</a></div></div>
+        <div class="bib-card"><span class="bib-n">[3]</span><div class="bib-body"><div class="bib-ttl">Feasibility and user acceptability of Breezing™, a mobile indirect calorimetry device, in pregnant women with overweight or obesity</div><div class="bib-auth">Leonard KS, et al. (2023). Obesity Research & Clinical Practice. PMID: 36687500.</div><div class="bib-note">N=27 mujeres, seguimiento 8–36 semanas. Compliance 68–71%. Confirma usabilidad en monitorización continua de REE.</div><a href="https://pubmed.ncbi.nlm.nih.gov/36687500/" target="_blank" class="bib-link">PubMed →</a></div></div>
+        <div class="bib-card"><span class="bib-n">[4]</span><div class="bib-body"><div class="bib-ttl">Breezing Clinical Studies — Mayo Clinic, University of Arizona &amp; Arizona State University</div><div class="bib-auth">Breezing Co. (2021).</div><div class="bib-note">Precisión ~100% IC95% vs. Gold Standard. Fórmulas predictivas pueden errar 660–950 kcal/día vs. REE real medido con Breezing.</div><a href="https://breezing.com/clinical-studies/" target="_blank" class="bib-link">Ver estudios →</a></div></div>
       </div>
     </div>
 
-    <!-- FÓRMULAS -->
+    <!-- FORMULAS -->
     <div class="bib-block">
       <div class="bib-block-title">
         <div class="bib-block-bar" style="background:var(--numa-amber);"></div>
-        <span class="bib-block-lbl" style="color:var(--numa-amber);">📐 Limitaciones de fórmulas predictivas vs. calorimetría</span>
+        <span class="bib-block-lbl" style="color:var(--numa-amber);" data-i18n="bib_formula_label"></span>
       </div>
       <div class="bib-cards">
-        <div class="bib-card">
-          <span class="bib-n">[5]</span>
-          <div class="bib-body">
-            <div class="bib-ttl">Comparison of predictive equations for resting metabolic rate in healthy nonobese and obese adults: a systematic review</div>
-            <div class="bib-auth">Frankenfield DC, Roth-Yousey L, Compher C; Evidence Analysis Working Group. (2005). Journal of the American Dietetic Association, 105(5):775-89. PMID: 15883556.</div>
-            <div class="bib-note">Revisión sistemática de la Academy of Nutrition and Dietetics. Mifflin-St. Jeor es la más precisa pero con «errores notables» en individuos. Concluye que la calorimetría indirecta elimina los errores de estimación individual.</div>
-            <a href="https://pubmed.ncbi.nlm.nih.gov/15883556/" target="_blank" class="bib-link">PubMed →</a>
-          </div>
-        </div>
-        <div class="bib-card">
-          <span class="bib-n">[6]</span>
-          <div class="bib-body">
-            <div class="bib-ttl">Bias and accuracy of resting metabolic rate equations in non-obese and obese adults</div>
-            <div class="bib-auth">Frankenfield D. (2013). Clinical Nutrition, 32(6):976-82. PMID: 23631843.</div>
-            <div class="bib-note">N=337 adultos. Mifflin-St. Jeor: precisión 82% en no obesos, 75% en obesos. Límites de acuerdo amplios: ±378 kcal/día (Harris-Benedict). La calorimetría indirecta elimina este margen en individuos.</div>
-            <a href="https://pubmed.ncbi.nlm.nih.gov/23631843/" target="_blank" class="bib-link">PubMed →</a>
-          </div>
-        </div>
-        <div class="bib-card">
-          <span class="bib-n">[7]</span>
-          <div class="bib-body">
-            <div class="bib-ttl">Basal metabolic rate using indirect calorimetry among individuals living with overweight or obesity: accuracy of predictive equations</div>
-            <div class="bib-auth">Baudrier M, et al. (2024). Clinical Nutrition. PMID: 38220405.</div>
-            <div class="bib-note">N=731 pacientes con sobrepeso/obesidad. La mejor fórmula (Mifflin-St. Jeor) alcanza solo 73% de precisión individual. Pacientes con síndrome metabólico: 77.4% prevalencia de subestimación del BMR por fórmulas.</div>
-            <a href="https://pubmed.ncbi.nlm.nih.gov/38220405/" target="_blank" class="bib-link">PubMed →</a>
-          </div>
-        </div>
+        <div class="bib-card"><span class="bib-n">[5]</span><div class="bib-body"><div class="bib-ttl">Comparison of predictive equations for resting metabolic rate in healthy nonobese and obese adults: a systematic review</div><div class="bib-auth">Frankenfield DC, Roth-Yousey L, Compher C. (2005). J Am Dietetic Assoc, 105(5):775-89. PMID: 15883556.</div><div class="bib-note">Revisión sistemática AND. Mifflin-St. Jeor: la más precisa de las fórmulas pero con «errores notables» en individuos. La calorimetría elimina los errores de estimación individual.</div><a href="https://pubmed.ncbi.nlm.nih.gov/15883556/" target="_blank" class="bib-link">PubMed →</a></div></div>
+        <div class="bib-card"><span class="bib-n">[6]</span><div class="bib-body"><div class="bib-ttl">Bias and accuracy of resting metabolic rate equations in non-obese and obese adults</div><div class="bib-auth">Frankenfield D. (2013). Clinical Nutrition, 32(6):976-82. PMID: 23631843.</div><div class="bib-note">N=337 adultos. Mifflin-St. Jeor: 82% precisión en no obesos, 75% en obesos. Límites de acuerdo ±378 kcal/día.</div><a href="https://pubmed.ncbi.nlm.nih.gov/23631843/" target="_blank" class="bib-link">PubMed →</a></div></div>
+        <div class="bib-card"><span class="bib-n">[7]</span><div class="bib-body"><div class="bib-ttl">Basal metabolic rate using indirect calorimetry among individuals living with overweight or obesity: accuracy of predictive equations</div><div class="bib-auth">Baudrier M, et al. (2024). Clinical Nutrition. PMID: 38220405.</div><div class="bib-note">N=731. Mejor fórmula (Mifflin-St. Jeor): solo 73% de precisión individual. Con síndrome metabólico: 77.4% prevalencia de subestimación.</div><a href="https://pubmed.ncbi.nlm.nih.gov/38220405/" target="_blank" class="bib-link">PubMed →</a></div></div>
       </div>
     </div>
 
-    <!-- FLEXIBILIDAD -->
+    <!-- FLEXIBILITY -->
     <div class="bib-block">
       <div class="bib-block-title">
         <div class="bib-block-bar" style="background:#FF6B35;"></div>
-        <span class="bib-block-lbl" style="color:#FF6B35;">🔥 Flexibilidad metabólica, RQ y ayuno</span>
+        <span class="bib-block-lbl" style="color:#FF6B35;" data-i18n="bib_flex_label"></span>
       </div>
       <div class="bib-cards">
-        <div class="bib-card">
-          <span class="bib-n">[8]</span>
-          <div class="bib-body">
-            <div class="bib-ttl">Metabolic Flexibility and Its Impact on Health Outcomes</div>
-            <div class="bib-auth">Smith RL, Soeters MR, Wüst RCI, Houtkooper RHB. (2022). Mayo Clinic Proceedings, 97(4):761-776. DOI: 10.1016/j.mayocp.2022.01.012.</div>
-            <div class="bib-note">Revisión en Mayo Clinic Proceedings. En sujetos obesos, el RQ basal de 0.9 no cambia en respuesta al estímulo insulínico: estado inflexible. La flexibilidad metabólica medida por RQ predice riesgo cardiometabólico y respuesta a intervenciones.</div>
-            <a href="https://www.mayoclinicproceedings.org/article/S0025-6196(22)00042-8/fulltext" target="_blank" class="bib-link">Mayo Clinic Proceedings →</a>
-          </div>
-        </div>
-        <div class="bib-card">
-          <span class="bib-n">[9]</span>
-          <div class="bib-body">
-            <div class="bib-ttl">Metabolic flexibility and insulin resistance</div>
-            <div class="bib-auth">Galgani JE, Moro C, Ravussin E. (2008). Am J Physiol Endocrinol Metab, 295(5):E1009-17. PMID: 18765680.</div>
-            <div class="bib-note">Definición clásica y cuantificación de la flexibilidad metabólica mediante ΔRQ. Incapacidad para aumentar oxidación lipídica → acumulación intramiocelular y resistencia insulínica. Base científica del concepto IFM.</div>
-            <a href="https://pubmed.ncbi.nlm.nih.gov/18765680/" target="_blank" class="bib-link">PubMed →</a>
-          </div>
-        </div>
-        <div class="bib-card">
-          <span class="bib-n">[10]</span>
-          <div class="bib-body">
-            <div class="bib-ttl">Effect of Dietary Strategies on Respiratory Quotient and Its Association with Clinical Parameters and Organ Fat Loss: A Randomized Controlled Trial</div>
-            <div class="bib-auth">Hagemann CA, et al. (2021). Nutrients, 13(7):2287. PMC: PMC8308467.</div>
-            <div class="bib-note">RCT N=141. RQ elevado en ayunas asociado a mayor grasa visceral, grasa hepática, hiperinsulinemia y resistencia a insulina. Dieta mediterránea baja en carbohidratos redujo el RQ significativamente más que la dieta baja en grasas (−0.022 vs −0.002, p=0.005).</div>
-            <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC8308467/" target="_blank" class="bib-link">PMC →</a>
-          </div>
-        </div>
-        <div class="bib-card">
-          <span class="bib-n">[11]</span>
-          <div class="bib-body">
-            <div class="bib-ttl">Fasting respiratory quotient as a predictor of weight changes in non-obese women</div>
-            <div class="bib-auth">Seidell JC, Muller DC, Sorkin JD, Andres R. (1992). Int J Obesity, 16(8):609-15. PMID: 9665683.</div>
-            <div class="bib-note">Estudio prospectivo a 3 años. El RQ en ayunas fue predictor independiente significativo de cambios en peso y BMI (p&lt;0.05) en mujeres no obesas. Mayor RQ basal = mayor ganancia ponderal futura.</div>
-            <a href="https://pubmed.ncbi.nlm.nih.gov/9665683/" target="_blank" class="bib-link">PubMed →</a>
-          </div>
-        </div>
-        <div class="bib-card">
-          <span class="bib-n">[12]</span>
-          <div class="bib-body">
-            <div class="bib-ttl">Metabolic flexibility during sleep</div>
-            <div class="bib-auth">Hibi M, et al. (2021). Scientific Reports, 11, 18399. DOI: 10.1038/s41598-021-97301-8.</div>
-            <div class="bib-note">La amplitud de las oscilaciones circadianas del RQ durante el sueño diferencia personas metabólicamente flexibles de inflexibles incluso antes de que aparezcan diferencias en ayuno diurno o respuesta postprandial. Medición continua como ventana diagnóstica precoz.</div>
-            <a href="https://www.nature.com/articles/s41598-021-97301-8" target="_blank" class="bib-link">Scientific Reports →</a>
-          </div>
-        </div>
+        <div class="bib-card"><span class="bib-n">[8]</span><div class="bib-body"><div class="bib-ttl">Metabolic Flexibility and Its Impact on Health Outcomes</div><div class="bib-auth">Smith RL, et al. (2022). Mayo Clinic Proceedings, 97(4):761-776. DOI: 10.1016/j.mayocp.2022.01.012.</div><div class="bib-note">En sujetos obesos, el RQ basal de 0.9 no cambia ante estímulo insulínico. La flexibilidad metabólica medida por RQ predice riesgo cardiometabólico.</div><a href="https://www.mayoclinicproceedings.org/article/S0025-6196(22)00042-8/fulltext" target="_blank" class="bib-link">Mayo Clinic →</a></div></div>
+        <div class="bib-card"><span class="bib-n">[9]</span><div class="bib-body"><div class="bib-ttl">Metabolic flexibility and insulin resistance</div><div class="bib-auth">Galgani JE, Moro C, Ravussin E. (2008). Am J Physiol Endocrinol Metab, 295(5):E1009-17. PMID: 18765680.</div><div class="bib-note">Definición clásica y cuantificación de la flexibilidad metabólica mediante ΔRQ. Base científica del concepto IFM/MFI.</div><a href="https://pubmed.ncbi.nlm.nih.gov/18765680/" target="_blank" class="bib-link">PubMed →</a></div></div>
+        <div class="bib-card"><span class="bib-n">[10]</span><div class="bib-body"><div class="bib-ttl">Effect of Dietary Strategies on Respiratory Quotient and Its Association with Clinical Parameters and Organ Fat Loss: A Randomized Controlled Trial</div><div class="bib-auth">Hagemann CA, et al. (2021). Nutrients, 13(7):2287. PMC: PMC8308467.</div><div class="bib-note">RCT N=141. RQ elevado asociado a mayor grasa visceral, hepática e hiperinsulinemia. Dieta mediterránea baja en carbohidratos redujo el RQ significativamente más (−0.022 vs −0.002, p=0.005).</div><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC8308467/" target="_blank" class="bib-link">PMC →</a></div></div>
+        <div class="bib-card"><span class="bib-n">[11]</span><div class="bib-body"><div class="bib-ttl">Fasting respiratory quotient as a predictor of weight changes in non-obese women</div><div class="bib-auth">Seidell JC, Muller DC, Sorkin JD, Andres R. (1992). Int J Obesity. PMID: 9665683.</div><div class="bib-note">Estudio prospectivo a 3 años. El RQ en ayunas fue predictor independiente de cambios en peso y BMI (p&lt;0.05). Mayor RQ = mayor ganancia ponderal futura.</div><a href="https://pubmed.ncbi.nlm.nih.gov/9665683/" target="_blank" class="bib-link">PubMed →</a></div></div>
+        <div class="bib-card"><span class="bib-n">[12]</span><div class="bib-body"><div class="bib-ttl">Metabolic flexibility during sleep</div><div class="bib-auth">Hibi M, et al. (2021). Scientific Reports, 11, 18399. DOI: 10.1038/s41598-021-97301-8.</div><div class="bib-note">Las oscilaciones circadianas del RQ durante el sueño diferencian personas metabolicamente flexibles de inflexibles antes de que aparezcan diferencias en ayuno diurno.</div><a href="https://www.nature.com/articles/s41598-021-97301-8" target="_blank" class="bib-link">Scientific Reports →</a></div></div>
       </div>
     </div>
 
-    <div class="bib-note-box">
-      <p><strong style="color:var(--numa-sky);">Nota sobre la bibliografía:</strong> Guía elaborada por NUMA SmartLAB con fines divulgativos y de apoyo clínico. La selección prioriza estudios de validación directa del dispositivo Breezing, revisiones sistemáticas indexadas en PubMed/PMC y evidencia sobre flexibilidad metabólica publicada en revistas peer-reviewed. Para uso clínico avanzado, consultar directamente las fuentes originales y la obra del Dr. Ibáñez García, referencia nacional en calorimetría indirecta. Guía actualizada: abril 2026 · <a href="https://numablue.com" target="_blank" class="bib-link">numablue.com</a></p>
-    </div>
-
+    <div class="bib-note-box"><p data-i18n="bib_note"></p></div>
   </div>
 </div>
 
 <!-- FOOTER -->
-<footer>
-  <p>
-    <strong>NUMA Blue · Smart Lab</strong> · Sistema de Análisis Metabólico y Respiratorio en Reposo<br>
-    Av. Manoteras 12, Piso 6, Oficina 661, 28050 Madrid · <a href="mailto:hello@numablue.com">hello@numablue.com</a> · <a href="tel:+34613079475">+34 613 07 94 75</a><br>
-    <a href="https://numablue.com" target="_blank">numablue.com</a> · © NUMA Blue 2026
-  </p>
-</footer>
+<footer><p data-i18n="footer_txt"></p></footer>
 
 <script>
 function tglFaq(btn) {
