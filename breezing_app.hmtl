@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Numa Smart Lab - Metabolic Report</title>
+    <!-- Librerías -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+    <script src="https://kit.fontawesome.com/97072ff9f7.js" crossorigin="anonymous"></script>
+    
+    <!-- Fuentes y Estilos -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; color: #1e293b; height: 100vh; overflow: hidden; }
+        .input-label { font-size: 0.65rem; font-weight: 800; text-transform: uppercase; color: #64748b; margin-bottom: 4px; display: block; letter-spacing: 0.02em; }
+        .app-input { width: 100%; padding: 0.5rem 0.75rem; border: 1px solid #cbd5e1; border-radius: 0.375rem; font-size: 0.8rem; color: #334155; transition: border-color 0.2s; background: white; }
+        .app-input:focus { outline: none; border-color: #4f46e5; box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.1); }
+        .section-title { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; border-bottom: 1px solid #e2e8f0; padding-bottom: 0.35rem; margin-bottom: 1rem; margin-top: 1.5rem; letter-spacing: 0.05em; }
+        .title-blue { color: #3b82f6; border-color: #bfdbfe; }
+        .title-purple { color: #8b5cf6; border-color: #ddd6fe; }
+        .title-orange { color: #ea580c; border-color: #fed7aa; }
+        .traffic-dot { height: 14px; width: 14px; border-radius: 50%; display: inline-block; }
+        .viewport-container { flex: 1; min-height: 0; background-color: #cbd5e1; overflow-y: auto; padding: 40px; display: flex; flex-direction: column; align-items: center; gap: 40px; }
+        .a4-page { width: 210mm; height: 297mm; background: white; padding: 10mm 15mm; box-sizing: border-box; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2); position: relative; overflow: hidden; display: flex; flex-direction: column; transform: none !important; flex-shrink: 0; }
+        input[type="checkbox"] { accent-color: #1e293b; width: 16px; height: 16px; cursor: pointer; flex-shrink: 0;}
+        #sidebar::-webkit-scrollbar, .viewport-container::-webkit-scrollbar { width: 6px; }
+        #sidebar::-webkit-scrollbar-track, .viewport-container::-webkit-scrollbar-track { background: transparent; }
+        #sidebar::-webkit-scrollbar-thumb, .viewport-container::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 3px; }
+        [contenteditable="true"]:empty:before { content: attr(data-placeholder); color: #94a3b8; font-style: italic; pointer-events: none; display: block; }
+        
+        @media print {
+            @page { size: A4 portrait; margin: 0; }
+            html, body { width: 210mm !important; height: auto !important; overflow: visible !important; background: white !important; margin: 0 !important; padding: 0 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+            #app-layout { display: block !important; height: auto !important; overflow: visible !important; }
+            #sidebar, .no-print { display: none !important; }
+            .viewport-container { display: block !important; padding: 0 !important; margin: 0 !important; height: auto !important; overflow: visible !important; background: white !important; }
+            .a4-page { width: 210mm !important; height: 296mm !important; max-height: 296mm !important; overflow: hidden !important; margin: 0 !important; padding: 10mm 15mm !important; box-shadow: none !important; transform: none !important; page-break-after: always !important; break-after: page !important; position: relative !important; }
+            .a4-page:last-of-type { page-break-after: avoid !important; break-after: avoid !important; }
+        }
+    </style>
+</head>
+<body class="flex flex-row h-screen overflow-hidden" id="app-layout">
+
+    <!-- === SIDEBAR === -->
+    <aside id="sidebar" class="w-[380px] flex-shrink-0 bg-white border-r border-slate-200 flex flex-col h-full z-30 shadow-2xl overflow-y-auto no-print">
+        <div class="bg-slate-100 p-2 flex flex-wrap justify-center gap-1.5 border-b border-slate-200">
+            <button onclick="setLang('es')" id="btn-es" class="lang-btn px-2 py-1 text-[9px] font-bold rounded bg-indigo-600 text-white shadow-sm transition-all border border-transparent">Español</button>
+            <button onclick="setLang('en')" id="btn-en" class="lang-btn px-2 py-1 text-[9px] font-bold rounded bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 transition-all">English</button>
+            <button onclick="setLang('pt')" id="btn-pt" class="lang-btn px-2 py-1 text-[9px] font-bold rounded bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 transition-all">Português</button>
+            <button onclick="setLang('it')" id="btn-it" class="lang-btn px-2 py-1 text-[9px] font-bold rounded bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 transition-all">Italiano</button>
+            <button onclick="setLang('de')" id="btn-de" class="lang-btn px-2 py-1 text-[9px] font-bold rounded bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 transition-all">Deutsch</button>
+        </div>
+
+        <div class="p-6 border-b border-slate-100 bg-white sticky top-0 z-10 flex flex-col items-center border-t-4 border-indigo-600 shadow-sm">
+            <img src="https://manutaranilla.github.io/numa-tools2/logo.png" alt="Numa Smart Lab" class="h-16 object-contain mb-2" onerror="this.onerror=null; this.src='https://manutaranilla.github.io/numa-tools2/Logo%20principal%20Numa%20Smart%20Lab.png';">
+            <div class="flex flex-col text-center mt-1">
+                <h1 class="text-[11px] font-black uppercase tracking-wider text-slate-600 leading-none" data-i18n="sidebarTitle">Panel de Control Breezing</h1>
+                <p class="text-[9px] text-slate-400 font-bold tracking-widest uppercase mt-1" data-i18n="calibration">Calibración</p>
+            </div>
+        </div>
+
+        <div class="p-6 pb-12 space-y-2">
+            <h3 class="section-title title-blue" data-i18n="step1">1. Identificación</h3>
+            <div class="space-y-3">
+                <div><span class="input-label" data-i18n="patName">Nombre del Paciente</span><input type="text" id="in-name" class="app-input" data-i18n-ph="patNamePh" placeholder="Nombre y Apellidos" oninput="runSystem()"></div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div><span class="input-label" data-i18n="date">Fecha</span><input type="date" id="in-date" class="app-input" oninput="runSystem()"></div>
+                    <div><span class="input-label" data-i18n="time">Hora</span><input type="time" id="in-time" class="app-input" oninput="runSystem()"></div>
+                </div>
+            </div>
+
+            <h3 class="section-title title-blue mt-6" data-i18n="step2">2. Responsables</h3>
+            <div class="space-y-3">
+                <div><span class="input-label title-blue" data-i18n="prof">Profesional</span><input type="text" id="in-doctor" class="app-input" data-i18n-ph="profPh" placeholder="Dr/a. Nombre" oninput="runSystem()"></div>
+                <div><span class="input-label title-blue" data-i18n="clinic">Clínica</span><input type="text" id="in-clinic" class="app-input" data-i18n-ph="clinicPh" placeholder="Centro" oninput="runSystem()"></div>
+            </div>
+
+            <h3 class="section-title title-purple mt-6" data-i18n="step3">3. Objetivo & Biometría</h3>
+            <div class="space-y-3">
+                <div>
+                    <span class="input-label" data-i18n="goalLabel">Objetivo</span>
+                    <select id="in-goal" class="app-input font-bold text-slate-800" onchange="runSystem()">
+                        <option value="weight_loss" data-i18n="goalLoss">Pérdida de Peso / Grasa</option>
+                        <option value="performance" data-i18n="goalPerf">Rendimiento Deportivo</option>
+                        <option value="maintenance" data-i18n="goalMaint">Mantenimiento / Salud</option>
+                        <option value="muscle_gain" data-i18n="goalGain">Ganancia Muscular</option>
+                    </select>
+                </div>
+                <div>
+                    <span class="input-label" data-i18n="actLabel">Actividad</span>
+                    <select id="in-activity" class="app-input text-slate-700" onchange="runSystem()">
+                        <option value="1.2" data-i18n="act1">Sedentario (x1.2)</option>
+                        <option value="1.35" data-i18n="act2">Ligero (x1.35)</option>
+                        <option value="1.55" data-i18n="act3">Moderado (x1.55)</option>
+                        <option value="1.75" data-i18n="act4">Alto (x1.75)</option>
+                        <option value="1.9" data-i18n="act5">Muy Alto (x1.9)</option>
+                    </select>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div><span class="input-label" data-i18n="ageLabel">Edad</span><input type="number" id="in-age" class="app-input text-slate-800 font-medium" value="30" oninput="runSystem()"></div>
+                    <div><span class="input-label" data-i18n="sexLabel">Sexo</span><select id="in-sex" class="app-input text-slate-800 font-medium" onchange="runSystem()"><option value="M" data-i18n="sexM">Hombre</option><option value="F" data-i18n="sexF">Mujer</option></select></div>
+                </div>
+                <div class="grid grid-cols-3 gap-3">
+                    <div><span class="input-label" data-i18n="weightLabel">Peso (kg)</span><input type="number" id="in-weight" class="app-input text-slate-800 font-medium" value="70" step="0.1" oninput="runSystem()"></div>
+                    <div><span class="input-label" data-i18n="heightLabel">Altura (cm)</span><input type="number" id="in-height" class="app-input text-slate-800 font-medium" value="170" oninput="runSystem()"></div>
+                    <div><span class="input-label text-blue-600" data-i18n="bfLabel">% Grasa (Opc.)</span><input type="number" id="in-bf" class="app-input text-blue-700 font-bold border-blue-200 focus:border-blue-500 bg-blue-50" placeholder="Ej: 15" step="0.1" oninput="runSystem()"></div>
+                </div>
+                <div class="mt-4 pt-4 border-t border-slate-100">
+                    <label class="flex items-center justify-between cursor-pointer group">
+                        <span class="input-label mb-0 text-slate-800" data-i18n="includeFasting">Incluir Pauta de Ayuno</span>
+                        <div class="relative inline-flex items-center">
+                            <input type="checkbox" id="in-fasting-toggle" class="sr-only peer" checked onchange="runSystem()">
+                            <div class="w-9 h-5 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-purple-600"></div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <h3 class="section-title title-orange mt-6" data-i18n="step4">4. Datos Calorimetría Breezing</h3>
+            <div class="space-y-3">
+                <div class="grid grid-cols-2 gap-3">
+                    <div><span class="input-label">REE (Kcal)</span><input type="number" id="in-ree" class="app-input font-black text-slate-900" value="1500" oninput="runSystem()"></div>
+                    <div><span class="input-label">RQ</span><input type="number" id="in-rq" class="app-input font-bold text-slate-800" step="0.01" value="0.85" oninput="runSystem()"></div>
+                </div>
+                <div class="bg-blue-50 p-3 rounded-lg border border-blue-100">
+                    <span class="input-label title-blue" data-i18n="formulaLabel">Fórmula Predictiva</span>
+                    <select id="in-formula" class="app-input text-slate-800 font-bold" onchange="runSystem()">
+                        <option value="msje">Mifflin-St Jeor</option>
+                        <option value="hb">Harris-Benedict</option>
+                        <option value="katch">Katch-McArdle (Masa Magra)</option>
+                    </select>
+                </div>
+                <div class="bg-orange-50/50 p-4 rounded-lg border border-orange-100 shadow-sm mt-4">
+                    <p class="text-[10px] font-black text-orange-600 uppercase tracking-widest mb-3" data-i18n="advParams">Parámetros Avanzados</p>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div><span class="input-label title-blue">VO2 (ml/min)</span><input type="number" id="in-vo2" class="app-input text-slate-800 font-medium" value="250" oninput="runSystem()"></div>
+                        <div><span class="input-label title-blue">VCO2 (ml/min)</span><input type="number" id="in-vco2" class="app-input text-slate-800 font-medium" value="210" oninput="runSystem()"></div>
+                        <div><span class="input-label title-blue">VE (L/min)</span><input type="number" id="in-ve" class="app-input text-slate-800 font-medium" value="8" oninput="runSystem()"></div>
+                        <div><span class="input-label title-orange">FR (rpm)*</span><input type="number" id="in-fr" class="app-input border-orange-300 focus:border-orange-500 text-slate-800 font-medium" value="14" oninput="runSystem()"></div>
+                        <div><span class="input-label">VT (ml)</span><input type="number" id="in-vt" class="app-input text-slate-800 font-medium" value="500" oninput="runSystem()"></div>
+                        <div><span class="input-label">FC (bpm)</span><input type="number" id="in-hr" class="app-input text-slate-800 font-medium" value="65" oninput="runSystem()"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CHECKBOX RGPD -->
+            <div class="mt-8 mb-4 bg-slate-50 p-4 rounded-lg border border-slate-200 shadow-sm">
+                <label class="flex items-start gap-3 cursor-pointer group">
+                    <input type="checkbox" id="legal-checkbox" class="mt-1" onchange="toggleDownload()">
+                    <div class="text-[9px] text-slate-600 leading-snug" id="rgpd-text"></div>
+                </label>
+            </div>
+
+            <div class="space-y-3 pb-8 no-print">
+                <button onclick="window.print()" id="btn-download" class="w-full bg-[#1e293b] hover:bg-[#0f172a] text-white py-3.5 rounded-lg font-bold text-xs uppercase tracking-widest shadow-md flex items-center justify-center gap-2 transition-all opacity-50 cursor-not-allowed" disabled>
+                    <i class="fa-solid fa-print text-base"></i> <span data-i18n="btnPdf">IMPRIMIR / GUARDAR PDF</span>
+                </button>
+                <button onclick="window.open('https://numablue.com/guia-metabolismo-reposo/', '_blank')" id="btn-guide" class="w-full bg-gradient-to-r from-[#8b5cf6] to-[#a855f7] hover:from-[#7c3aed] hover:to-[#9333ea] text-white py-3.5 rounded-lg font-bold text-xs uppercase tracking-widest shadow-md flex items-center justify-center gap-2 transition-all">
+                    <i class="fa-solid fa-book-open text-base"></i> <span data-i18n="btnGuide">Guía de Interpretación</span>
+                </button>
+            </div>
+        </div>
+    </aside>
+
+    <!-- === VISOR DEL REPORTE === -->
+    <main id="report-viewport" class="viewport-container flex shadow-inner">
+        <!-- PÁGINA 1 -->
+        <div id="page1" class="a4-page">
+            <header class="flex justify-between items-start pb-3 mb-3 border-b border-slate-200">
+                <div class="flex items-center gap-4">
+                    <img src="https://manutaranilla.github.io/numa-tools2/logo.png" alt="Numa Smart Lab" class="h-14 object-contain" onerror="this.onerror=null; this.src='https://manutaranilla.github.io/numa-tools2/Logo%20principal%20Numa%20Smart%20Lab.png';">
+                    <div class="flex flex-col mt-1 border-l-2 border-slate-200 pl-4">
+                        <h1 class="text-xl font-black text-slate-900 tracking-tight leading-none mb-1" data-i18n="repTitle">Informe de Salud Metabólica</h1>
+                        <h2 class="text-[9px] font-bold text-blue-700 tracking-widest uppercase" data-i18n="repSub">Análisis Calorimétrico de Reposo</h2>
+                    </div>
+                </div>
+                <div class="text-right flex flex-col items-end pt-1">
+                    <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1" data-i18n="rPat">Paciente</p>
+                    <p class="text-2xl font-black text-slate-900 uppercase tracking-tight leading-none mb-2" id="p1-name">---</p>
+                    <p class="text-[10px] text-slate-700 mb-0.5"><span class="font-bold text-slate-500 mr-1" data-i18n="rDate">FECHA:</span> <span id="p1-date" class="font-bold">--/--/----</span></p>
+                    <p class="text-[10px] text-slate-700 mb-0.5"><span class="font-bold text-slate-500 mr-1" data-i18n="rClinic">CLÍNICA:</span> <span id="p1-clinic-header" class="font-bold">---</span></p>
+                    <p class="text-[10px] text-slate-700"><span class="font-bold text-slate-500 mr-1" data-i18n="rProf">PROF.:</span> <span id="p1-doctor-header" class="font-bold">---</span></p>
+                </div>
+            </header>
+
+            <div class="bg-slate-50 rounded-xl p-3 mb-4 flex items-center justify-between text-center border border-slate-200">
+                <div class="flex-1"><p class="text-[8px] font-bold text-slate-500 uppercase tracking-widest mb-1" data-i18n="rAge">Edad</p><p class="text-sm font-black text-slate-900" id="p1-age">--</p></div>
+                <div class="flex-1"><p class="text-[8px] font-bold text-slate-500 uppercase tracking-widest mb-1" data-i18n="rSex">Sexo</p><p class="text-sm font-black text-slate-900" id="p1-sex">--</p></div>
+                <div class="flex-1"><p class="text-[8px] font-bold text-slate-500 uppercase tracking-widest mb-1" data-i18n="rWeight">Peso</p><p class="text-sm font-black text-slate-900" id="p1-weight">--</p></div>
+                <div class="flex-1"><p class="text-[8px] font-bold text-blue-500 uppercase tracking-widest mb-1" data-i18n="bfLabel">% Grasa (Opc.)</p><p class="text-sm font-black text-blue-700" id="p1-bf">--</p></div>
+                <div class="flex-1 border-r border-slate-300 pr-4"><p class="text-[8px] font-bold text-slate-500 uppercase tracking-widest mb-1" data-i18n="rHeight">Altura</p><p class="text-sm font-black text-slate-900" id="p1-height">--</p></div>
+                <div class="flex-[1.5] pl-4"><p class="text-[8px] font-bold text-blue-600 uppercase tracking-widest mb-1" data-i18n="rGoal">Objetivo Clínico</p><p class="text-xs font-black text-blue-800 uppercase" id="p1-goal">--</p></div>
+            </div>
+
+            <div class="flex gap-4 mb-4">
+                <div class="w-1/2 border border-slate-200 bg-white rounded-2xl p-4 shadow-sm flex flex-col">
+                    <h3 class="text-[9px] font-black text-slate-700 uppercase tracking-widest mb-4" data-i18n="bxAgeAn">Análisis de Edad</h3>
+                    <div class="mb-4">
+                        <div class="flex justify-between items-end mb-1"><span class="text-xs font-bold text-slate-700" data-i18n="bxChrAge">Edad Cronológica</span><span class="text-sm font-black text-slate-900" id="p1-age-real-val">--</span></div>
+                        <div class="h-1.5 w-full bg-slate-200 rounded-full overflow-hidden"><div id="bar-age-real" class="h-full bg-slate-400 rounded-full" style="width: 50%"></div></div>
+                    </div>
+                    <div class="mb-5">
+                        <div class="flex justify-between items-end mb-1"><span class="text-xs font-bold text-blue-700" data-i18n="bxMetAge">Edad Metabólica Estimada*</span><span class="text-sm font-black text-blue-700" id="p1-age-met-val">--</span></div>
+                        <div class="h-1.5 w-full bg-slate-200 rounded-full overflow-hidden"><div id="bar-age-met" class="h-full bg-blue-600 rounded-full transition-all duration-1000" style="width: 50%"></div></div>
+                    </div>
+                    <div class="mt-auto">
+                        <h3 class="text-[9px] font-black text-slate-700 uppercase tracking-widest mb-2" data-i18n="bxIam">Índice de Adaptación Metabólica (IAM)</h3>
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="text-lg font-black text-slate-900 uppercase tracking-tight" id="p1-iam-title">---</span>
+                            <span id="p1-iam-badge" class="px-2 py-0.5 rounded text-[9px] font-bold text-slate-700 bg-slate-100 tracking-wide border border-slate-200">IAM: --</span>
+                        </div>
+                        <p class="text-[9px] text-slate-700 leading-snug" id="p1-iam-desc">---</p>
+                    </div>
+                </div>
+
+                <div class="w-1/2 border border-slate-200 bg-white rounded-2xl p-4 shadow-sm flex flex-col">
+                    <h3 class="text-[9px] font-black text-slate-700 uppercase tracking-widest mb-2" data-i18n="bxDiag">Diagnóstico Clínico</h3>
+                    <h2 class="text-lg font-black text-slate-900 mb-5" id="p1-ready-q">¿Preparado para Déficit Calórico?</h2>
+                    <div class="flex items-center gap-4 mb-6">
+                        <div id="p1-restriction-light" class="h-14 w-14 rounded-full flex items-center justify-center border-2 border-emerald-200 bg-white flex-shrink-0 shadow-sm"><i data-lucide="check" class="w-7 h-7 text-emerald-600"></i></div>
+                        <div><p class="text-lg font-black text-slate-900 uppercase tracking-tight leading-none mb-1" id="p1-ready-title">---</p><p class="text-[11px] text-slate-600 font-medium" id="p1-ready-desc">---</p></div>
+                    </div>
+                    <div class="mt-auto bg-blue-50 p-3 rounded-xl border border-blue-200">
+                        <p class="text-[8px] font-black text-blue-900 uppercase tracking-widest mb-1" data-i18n="bxCrit">Criterio de Decisión:</p>
+                        <p class="text-[10px] text-blue-800 font-medium leading-snug" id="p1-decision-criteria">---</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-4 mb-2 mt-2">
+                <h3 class="text-[11px] font-black text-slate-400 uppercase tracking-widest" data-i18n="hCal">Análisis Calorimétrico</h3>
+                <div class="flex-1 h-px bg-slate-200"></div>
+            </div>
+            
+            <div class="flex gap-4 mb-4">
+                <div class="w-1/2 bg-white border border-slate-200 rounded-2xl p-4 shadow-sm flex flex-col justify-between">
+                    <div class="flex justify-between items-start mb-6">
+                        <div>
+                            <p class="text-[10px] font-black text-slate-600 uppercase tracking-widest mb-1" data-i18n="hRee">REE (Metabolismo<br>Basal)</p>
+                            <div class="flex items-baseline gap-1"><span class="text-[52px] font-black text-blue-700 leading-none tracking-tighter" id="p1-ree-big">--</span><span class="text-sm text-slate-700 font-bold" data-i18n="kcalDay">kcal/día</span></div>
+                        </div>
+                        <div class="text-right flex flex-col items-end">
+                            <span id="p1-dev-badge" class="px-2.5 py-1 bg-blue-100 text-blue-800 rounded text-[10px] font-black mb-1 inline-block border border-blue-200">---</span>
+                            <span id="p1-dev-text" class="text-[8px] font-black text-blue-700 uppercase tracking-widest text-right leading-tight">Gasto<br>Normal</span>
+                        </div>
+                    </div>
+                    <div class="relative mt-auto">
+                        <div class="flex justify-between text-[9px] font-bold text-slate-500 uppercase mb-1"><span data-i18n="measured">Medido</span><span id="p1-expected-text">Esperado: --</span></div>
+                        <div class="h-2.5 w-full bg-slate-200 rounded-full relative"><div id="p1-bar-measured" class="h-full bg-blue-700 rounded-full transition-all duration-1000" style="width: 0%"></div><div id="p1-marker-predicted" class="absolute h-4 w-1 bg-slate-900 -top-[3px] transition-all duration-1000" style="left: 0%"></div></div>
+                        <p id="p1-formula-text" class="text-[8px] text-slate-500 text-right mt-1.5 italic">Ref: ---</p>
+                    </div>
+                </div>
+
+                <div class="w-1/2 bg-white border border-slate-200 rounded-2xl p-4 shadow-sm flex flex-col justify-between space-y-2">
+                    <div>
+                        <div class="flex justify-between items-end mb-0.5"><span class="text-[10px] font-black text-slate-800 uppercase tracking-widest" data-i18n="bxReeRel">REE Relativo (Peso)</span><span class="text-lg font-black text-blue-700 leading-none" id="p1-nmi-grid">--</span></div>
+                        <p class="text-[8px] text-slate-500 italic mb-1.5" data-i18n="bxReeRelD">Eficiencia metabólica por kg de peso corporal.</p>
+                        <div class="h-2 w-full bg-slate-200 rounded-full overflow-hidden"><div id="bar-nmi" class="h-full bg-blue-600 rounded-full transition-all duration-1000" style="width: 0%"></div></div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between items-end mb-0.5"><span class="text-[10px] font-black text-blue-700 uppercase tracking-widest" data-i18n="bxBsa">REE por Superficie (BSA)</span><span class="text-lg font-black text-blue-700 leading-none" id="p1-bsa-grid">--</span></div>
+                        <p class="text-[8px] text-slate-500 italic mb-1.5" data-i18n="bxBsaD">Gasto normalizado por tamaño corporal total.</p>
+                        <div class="h-2 w-full bg-slate-200 rounded-full overflow-hidden"><div id="bar-bsa" class="h-full bg-blue-600 rounded-full transition-all duration-1000" style="width: 0%"></div></div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between items-end mb-0.5">
+                            <span class="text-[10px] font-black text-slate-800 uppercase tracking-widest flex items-center gap-1.5"><i class="fa-regular fa-heart text-red-600"></i> <span data-i18n="bxFc">FC (Reposo)</span></span>
+                            <span class="text-lg font-black text-red-700 leading-none" id="t-fc-rep">-- bpm</span>
+                        </div>
+                        <div class="h-2 w-full bg-slate-200 rounded-full overflow-hidden mt-1.5 mb-1.5"><div id="bar-fc" class="h-full bg-red-600 rounded-full transition-all duration-1000" style="width: 0%"></div></div>
+                        <p class="text-[8px] text-slate-600 leading-tight" id="t-fc-obs">---</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-4 mb-2 mt-2">
+                <h3 class="text-[11px] font-black text-blue-700 uppercase tracking-widest" data-i18n="hSub">Oxidación de Sustratos (NP-RQ)</h3>
+                <div class="flex-1 h-px bg-slate-200"></div>
+            </div>
+            
+            <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm flex items-stretch justify-between mb-2">
+                <div class="w-1/2 flex flex-col pr-6 border-r border-slate-200 justify-center">
+                    <div class="mb-4"><p class="text-[46px] font-black text-slate-900 leading-none tracking-tighter" id="p1-rq-big">0.85</p><p class="text-[9px] font-bold text-slate-600 uppercase tracking-widest mt-1" data-i18n="hRq">Cociente Respiratorio</p></div>
+                    <div class="flex justify-between items-center mb-2"><span class="text-[9px] font-black text-slate-800 uppercase tracking-widest" data-i18n="hIfm">Índice Flexibilidad Metabólica</span><span id="p1-ifm-badge" class="px-2 py-0.5 rounded text-[8px] font-black text-blue-800 bg-blue-100 uppercase tracking-widest border border-blue-300">EXCELENTE (IFM 3)</span></div>
+                    <div class="relative w-full h-2.5 rounded-full bg-gradient-to-r from-red-600 via-yellow-400 to-emerald-600 mb-1 mt-2"><div id="p1-rq-marker" class="absolute top-[-4px] bottom-[-4px] w-0.5 bg-slate-900 transition-all duration-1000" style="left: 50%;"></div></div>
+                    <div class="flex justify-between text-[7px] font-bold text-slate-600 uppercase mb-4"><span data-i18n="ifmOpt">Óptima (IFM 4)</span><span data-i18n="ifmMix">Mixta (IFM 2)</span><span data-i18n="ifmLow">Baja (IFM 1)</span></div>
+                    <div class="bg-blue-50 rounded-xl p-3 border border-blue-200 mt-auto"><p class="text-[8px] font-black text-blue-900 uppercase tracking-widest mb-1" data-i18n="ifmInterp">Interpretación:</p><p class="text-[9px] text-blue-900 font-medium leading-snug" id="p1-ifm-desc">---</p></div>
+                </div>
+
+                <div class="w-1/2 pl-6 flex flex-col items-center justify-center">
+                    <div class="h-[130px] w-[130px] relative mb-4"><canvas id="chart-rq-energy"></canvas></div>
+                    <div class="w-full flex justify-center gap-6 mb-4">
+                        <div class="flex items-center gap-1.5"><div class="w-2.5 h-2.5 rounded-full bg-orange-500"></div><span class="text-[9px] font-black text-slate-800" id="p1-cho-gd">-- G/D CARBOS</span></div>
+                        <div class="flex items-center gap-1.5"><div class="w-2.5 h-2.5 rounded-full bg-emerald-500"></div><span class="text-[9px] font-black text-slate-800" id="p1-fat-gd">-- G/D GRASAS</span></div>
+                    </div>
+                    <div class="w-full bg-slate-100 border border-slate-300 rounded-lg p-2 flex items-center gap-3">
+                        <div class="bg-white border border-slate-200 px-2 py-1 rounded text-xs font-black text-slate-900" id="p1-pro-gd">-- g/d</div>
+                        <div class="flex flex-col justify-center"><p class="text-[9px] font-black text-slate-800 uppercase tracking-widest leading-tight" data-i18n="pro15">Proteína (Est. 15%)</p><p class="text-[7px] font-bold text-slate-500 uppercase tracking-widest leading-tight mt-0.5" data-i18n="proNot">No medible por gases</p></div>
+                    </div>
+                    <p class="text-[7px] text-slate-500 italic text-center w-full mt-2" data-i18n="proNote">*La proteína no se grafica en el NP-RQ. Se estima como referencia.</p>
+                </div>
+            </div>
+
+            <footer class="mt-auto pt-2 text-center"><p class="text-[9px] text-slate-500 font-bold uppercase tracking-[0.2em]" data-i18n="page1">Página 1/4</p></footer>
+        </div>
+        <div class="html2pdf__page-break"></div>
+
+        <!-- PÁGINA 2: Estrategia -->
+        <div id="page2" class="a4-page">
+            <header class="flex justify-between items-start pb-3 mb-4 border-b border-slate-200">
+                <div class="flex items-center gap-4">
+                    <img src="https://manutaranilla.github.io/numa-tools2/logo.png" alt="Numa Smart Lab" class="h-14 object-contain" onerror="this.onerror=null; this.src='https://manutaranilla.github.io/numa-tools2/Logo%20principal%20Numa%20Smart%20Lab.png';">
+                    <div class="flex flex-col mt-1 border-l-2 border-slate-200 pl-4"><h1 class="text-[10px] font-black text-slate-700 tracking-widest uppercase" data-i18n="pg2Title">Estrategia Nutricional</h1><h2 class="text-xl font-black text-slate-900 tracking-tight uppercase leading-none mt-1" data-i18n="pg2Sub">Plan de Acción & Macros</h2></div>
+                </div>
+                <div class="text-right flex flex-col items-end pt-1">
+                    <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1" data-i18n="rPat">Paciente</p><p class="text-2xl font-black text-slate-900 uppercase tracking-tight leading-none mb-2" id="p2-name">---</p>
+                    <p class="text-[10px] text-slate-700 mb-0.5"><span class="font-bold text-slate-500 mr-1" data-i18n="rDate">FECHA:</span> <span id="p2-date" class="font-bold">--/--/----</span></p>
+                    <p class="text-[10px] text-slate-700 mb-0.5"><span class="font-bold text-slate-500 mr-1" data-i18n="rClinic">CLÍNICA:</span> <span id="p2-clinic-header" class="font-bold">---</span></p>
+                    <p class="text-[10px] text-slate-700"><span class="font-bold text-slate-500 mr-1" data-i18n="rProf">PROF.:</span> <span id="p2-doctor-header" class="font-bold">---</span></p>
+                </div>
+            </header>
+
+            <div class="flex gap-6 mb-4">
+                <div class="w-1/3 flex flex-col pr-4 border-r border-slate-200">
+                    <div class="flex justify-between items-center mb-2"><h3 class="text-[10px] font-black text-slate-700 uppercase tracking-widest" data-i18n="tRel">Fiabilidad del Test</h3><div id="p2-rel-dot" class="traffic-dot bg-emerald-500 w-3 h-3"></div></div>
+                    <p class="text-xl font-black text-slate-900 mb-2" id="p2-rel-title">Óptima</p>
+                    <div class="flex justify-between items-center text-[9px] font-bold text-slate-600 mb-1"><span>RPU Score</span><span id="p2-rpu-val">90/100</span></div>
+                    <div class="h-2 w-full bg-slate-200 rounded-full mb-3"><div id="p2-rpu-bar" class="h-full bg-emerald-500 rounded-full" style="width: 90%"></div></div>
+                    <ul class="text-[9px] text-slate-700 mb-4 list-disc pl-3 space-y-1" id="p2-reliability-reasons"><li>Patrón estable.</li></ul>
+                    <div class="mt-auto bg-slate-100 p-2 rounded text-[10px] font-bold text-slate-800 text-center border border-slate-200" id="p2-rel-action">Resultados aptos.</div>
+                </div>
+                <div class="w-2/3 pl-2">
+                    <h3 class="text-[10px] font-black text-slate-700 uppercase tracking-widest mb-3" data-i18n="tEff">Eficiencia Respiratoria</h3>
+                    <table class="w-full text-[10px]">
+                        <thead><tr class="text-slate-600 uppercase text-left border-b border-slate-300"><th class="pb-2" data-i18n="tblP">Parámetro</th><th class="pb-2 text-center" data-i18n="tblM">Medido</th><th class="pb-2 text-center">Ref.</th><th class="pb-2 text-right">Obs.</th></tr></thead>
+                        <tbody class="text-slate-800">
+                            <tr class="border-b border-slate-100 h-7"><td class="font-bold">VO2</td><td class="text-center" id="t-vo2">--</td><td class="text-center text-slate-500">ml/min</td><td class="text-right text-slate-500">--</td></tr>
+                            <tr class="border-b border-slate-100 h-7"><td class="font-bold">VCO2</td><td class="text-center" id="t-vco2">--</td><td class="text-center text-slate-500">ml/min</td><td class="text-right text-slate-500">--</td></tr>
+                            <tr class="border-b border-slate-100 h-7"><td class="font-bold">VE</td><td class="text-center" id="t-ve">--</td><td class="text-center text-slate-500">L/min</td><td class="text-right text-slate-500">--</td></tr>
+                            <tr class="border-b border-slate-100 h-7"><td class="font-bold">fR</td><td class="text-center" id="t-fr">--</td><td class="text-center text-slate-500">12-20</td><td class="text-right font-bold" id="t-fr-obs">--</td></tr>
+                            <tr class="border-b border-slate-100 h-7"><td class="font-bold">EqO2 (VE/VO2)</td><td class="text-center" id="t-eqo2">--</td><td class="text-center text-slate-500">< 30</td><td class="text-right font-bold" id="t-eqo2-obs">--</td></tr>
+                            <tr class="h-7 bg-slate-100"><td class="font-black text-slate-900 pl-1">EqCO2 (VE/VCO2)</td><td class="text-center font-black text-slate-900" id="t-eqco2">--</td><td class="text-center text-slate-600">< 30</td><td class="text-right font-black pr-1" id="t-eqco2-obs">--</td></tr>
+                        </tbody>
+                    </table>
+                    <p class="text-[8px] text-slate-600 mt-2 leading-tight" data-i18n="tInsight">Insight Clínico: La eficiencia respiratoria evalúa el acoplamiento cardiopulmonar. Un sistema eficiente obtiene energía y limpia desechos (CO2) con el menor coste ventilatorio posible.</p>
+                </div>
+            </div>
+
+            <div class="border border-slate-200 rounded-xl p-4 mb-4 shadow-sm">
+                <h3 class="text-[10px] font-black text-slate-700 uppercase tracking-widest text-center mb-4" data-i18n="dTitle">Oxidación Medida (Reposo)</h3>
+                <div class="flex justify-around items-center h-[120px]">
+                    <div class="w-1/2 flex flex-col items-center relative h-full">
+                        <p class="text-[9px] font-bold text-slate-800 mb-2" data-i18n="dWeight">Distribución Ponderal (g)</p>
+                        <div class="w-[100px] h-[100px]"><canvas id="chart-don-g"></canvas></div>
+                        <div class="flex justify-between w-full px-4 mt-2">
+                            <span class="text-[9px] font-black text-slate-700"><span class="text-emerald-600 mr-1">•</span><span id="p2-donut-f-g">--</span> <span data-i18n="gdFats">G/D GRASAS</span></span>
+                            <span class="text-[9px] font-black text-slate-700"><span class="text-orange-600 mr-1">•</span><span id="p2-donut-c-g">--</span> <span data-i18n="gdCarbs">G/D CARBOS</span></span>
+                        </div>
+                    </div>
+                    <div class="w-1/2 flex flex-col items-center relative h-full">
+                        <p class="text-[9px] font-bold text-slate-800 mb-2" data-i18n="dEnergy">Distribución Energía (kcal)</p>
+                        <div class="w-[100px] h-[100px]"><canvas id="chart-don-kcal"></canvas></div>
+                    </div>
+                </div>
+                
+                <div class="flex justify-center gap-6 mt-6 text-[9px] font-black uppercase tracking-widest text-slate-700">
+                    <span class="flex items-center gap-1"><div class="w-2 h-2 rounded-full bg-emerald-500"></div> <span data-i18n="cFats">GRASAS</span></span>
+                    <span class="flex items-center gap-1"><div class="w-2 h-2 rounded-full bg-orange-500"></div> <span data-i18n="cCarbs">CARBOS</span></span>
+                    <span class="flex items-center gap-1"><div class="w-2 h-2 rounded-full bg-blue-600"></div> <span data-i18n="cPros">PROTEÍNAS*</span></span>
+                </div>
+                
+                <div class="mt-4 bg-slate-100 border border-slate-300 rounded flex p-2 items-center gap-4 w-3/4 mx-auto">
+                     <div class="bg-white px-2 py-1 rounded shadow-sm text-sm font-black text-slate-900 border border-slate-200" id="p2-donut-p-g">-- g/d</div>
+                     <div class="text-[9px] text-slate-700 font-bold leading-tight">
+                        <span data-i18n="pro15up">PROTEÍNA (EST. 15%)</span><br><span class="font-normal italic text-[8px] text-slate-500" data-i18n="proNote">*La proteína no se grafica en el NP-RQ. Se estima como referencia.</span>
+                     </div>
+                </div>
+                <p class="text-[7px] text-slate-500 italic text-center w-full mt-2" data-i18n="donNote">*Nota: La grasa es más densa (9 kcal/g) que el carbohidrato (4 kcal/g). Por eso el % de Kcal de grasa siempre será mayor que su volumen en gramos.</p>
+            </div>
+
+            <h3 class="text-[10px] font-black text-slate-700 uppercase tracking-widest mb-2" data-i18n="pNut">Prescripción Nutricional</h3>
+            
+            <div class="flex gap-6 items-center">
+                <div class="w-1/2 space-y-3">
+                    <div class="border border-slate-200 rounded-xl p-3 shadow-sm bg-slate-50">
+                        <p class="text-[9px] font-black text-emerald-700 uppercase mb-1" data-i18n="pDaily">OBJETIVO DIARIO</p>
+                        <p class="text-4xl font-black text-slate-900 tracking-tight" id="p2-tar-kcal">--- <span class="text-lg text-slate-600 font-bold">kcal</span></p>
+                        <p class="text-[10px] text-slate-600 mt-1 font-bold uppercase" id="p2-tar-desc">---</p>
+                    </div>
+                    
+                    <div class="border border-slate-200 rounded-xl p-4 shadow-sm bg-white space-y-3">
+                        <div>
+                            <div class="flex justify-between items-end text-xs font-bold text-slate-800 mb-1"><span class="flex items-center gap-2"><i class="fa-solid fa-droplet text-emerald-600 opacity-80"></i> <span data-i18n="pFat">Grasas</span></span><span class="font-black" id="p2-mac-f">--g</span></div>
+                            <div class="h-1.5 w-1/3 bg-emerald-500 rounded-full"></div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between items-end text-xs font-bold text-slate-800 mb-1"><span class="flex items-center gap-2"><i class="fa-solid fa-wheat-awn text-orange-600 opacity-80"></i> <span data-i18n="pCarb">Carbos</span></span><span class="font-black" id="p2-mac-c">--g</span></div>
+                            <div class="h-1.5 w-1/2 bg-orange-500 rounded-full"></div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between items-end text-xs font-bold text-slate-800 mb-1"><span class="flex items-center gap-2"><i class="fa-solid fa-drumstick-bite text-blue-600 opacity-80"></i> <span data-i18n="pPro">Proteína</span></span><span class="font-black" id="p2-mac-p">--g</span></div>
+                            <div class="h-1.5 w-[80%] bg-blue-600 rounded-full"></div>
+                        </div>
+                        <p class="text-[8px] text-slate-500 italic text-center pt-2 mt-2 border-t border-slate-100" data-i18n="pNote">Valores en gramos para facilitar la dieta diaria.</p>
+                    </div>
+                </div>
+
+                <div class="w-1/2 flex flex-col justify-center items-center">
+                    <h4 class="text-[10px] font-black text-slate-800 uppercase tracking-widest text-center mb-6" data-i18n="pBal">Balance Energético</h4>
+                    <div class="flex justify-around items-end h-[120px] w-full px-4 gap-8">
+                        <div class="w-24 flex flex-col justify-end h-full relative">
+                            <div class="absolute -top-5 w-full text-center text-sm font-black text-slate-800" id="sb-tee-val">-- <span class="text-[8px] font-normal text-slate-500">KCAL</span></div>
+                            <div id="sb-tef" class="w-full bg-[#a855f7] rounded-t-sm flex items-center justify-center text-[8px] text-white font-bold border-b border-white/20" style="height: 10%">TEF</div>
+                            <div id="sb-act" class="w-full bg-[#ea580c] flex items-center justify-center text-[8px] text-white font-bold border-b border-white/20" style="height: 30%">ACT</div>
+                            <div id="sb-rmr" class="w-full bg-[#2563eb] rounded-b-sm flex items-end justify-center pb-2 text-[10px] text-white font-bold" style="height: 60%">REE</div>
+                            <div class="absolute -bottom-5 w-full text-center text-[9px] font-bold text-slate-600 uppercase" data-i18n="pExp">Gasto</div>
+                        </div>
+                        <div class="w-24 flex flex-col justify-end h-full relative">
+                            <div class="absolute -top-5 w-full text-center text-sm font-black text-emerald-700" id="sb-tar-val">-- <span class="text-[8px] font-normal text-emerald-500">KCAL</span></div>
+                            <div id="sb-tar" class="w-full bg-[#059669] rounded-sm flex items-start justify-center pt-2" style="height: 0%"><span class="text-[10px] text-white font-bold uppercase tracking-widest" data-i18n="pTar">Meta</span></div>
+                            <div class="absolute -bottom-5 w-full text-center text-[9px] font-bold text-emerald-700 uppercase" data-i18n="pInt">Ingesta</div>
+                        </div>
+                    </div>
+                    <div class="flex justify-center gap-4 mt-8 bg-slate-100 border border-slate-200 py-1.5 px-4 rounded-full text-[8px] text-slate-700 font-bold uppercase tracking-widest">
+                        <span class="flex items-center gap-1"><div class="w-2 h-2 bg-[#2563eb] rounded-full"></div> <span data-i18n="lBas">Basal</span></span>
+                        <span class="flex items-center gap-1"><div class="w-2 h-2 bg-[#ea580c] rounded-full"></div> <span data-i18n="lAct">Actividad</span></span>
+                        <span class="flex items-center gap-1"><div class="w-2 h-2 bg-[#a855f7] rounded-full"></div> <span data-i18n="lDig">Digestión</span></span>
+                    </div>
+                </div>
+            </div>
+
+            <footer class="mt-auto pt-4 text-center"><p class="text-[9px] text-slate-500 font-bold uppercase tracking-[0.2em]" data-i18n="page2">Página 2/4</p></footer>
+        </div>
+        <div class="html2pdf__page-break"></div>
+
+        <!-- PÁGINA 3: Conclusiones -->
+        <div id="page3" class="a4-page">
+            <header class="flex justify-between items-start pb-3 mb-3 border-b border-slate-200">
+                <div class="flex items-center gap-4">
+                    <img src="https://manutaranilla.github.io/numa-tools2/logo.png" alt="Numa Smart Lab" class="h-14 object-contain" onerror="this.onerror=null; this.src='https://manutaranilla.github.io/numa-tools2/Logo%20principal%20Numa%20Smart%20Lab.png';">
+                    <div class="flex flex-col mt-1 border-l-2 border-slate-200 pl-4">
+                        <h1 class="text-[10px] font-black text-slate-700 tracking-widest uppercase" data-i18n="pg3Title">Actividad & Estilo de Vida</h1>
+                        <h2 class="text-xl font-black text-slate-900 tracking-tight uppercase leading-none mt-1" data-i18n="pg3Sub">Protocolo Clínico</h2>
+                    </div>
+                </div>
+                <div class="text-right flex flex-col items-end pt-1">
+                    <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1" data-i18n="rPat">Paciente</p>
+                    <p class="text-2xl font-black text-slate-900 uppercase tracking-tight leading-none mb-2" id="p3-name">---</p>
+                    <p class="text-[10px] text-slate-700 mb-0.5"><span class="font-bold text-slate-500 mr-1" data-i18n="rDate">FECHA:</span> <span id="p3-date" class="font-bold">--/--/----</span></p>
+                    <p class="text-[10px] text-slate-700 mb-0.5"><span class="font-bold text-slate-500 mr-1" data-i18n="rClinic">CLÍNICA:</span> <span id="p3-clinic-header" class="font-bold">---</span></p>
+                    <p class="text-[10px] text-slate-700"><span class="font-bold text-slate-500 mr-1" data-i18n="rProf">PROF.:</span> <span id="p3-doctor-header" class="font-bold">---</span></p>
+                </div>
+            </header>
+
+            <h3 class="text-[10px] font-black text-slate-700 uppercase tracking-widest mb-2" data-i18n="cTitle">Impacto Fisiológico y Conclusiones del Test en Reposo</h3>
+            <div class="bg-white border border-slate-300 rounded-xl p-3 shadow-sm mb-3">
+                <ul class="space-y-2 text-[9px] text-slate-800 leading-relaxed" id="p3-conclusions-list"></ul>
+            </div>
+
+            <h3 id="p3-fasting-header" class="text-[10px] font-black text-slate-700 uppercase tracking-widest mb-2 border-t border-slate-200 pt-3" data-i18n="fTitle">Recomendaciones Nutricionales y Ayuno</h3>
+            <div id="p3-fasting-container" class="w-full border border-slate-300 rounded-xl p-3 shadow-sm mb-3 flex items-center justify-between bg-white transition-all">
+                <div class="w-3/4 pr-6 border-r border-slate-200">
+                    <h4 class="text-[10px] font-black text-slate-900 uppercase tracking-widest mb-2" data-i18n="fSub">Protocolo de Ayuno Intermitente</h4>
+                    <p class="text-xs text-slate-700 leading-relaxed" id="p3-fasting-desc">---</p>
+                </div>
+                <div class="w-1/4 pl-6 text-center flex flex-col items-center justify-center">
+                    <span id="p3-fasting-badge" class="px-3 py-1 mb-2 bg-emerald-100 text-emerald-800 border border-emerald-200 rounded text-[9px] font-black uppercase tracking-widest text-center w-full">---</span>
+                    <p class="text-4xl font-black text-emerald-700 leading-none" id="p3-fasting-hours">---</p>
+                </div>
+            </div>
+
+            <h3 class="text-[10px] font-black text-purple-700 uppercase tracking-widest mb-2 border-t border-slate-200 pt-3" data-i18n="aTitle">Pauta de Actividad e Hipoxia</h3>
+            <div class="border border-slate-300 rounded-xl shadow-sm overflow-hidden mb-3">
+                <div class="px-4 py-2.5 flex items-center gap-3 border-b border-slate-300 bg-green-100 text-green-900" id="act-header-bg">
+                    <div class="bg-white/90 border border-green-200 p-1 rounded shadow-sm text-green-800" id="act-header-icon"><i class="fa-solid fa-heart-pulse"></i></div>
+                    <h4 class="text-xs font-black uppercase tracking-wide" id="act-header-title">Mantenimiento & Optimización</h4>
+                </div>
+                <div class="flex bg-white p-3 gap-4">
+                    <div class="w-1/2 border-r border-slate-200 pr-4 flex flex-col justify-start">
+                        <h5 class="text-[9px] font-black text-slate-800 uppercase tracking-widest mb-2 flex items-center gap-1.5"><i class="fa-solid fa-dumbbell text-slate-500"></i> <span data-i18n="aVeh">Vehículo (Ejercicio)</span></h5>
+                        <p class="text-[11px] text-slate-700 leading-relaxed" id="act-exercise-desc">---</p>
+                    </div>
+                    <div class="w-1/2 pl-2 flex flex-col justify-start">
+                        <h5 class="text-[9px] font-black text-slate-800 uppercase tracking-widest mb-2 flex items-center gap-1.5"><i class="fa-solid fa-wind text-slate-500"></i> <span data-i18n="aMod">Modulador (Hipoxia)</span></h5>
+                        <p class="text-[11px] text-slate-700 font-medium leading-relaxed" id="act-hypoxia-desc">---</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex gap-4 mb-auto border-t border-slate-200 pt-3">
+                <div class="w-1/2 border border-slate-300 bg-white rounded-xl p-3 shadow-sm flex flex-col justify-center">
+                    <h4 class="text-[10px] font-black text-slate-900 uppercase tracking-widest mb-1.5" data-i18n="eTitle">Evolución y Seguimiento</h4>
+                    <p class="text-[10px] text-slate-700 font-medium leading-snug" id="p3-followup-text">---</p>
+                </div>
+                <div class="w-1/2 border border-blue-200 bg-blue-50 rounded-xl p-3 shadow-sm flex flex-col justify-center">
+                    <h4 class="text-[10px] font-black text-blue-900 uppercase tracking-widest mb-1.5" data-i18n="nTitle">El Siguiente Nivel</h4>
+                    <p class="text-[10px] text-blue-800 font-medium leading-snug" id="p3-next-desc">El test de reposo es "la foto en parado". Para definir zonas de quema de grasa y rendimiento exactas, evoluciona a la <strong class="font-black">Calorimetría en Ejercicio</strong>.</p>
+                </div>
+            </div>
+
+            <footer class="mt-auto pt-4 text-center"><p class="text-[9px] text-slate-500 font-bold uppercase tracking-[0.2em]" data-i18n="page3">Página 3/4</p></footer>
+        </div>
+        <div class="html2pdf__page-break"></div>
+
+        <!-- PÁGINA 4: Notas Clínicas -->
+        <div id="page4" class="a4-page">
+            <header class="flex justify-between items-start pb-4 mb-6 border-b border-slate-200">
+                <div class="flex items-center gap-4">
+                    <img src="https://manutaranilla.github.io/numa-tools2/logo.png" alt="Numa Smart Lab" class="h-14 object-contain" onerror="this.onerror=null; this.src='https://manutaranilla.github.io/numa-tools2/Logo%20principal%20Numa%20Smart%20Lab.png';">
+                    <div class="flex flex-col mt-1 border-l-2 border-slate-200 pl-4">
+                        <h1 class="text-[10px] font-black text-slate-700 tracking-widest uppercase" data-i18n="pg4Title">Observaciones Adicionales</h1>
+                        <h2 class="text-xl font-black text-slate-900 tracking-tight uppercase leading-none mt-1" data-i18n="pg4Sub">Notas Clínicas del Profesional</h2>
+                    </div>
+                </div>
+                <div class="text-right flex flex-col items-end pt-1">
+                    <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1" data-i18n="rPat">Paciente</p>
+                    <p class="text-2xl font-black text-slate-900 uppercase tracking-tight leading-none mb-2" id="p4-name">---</p>
+                    <p class="text-[10px] text-slate-700 mb-0.5"><span class="font-bold text-slate-500 mr-1" data-i18n="rDate">FECHA:</span> <span id="p4-date" class="font-bold">--/--/----</span></p>
+                    <p class="text-[10px] text-slate-700 mb-0.5"><span class="font-bold text-slate-500 mr-1" data-i18n="rClinic">CLÍNICA:</span> <span id="p4-clinic-header" class="font-bold">---</span></p>
+                    <p class="text-[10px] text-slate-700"><span class="font-bold text-slate-500 mr-1" data-i18n="rProf">PROF.:</span> <span id="p4-doctor-header" class="font-bold">---</span></p>
+                </div>
+            </header>
+
+            <div class="flex-1 border border-slate-300 rounded-xl p-6 shadow-sm bg-white text-sm text-slate-800 outline-none focus:ring-2 focus:ring-blue-500 transition-all cursor-text overflow-y-auto leading-relaxed" contenteditable="true" id="clinical-notes" data-placeholder="Espacio interactivo. Haz clic aquí para añadir observaciones clínicas, analíticas complementarias, pautas específicas de suplementación o ajustes detallados del entrenamiento..."></div>
+
+            <footer class="mt-auto pt-6 text-center">
+                <p class="text-[9px] text-slate-500 font-bold uppercase tracking-[0.2em]" data-i18n="page4">Página 4/4</p>
+            </footer>
+        </div>
+    </main>
+
+    <script>
+        const i18n = {
+            es: { 
+                sidebarTitle: "Panel de Control", calibration: "Calibración", step1: "1. Identificación", patName: "Paciente", patNamePh: "Nombre", date: "Fecha", time: "Hora", step2: "2. Responsables", prof: "Profesional", profPh: "Dr/a.", clinic: "Clínica", clinicPh: "Centro", step3: "3. Objetivo & Biometría", goalLabel: "Objetivo", goalLoss: "Pérdida Grasa", goalPerf: "Rendimiento", goalMaint: "Mantenimiento", goalGain: "Ganancia Muscular", actLabel: "Actividad", act1: "Sedentario (x1.2)", act2: "Ligero (x1.35)", act3: "Moderado (x1.55)", act4: "Alto (x1.75)", act5: "Muy Alto (x1.9)", ageLabel: "Edad", sexLabel: "Sexo", sexM: "Hombre", sexF: "Mujer", weightLabel: "Peso (kg)", heightLabel: "Altura (cm)", bfLabel: "% Grasa (Opc.)", includeFasting: "Incluir Ayuno", step4: "4. Calorimetría", formulaLabel: "Fórmula Predictiva", advParams: "Parámetros Avanzados", 
+                rgpdAccept: "Acepto – Exención de Responsabilidad y RGPD", 
+                rgpdT1: "Los resultados de este informe son puramente orientativos, no constituyen un diagnóstico médico y deben ser validados por un facultativo.", 
+                rgpdT2: "El profesional asume la total responsabilidad legal, la interpretación clínica y el tratamiento de los datos del paciente (RGPD).", 
+                rgpdT3: "Numa Blue opera exclusivamente como herramienta de software para el cálculo de algoritmos y estructuración de datos.", 
+                rgpdT4: "Numa Blue se exime expresamente de cualquier responsabilidad civil, penal o médica derivada de las decisiones tomadas con este informe.", 
+                btnPdf: "IMPRIMIR PDF", btnGuide: "Guía", repTitle: "Informe Salud Metabólica", repSub: "Análisis Calorimétrico", rPat: "Paciente", rDate: "FECHA:", rClinic: "CLÍNICA:", rProf: "PROF.:", rAge: "Edad", rSex: "Sexo", rWeight: "Peso", rHeight: "Altura", rGoal: "Objetivo", bxAgeAn: "Análisis Edad", bxChrAge: "Edad Cronológica", bxMetAge: "Edad Metabólica", bxIam: "Índice Adaptación Metabólica (IAM)", bxDiag: "Diagnóstico Clínico", bxReadyDef: "¿Déficit Calórico?", bxReadyFast: "¿Déficit y Ayuno?", bxReadyAna: "Potencial Anabólico", bxCrit: "Criterio:", hCal: "Análisis Calorimétrico", hRee: "REE (Basal)", kcalDay: "kcal/día", measured: "Medido", expPrefix: "Esperado:", refPrefix: "Ref:", bxReeRel: "REE Relativo", bxReeRelD: "Eficiencia por kg.", bxBsa: "REE por Superficie", bxBsaD: "Gasto normalizado.", bxFc: "FC (Reposo)", hSub: "Oxidación (NP-RQ)", hRq: "Cociente Respiratorio", hIfm: "Índice Flexibilidad", ifmOpt: "Óptima (IFM 4)", ifmMix: "Mixta (IFM 2)", ifmLow: "Baja (IFM 1)", ifmInterp: "Interpretación:", gdFats: "G/D GRASAS", gdCarbs: "G/D CARBOS", cFats: "GRASAS", cCarbs: "CARBOS", cPros: "PROTEÍNAS*", pro15: "Proteína (Est. 15%)", pro15up: "PROTEÍNA (EST. 15%)", proNot: "No medible", proNote: "*Proteína estimada.", donNote: "*Grasa = 9kcal/g, Carbo = 4kcal/g.", page1: "Página 1/4", page2: "Página 2/4", page3: "Página 3/4", page4: "Página 4/4", pg2Title: "Estrategia Nutricional", pg2Sub: "Macros", tRel: "Fiabilidad Test", rpuApt: "Resultados aptos.", tEff: "Eficiencia Respiratoria", tblP: "Parámetro", tblM: "Medido", tInsight: "Eficiencia respiratoria evalúa acoplamiento.", dTitle: "Oxidación (Reposo)", dWeight: "Gramos", dEnergy: "Kcal", pNut: "Prescripción", pDaily: "META DIARIA", pFat: "Grasas", pCarb: "Carbos", pPro: "Proteína", pNote: "Valores en gramos.", pBal: "Balance Energético", pExp: "Gasto", pTar: "Meta", pInt: "Ingesta", lBas: "Basal", lAct: "Act.", lDig: "Diges.", pg3Title: "Estilo de Vida", pg3Sub: "Protocolo Clínico", cTitle: "Conclusiones del Test", fTitle: "Nutrición y Ayuno", fSub: "Protocolo Ayuno", aTitle: "Actividad e Hipoxia", aVeh: "Ejercicio", aMod: "Hipoxia", eTitle: "Evolución", nTitle: "Siguiente Nivel", nextDesc: "Evoluciona a Calorimetría en Ejercicio.", pg4Title: "Observaciones", pg4Sub: "Notas Clínicas", notesPh: "Añadir observaciones...", male: "Hombre", female: "Mujer", years: "años", gFast: "Gasto Acelerado", gNorm: "Gasto Normal", gSlow: "Gasto Reducido", iamEfi: "EFICIENTE", iamAce: "ACELERADO", iamCon: "CONSERVADOR", iamDescAce: "Gasto excesivo.", iamDescCon: "Supresión severa (Modo Ahorro).", iamDescEfiC: "Ligeramente conservador.", iamDescEfiA: "Ligeramente acelerado.", iamDescEfi: "Motor metabólico ideal.", ifm4: "ÓPTIMA", ifm3: "EXCELENTE", ifm2: "MIXTA", ifm1: "BAJA", ifmDesc4: "Predominio oxidación grasas.", ifmDesc3: "Muy buena flexibilidad.", ifmDesc2: "Uso equilibrado. Si ayunas, inicio de inflexibilidad.", ifmDesc1: "Glucodependencia. Inflexibilidad severa.", fcDesc1: "Alerta: >55% FC Máx.", fcDesc2: "FC en rangos normales.", fcDesc3: "Excelente economía cardíaca.", rOpt: "Óptima", rMed: "Media", rBaj: "Baja", rr1: "FR alta.", rr2: "EqCO2 > 36.", rr3: "Hiperventilación (RQ>1).", rr4: "Patrón estable.", oExc: "Excelente", oLim: "Límite", oInef: "Ineficiente", frLow: "Baja", frNor: "Normal", frHig: "Alta", effEfi: "EFICIENTE", effInef: "INEFICIENTE", effLim: "LÍMITE", rtNo: "NO RECOMENDADO", rtPre: "PRECAUCIÓN", rtOk: "PREPARADO", rtLim: "LIMITADO", rtCost: "ALTO COSTE", rtOpt: "ÓPTIMO", rd1: "Requiere Restauración", rd2: "Metabolismo Acelerado", rd3: "Ineficiencia respiratoria.", rd4: "Sistema estable", rd5: "Tendencia acumular grasa.", rd6: "Entorno anabólico ideal.", rc1: "Prioridad Restauración.", rc2: "Déficit contraproducente.", rc3: "No estresar con déficit.", rc4: "Déficit seguro 20%", rc5: "Modo ahorro.", rc6: "Requiere mucha comida.", rc7: "Equilibrio anabólico perfecto.", tgt1: "RESTAURACIÓN", tgt2: "DÉFICIT SUAVE", tgt3: "PÉRDIDA GRASA", tgt4: "SUPERÁVIT", c1: "Precisión vs Fórmulas:", c1b: "Tu gasto real es ## kcal/d.", c2: "Alerta Cruce:", c2b: "Urge refeed.", c3: "Alta oxidación grasas:", c3b: "Excelente uso de ácidos grasos.", c4: "Ahorro glucógeno:", c4b: "Preservación reservas.", c5: "Baja oxidación grasas:", c5b: "Glucodependencia en reposo.", c6: "Protección músculo:", c6b: "Catabolismo proteico bajo.", c7: "Metabolismo sano:", c7b: "Energía adecuada.", c8: "Modo Supresión:", c8b: "Riesgo de rebote.", fb1: "PRECAUCIÓN (12H)", fb2: "INICIO (14H)", fb3: "MEDIO (16H)", fb4: "ÓPTIMO (16-18H)", fm1: "Mantener ayuno nocturno.", fm2: "Iniciar 14-16h suave.", fm3: "Protocolo 16h ideal.", fm4: "Óptima tolerancia ayunos profundos.", ah1: "RESTAURACIÓN", ah2: "QUEMA GRASA", ah3: "ANABOLISMO", ah4: "RENDIMIENTO", ah5: "MANTENIMIENTO", ae1: "Fuerza 3 días. Minimizar cardio.", am1: "Estimula biogénesis mitocondrial.", ae2: "Fuerza + Cardio Zona 2.", am2: "Multiplica quema calorías.", ae3: "Fuerza pesada 5 días.", am3: "Acelera aclaramiento lactato.", ae4: "Entrenamiento polarizado 80/20.", am4: "Dispara resistencia y VO2.", ae5: "Combinación Fuerza/Cardio.", am5: "Optimiza salud celular.", fw1: "Re-test 4-6 semanas vital.", fw2: "Re-test 4-6 semanas (estrés).", fw3: "Control flexibilidad 4-6 semanas.", fw4: "Re-test 4-6 semanas o 3 meses si mantiene.", yAyu: " y ayuno", tagWeeks: "REVISIÓN 4-6 SEMANAS", tagMonths: "REVISIÓN 3-6 MESES" 
+            },
+            en: {
+                sidebarTitle: "Control Panel", calibration: "Calibration", step1: "1. Identification", patName: "Patient", patNamePh: "Name", date: "Date", time: "Time", step2: "2. Responsibles", prof: "Professional", profPh: "Dr.", clinic: "Clinic", clinicPh: "Center", step3: "3. Goal & Biometrics", goalLabel: "Goal", goalLoss: "Fat Loss", goalPerf: "Performance", goalMaint: "Maintenance", goalGain: "Muscle Gain", actLabel: "Activity", act1: "Sedentary (x1.2)", act2: "Light (x1.35)", act3: "Moderate (x1.55)", act4: "High (x1.75)", act5: "Very High (x1.9)", ageLabel: "Age", sexLabel: "Sex", sexM: "Male", sexF: "Female", weightLabel: "Weight (kg)", heightLabel: "Height (cm)", bfLabel: "Body Fat % (Opt.)", includeFasting: "Include Fasting", step4: "4. Calorimetry", formulaLabel: "Predictive Formula", advParams: "Advanced Parameters", 
+                rgpdAccept: "I Accept – Disclaimer and GDPR", 
+                rgpdT1: "The results of this report are purely indicative, do not constitute a medical diagnosis, and must be validated by a physician.", 
+                rgpdT2: "The professional assumes full legal responsibility, clinical interpretation, and the processing of patient data (GDPR).", 
+                rgpdT3: "Numa Blue operates exclusively as a software tool for algorithm calculation and data structuring.", 
+                rgpdT4: "Numa Blue expressly disclaims any civil, criminal, or medical liability arising from decisions made using this report.", 
+                btnPdf: "PRINT PDF", btnGuide: "Guide", repTitle: "Metabolic Health Report", repSub: "Resting Calorimetric Analysis", rPat: "Patient", rDate: "DATE:", rClinic: "CLINIC:", rProf: "PROF.:", rAge: "Age", rSex: "Sex", rWeight: "Weight", rHeight: "Height", rGoal: "Goal", bxAgeAn: "Age Analysis", bxChrAge: "Chronological Age", bxMetAge: "Metabolic Age", bxIam: "Metabolic Adaptation Index (MAI)", bxDiag: "Clinical Diagnosis", bxReadyDef: "Caloric Deficit?", bxReadyFast: "Deficit & Fasting?", bxReadyAna: "Anabolic Potential", bxCrit: "Criteria:", hCal: "Calorimetric Analysis", hRee: "REE (Basal)", kcalDay: "kcal/day", measured: "Measured", expPrefix: "Expected:", refPrefix: "Ref:", bxReeRel: "Relative REE", bxReeRelD: "Efficiency per kg.", bxBsa: "REE by BSA", bxBsaD: "Normalized expenditure.", bxFc: "HR (Resting)", hSub: "Oxidation (NP-RQ)", hRq: "Respiratory Quotient", hIfm: "Flexibility Index", ifmOpt: "Optimal (MFI 4)", ifmMix: "Mixed (MFI 2)", ifmLow: "Low (MFI 1)", ifmInterp: "Interpretation:", gdFats: "G/D FATS", gdCarbs: "G/D CARBS", cFats: "FATS", cCarbs: "CARBS", cPros: "PROTEINS*", pro15: "Protein (Est. 15%)", pro15up: "PROTEIN (EST. 15%)", proNot: "Not measurable", proNote: "*Estimated protein.", donNote: "*Fat = 9kcal/g, Carb = 4kcal/g.", page1: "Page 1/4", page2: "Page 2/4", page3: "Page 3/4", page4: "Page 4/4", pg2Title: "Nutritional Strategy", pg2Sub: "Macros", tRel: "Test Reliability", rpuApt: "Valid results.", tEff: "Respiratory Efficiency", tblP: "Parameter", tblM: "Measured", tInsight: "Respiratory efficiency evaluates coupling.", dTitle: "Oxidation (Resting)", dWeight: "Grams", dEnergy: "Kcal", pNut: "Prescription", pDaily: "DAILY TARGET", pFat: "Fats", pCarb: "Carbs", pPro: "Protein", pNote: "Values in grams.", pBal: "Energy Balance", pExp: "Expend.", pTar: "Target", pInt: "Intake", lBas: "Basal", lAct: "Act.", lDig: "Diges.", pg3Title: "Lifestyle", pg3Sub: "Clinical Protocol", cTitle: "Test Conclusions", fTitle: "Nutrition & Fasting", fSub: "Fasting Protocol", aTitle: "Activity & Hypoxia", aVeh: "Exercise", aMod: "Hypoxia", eTitle: "Evolution", nTitle: "Next Level", nextDesc: "Evolve to Exercise Calorimetry.", pg4Title: "Observations", pg4Sub: "Clinical Notes", notesPh: "Add observations...", male: "Male", female: "Female", years: "years", gFast: "Accelerated Expend.", gNorm: "Normal Expend.", gSlow: "Reduced Expend.", iamEfi: "EFFICIENT", iamAce: "ACCELERATED", iamCon: "CONSERVATIVE", iamDescAce: "Excessive expenditure.", iamDescCon: "Severe suppression (Survival Mode).", iamDescEfiC: "Slightly conservative.", iamDescEfiA: "Slightly accelerated.", iamDescEfi: "Ideal metabolic engine.", ifm4: "OPTIMAL", ifm3: "EXCELLENT", ifm2: "MIXED", ifm1: "LOW", ifmDesc4: "Fat oxidation predominance.", ifmDesc3: "Very good flexibility.", ifmDesc2: "Balanced use. If fasting, early inflexibility.", ifmDesc1: "Glucodependence. Severe inflexibility.", fcDesc1: "Alert: >55% Max HR.", fcDesc2: "HR in normal ranges.", fcDesc3: "Excellent cardiac economy.", rOpt: "Optimal", rMed: "Medium", rBaj: "Low", rr1: "High RR.", rr2: "EqCO2 > 36.", rr3: "Hyperventilation (RQ>1).", rr4: "Stable pattern.", oExc: "Excellent", oLim: "Limit", oInef: "Inefficient", frLow: "Low", frNor: "Normal", frHig: "High", effEfi: "EFFICIENT", effInef: "INEFFICIENT", effLim: "LIMIT", rtNo: "NOT RECOMMENDED", rtPre: "CAUTION", rtOk: "READY", rtLim: "LIMITED", rtCost: "HIGH COST", rtOpt: "OPTIMAL", rd1: "Requires Restoration", rd2: "Accelerated Metabolism", rd3: "Respiratory inefficiency.", rd4: "Stable system", rd5: "Fat accumulation tendency.", rd6: "Ideal anabolic environment.", rc1: "Restoration Priority.", rc2: "Deficit counterproductive.", rc3: "Do not stress with deficit.", rc4: "Safe deficit 20%", rc5: "Survival mode.", rc6: "Requires lots of food.", rc7: "Perfect anabolic balance.", tgt1: "RESTORATION", tgt2: "MILD DEFICIT", tgt3: "FAT LOSS", tgt4: "SURPLUS", c1: "Precision vs Formulas:", c1b: "Real expenditure is ## kcal/d.", c2: "Crossover Alert:", c2b: "Urgent refeed.", c3: "High fat oxidation:", c3b: "Excellent fatty acid use.", c4: "Glycogen saving:", c4b: "Preserved reserves.", c5: "Low fat oxidation:", c5b: "Resting glucodependence.", c6: "Muscle protection:", c6b: "Low protein catabolism.", c7: "Healthy metabolism:", c7b: "Adequate energy.", c8: "Suppression Mode:", c8b: "Rebound risk.", fb1: "CAUTION (12H)", fb2: "START (14H)", fb3: "MEDIUM (16H)", fb4: "OPTIMAL (16-18H)", fm1: "Maintain overnight fast only.", fm2: "Start 14-16h mildly.", fm3: "16h protocol ideal.", fm4: "Optimal deep fasting tolerance.", ah1: "RESTORATION", ah2: "FAT BURNING", ah3: "ANABOLISM", ah4: "PERFORMANCE", ah5: "MAINTENANCE", ae1: "Strength 3 days. Minimize cardio.", am1: "Stimulates mitochondrial biogenesis.", ae2: "Strength + Zone 2 Cardio.", am2: "Multiplies calorie burn.", ae3: "Heavy strength 5 days.", am3: "Accelerates lactate clearance.", ae4: "Polarized training 80/20.", am4: "Skyrockets endurance & VO2.", ae5: "Strength/Cardio mix.", am5: "Optimizes cellular health.", fw1: "Re-test 4-6 weeks vital.", fw2: "Re-test 4-6 weeks (stress).", fw3: "Flexibility control 4-6 weeks.", fw4: "Re-test 4-6 weeks or 3 mos if maintaining.", yAyu: " & fasting", tagWeeks: "REVIEW IN 4-6 WEEKS", tagMonths: "REVIEW IN 3-6 MONTHS" 
+            },
+            pt: {
+                sidebarTitle: "Painel de Controle", calibration: "Calibração", step1: "1. Identificação", patName: "Paciente", patNamePh: "Nome", date: "Data", time: "Hora", step2: "2. Responsáveis", prof: "Profissional", profPh: "Dr.", clinic: "Clínica", clinicPh: "Centro", step3: "3. Objetivo e Biometria", goalLabel: "Objetivo", goalLoss: "Perda Gordura", goalPerf: "Desempenho", goalMaint: "Manutenção", goalGain: "Ganho Muscular", actLabel: "Atividade", act1: "Sedentário (x1.2)", act2: "Leve (x1.35)", act3: "Moderado (x1.55)", act4: "Alto (x1.75)", act5: "Muito Alto (x1.9)", ageLabel: "Idade", sexLabel: "Sexo", sexM: "Homem", sexF: "Mulher", weightLabel: "Peso (kg)", heightLabel: "Altura (cm)", bfLabel: "% Gordura (Opc.)", includeFasting: "Incluir Jejum", step4: "4. Calorimetria", formulaLabel: "Fórmula Preditiva", advParams: "Parâmetros Avançados", 
+                rgpdAccept: "Aceito – Isenção de Responsabilidade e RGPD", 
+                rgpdT1: "Os resultados deste relatório são puramente indicativos, não constituem diagnóstico médico e devem ser validados por um médico.", 
+                rgpdT2: "O profissional assume total responsabilidade legal, a interpretação clínica e o processamento dos dados do paciente (RGPD).", 
+                rgpdT3: "A Numa Blue atua exclusivamente como ferramenta de software para cálculo de algoritmos e estruturação de dados.", 
+                rgpdT4: "A Numa Blue isenta-se expressamente de qualquer responsabilidade civil, criminal ou médica decorrente de decisões tomadas com este relatório.", 
+                btnPdf: "IMPRIMIR PDF", btnGuide: "Guia", repTitle: "Relatório Saúde Metabólica", repSub: "Análise Calorimétrica", rPat: "Paciente", rDate: "DATA:", rClinic: "CLÍNICA:", rProf: "PROF.:", rAge: "Idade", rSex: "Sexo", rWeight: "Peso", rHeight: "Altura", rGoal: "Objetivo", bxAgeAn: "Análise Idade", bxChrAge: "Idade Cronológica", bxMetAge: "Idade Metabólica", bxIam: "Índice Adaptação Metabólica (IAM)", bxDiag: "Diagnóstico Clínico", bxReadyDef: "Déficit Calórico?", bxReadyFast: "Déficit e Jejum?", bxReadyAna: "Potencial Anabólico", bxCrit: "Critério:", hCal: "Análise Calorimétrica", hRee: "REE (Basal)", kcalDay: "kcal/dia", measured: "Medido", expPrefix: "Esperado:", refPrefix: "Ref:", bxReeRel: "REE Relativo", bxReeRelD: "Eficiência por kg.", bxBsa: "REE por Superfície", bxBsaD: "Gasto normalizado.", bxFc: "FC (Repouso)", hSub: "Oxidação (NP-RQ)", hRq: "Quociente Respiratório", hIfm: "Índice Flexibilidade", ifmOpt: "Ideal (IFM 4)", ifmMix: "Mista (IFM 2)", ifmLow: "Baixa (IFM 1)", ifmInterp: "Interpretação:", gdFats: "G/D GORDURAS", gdCarbs: "G/D CARBOID.", cFats: "GORDURAS", cCarbs: "CARBOID.", cPros: "PROTEÍNAS*", pro15: "Proteína (Est. 15%)", pro15up: "PROTEÍNA (EST. 15%)", proNot: "Não mensurável", proNote: "*Proteína estimada.", donNote: "*Gordura = 9kcal/g, Carbo = 4kcal/g.", page1: "Página 1/4", page2: "Página 2/4", page3: "Página 3/4", page4: "Página 4/4", pg2Title: "Estratégia Nutricional", pg2Sub: "Macros", tRel: "Confiabilidade", rpuApt: "Resultados aptos.", tEff: "Eficiência Respiratória", tblP: "Parâmetro", tblM: "Medido", tInsight: "Eficiência respiratória avalia acoplamento.", dTitle: "Oxidação (Repouso)", dWeight: "Gramas", dEnergy: "Kcal", pNut: "Prescrição", pDaily: "META DIÁRIA", pFat: "Gorduras", pCarb: "Carboid.", pPro: "Proteína", pNote: "Valores em gramas.", pBal: "Balanço Energético", pExp: "Gasto", pTar: "Meta", pInt: "Ingestão", lBas: "Basal", lAct: "Ativ.", lDig: "Diges.", pg3Title: "Estilo de Vida", pg3Sub: "Protocolo Clínico", cTitle: "Conclusões do Teste", fTitle: "Nutrição e Jejum", fSub: "Protocolo Jejum", aTitle: "Atividade e Hipóxia", aVeh: "Exercício", aMod: "Hipóxia", eTitle: "Evolução", nTitle: "Próximo Nível", nextDesc: "Evolua para Calorimetria em Exercício.", pg4Title: "Observações", pg4Sub: "Notas Clínicas", notesPh: "Adicionar observações...", male: "Homem", female: "Mulher", years: "anos", gFast: "Gasto Acelerado", gNorm: "Gasto Normal", gSlow: "Gasto Reduzido", iamEfi: "EFICIENTE", iamAce: "ACELERADO", iamCon: "CONSERVADOR", iamDescAce: "Gasto excessivo.", iamDescCon: "Supressão severa (Modo Economia).", iamDescEfiC: "Ligeiramente conservador.", iamDescEfiA: "Ligeiramente acelerado.", iamDescEfi: "Motor metabólico ideal.", ifm4: "IDEAL", ifm3: "EXCELENTE", ifm2: "MISTA", ifm1: "BAIXA", ifmDesc4: "Predomínio oxidação gorduras.", ifmDesc3: "Muito boa flexibilidade.", ifmDesc2: "Uso equilibrado. Se jejum, início de inflexibilidade.", ifmDesc1: "Glicodependência. Inflexibilidade severa.", fcDesc1: "Alerta: >55% FC Máx.", fcDesc2: "FC em faixas normais.", fcDesc3: "Excelente economia cardíaca.", rOpt: "Ideal", rMed: "Média", rBaj: "Baixa", rr1: "FR alta.", rr2: "EqCO2 > 36.", rr3: "Hiperventilação (RQ>1).", rr4: "Padrão estável.", oExc: "Excelente", oLim: "Limite", oInef: "Ineficiente", frLow: "Baixa", frNor: "Normal", frHig: "Alta", effEfi: "EFICIENTE", effInef: "INEFICIENTE", effLim: "LIMITE", rtNo: "NÃO RECOMENDADO", rtPre: "PRECAUÇÃO", rtOk: "PREPARADO", rtLim: "LIMITADO", rtCost: "ALTO CUSTO", rtOpt: "IDEAL", rd1: "Requer Restauração", rd2: "Metabolismo Acelerado", rd3: "Ineficiência respiratória.", rd4: "Sistema estável", rd5: "Tendência acumular gordura.", rd6: "Ambiente anabólico ideal.", rc1: "Prioridade Restauração.", rc2: "Déficit contraproducente.", rc3: "Não estressar com déficit.", rc4: "Déficit seguro 20%", rc5: "Modo economia.", rc6: "Requer muita comida.", rc7: "Equilíbrio anabólico perfeito.", tgt1: "RESTAURAÇÃO", tgt2: "DÉFICIT SUAVE", tgt3: "PERDA GORDURA", tgt4: "SUPERÁVIT", c1: "Precisão vs Fórmulas:", c1b: "Seu gasto real é ## kcal/d.", c2: "Alerta Cruzamento:", c2b: "Urge refeed.", c3: "Alta oxidação gorduras:", c3b: "Excelente uso de ácidos graxos.", c4: "Economia glicogênio:", c4b: "Preservação reservas.", c5: "Baixa oxidação gorduras:", c5b: "Glicodependência em repouso.", c6: "Proteção músculo:", c6b: "Catabolismo proteico baixo.", c7: "Metabolismo saudável:", c7b: "Energia adequada.", c8: "Modo Supressão:", c8b: "Risco de rebote.", fb1: "PRECAUÇÃO (12H)", fb2: "INÍCIO (14H)", fb3: "MÉDIO (16H)", fb4: "IDEAL (16-18H)", fm1: "Manter jejum noturno.", fm2: "Iniciar 14-16h suave.", fm3: "Protocolo 16h ideal.", fm4: "Ótima tolerância jejuns profundos.", ah1: "RESTAURAÇÃO", ah2: "QUEIMA GORDURA", ah3: "ANABOLISMO", ah4: "DESEMPENHO", ah5: "MANUTENÇÃO", ae1: "Força 3 dias. Minimizar cardio.", am1: "Estimula biogênese mitocondrial.", ae2: "Força + Cardio Zona 2.", am2: "Multiplica queima calorias.", ae3: "Força pesada 5 dias.", am3: "Acelera depuração lactato.", ae4: "Treinamento polarizado 80/20.", am4: "Dispara resistência e VO2.", ae5: "Combinação Força/Cardio.", am5: "Otimiza saúde celular.", fw1: "Re-teste 4-6 semanas vital.", fw2: "Re-teste 4-6 semanas (estresse).", fw3: "Controle flexibilidade 4-6 semanas.", fw4: "Re-teste 4-6 semanas ou 3 meses se mantiver.", yAyu: " e jejum", tagWeeks: "REVISÃO EM 4-6 SEMANAS", tagMonths: "REVISÃO EM 3-6 MESES" 
+            },
+            it: {
+                sidebarTitle: "Pannello di Controllo", calibration: "Calibrazione", step1: "1. Identificazione", patName: "Paziente", patNamePh: "Nome", date: "Data", time: "Ora", step2: "2. Responsabili", prof: "Professionista", profPh: "Dr.", clinic: "Clinica", clinicPh: "Centro", step3: "3. Obiettivo & Biometria", goalLabel: "Obiettivo", goalLoss: "Perdita Grasso", goalPerf: "Rendimento", goalMaint: "Mantenimento", goalGain: "Guadagno Muscolare", actLabel: "Attività", act1: "Sedentario (x1.2)", act2: "Leggero (x1.35)", act3: "Moderato (x1.55)", act4: "Alto (x1.75)", act5: "Molto Alto (x1.9)", ageLabel: "Età", sexLabel: "Sesso", sexM: "Uomo", sexF: "Donna", weightLabel: "Peso (kg)", heightLabel: "Altezza (cm)", bfLabel: "% Grasso (Opz.)", includeFasting: "Includi Digiuno", step4: "4. Calorimetria", formulaLabel: "Formula Predittiva", advParams: "Parametri Avanzati", 
+                rgpdAccept: "Accetto – Esclusione di Responsabilità e GDPR", 
+                rgpdT1: "I risultati di questo rapporto sono puramente indicativi, non costituiscono diagnosi medica e devono essere valutati da un medico.", 
+                rgpdT2: "Il professionista si assume la piena responsabilità legale, l'interpretazione clinica e il trattamento dei dati del paziente (GDPR).", 
+                rgpdT3: "Numa Blue opera esclusivamente come strumento software per il calcolo di algoritmi e la strutturazione dei dati.", 
+                rgpdT4: "Numa Blue declina espressamente ogni responsabilità civile, penale o medica derivante dalle decisioni prese con questo rapporto.", 
+                btnPdf: "STAMPA PDF", btnGuide: "Guida", repTitle: "Rapporto Salute Metabolica", repSub: "Analisi Calorimetrica", rPat: "Paziente", rDate: "DATA:", rClinic: "CLINICA:", rProf: "PROF.:", rAge: "Età", rSex: "Sesso", rWeight: "Peso", rHeight: "Altezza", rGoal: "Obiettivo", bxAgeAn: "Analisi Età", bxChrAge: "Età Cronologica", bxMetAge: "Età Metabolica", bxIam: "Indice Adattamento Metabolico (IAM)", bxDiag: "Diagnosi Clinica", bxReadyDef: "Deficit Calorico?", bxReadyFast: "Deficit e Digiuno?", bxReadyAna: "Potenziale Anabolico", bxCrit: "Criterio:", hCal: "Analisi Calorimetrica", hRee: "REE (Basale)", kcalDay: "kcal/giorno", measured: "Misurato", expPrefix: "Atteso:", refPrefix: "Rif:", bxReeRel: "REE Relativo", bxReeRelD: "Efficienza per kg.", bxBsa: "REE per Superficie", bxBsaD: "Spesa normalizzata.", bxFc: "FC (Riposo)", hSub: "Ossidazione (NP-RQ)", hRq: "Quoziente Respiratorio", hIfm: "Indice Flessibilità", ifmOpt: "Ottimale (IFM 4)", ifmMix: "Mista (IFM 2)", ifmLow: "Bassa (IFM 1)", ifmInterp: "Interpretazione:", gdFats: "G/G GRASSI", gdCarbs: "G/G CARBOID.", cFats: "GRASSI", cCarbs: "CARBOIDRATI", cPros: "PROTEINE*", pro15: "Proteina (St. 15%)", pro15up: "PROTEINA (ST. 15%)", proNot: "Non misurabile", proNote: "*Proteina stimata.", donNote: "*Grasso = 9kcal/g, Carbo = 4kcal/g.", page1: "Pagina 1/4", page2: "Pagina 2/4", page3: "Pagina 3/4", page4: "Pagina 4/4", pg2Title: "Strategia Nutrizionale", pg2Sub: "Macro", tRel: "Affidabilità Test", rpuApt: "Risultati idonei.", tEff: "Efficienza Respiratoria", tblP: "Parametro", tblM: "Misurato", tInsight: "Efficienza respiratoria valuta accoppiamento.", dTitle: "Ossidazione (Riposo)", dWeight: "Grammi", dEnergy: "Kcal", pNut: "Prescrizione", pDaily: "OBIETTIVO GIORNALIERO", pFat: "Grassi", pCarb: "Carboidrati", pPro: "Proteine", pNote: "Valori in grammi.", pBal: "Bilancio Energetico", pExp: "Spesa", pTar: "Meta", pInt: "Apporto", lBas: "Basale", lAct: "Attività", lDig: "Digest.", pg3Title: "Stile di Vita", pg3Sub: "Protocollo Clinico", cTitle: "Conclusioni Test", fTitle: "Nutrizione e Digiuno", fSub: "Protocolo Digiuno", aTitle: "Attività e Ipossia", aVeh: "Esercizio", aMod: "Ipossia", eTitle: "Evoluzione", nTitle: "Prossimo Livello", nextDesc: "Evolvi alla Calorimetria in Esercizio.", pg4Title: "Osservazioni", pg4Sub: "Note Cliniche", notesPh: "Aggiungi osservazioni...", male: "Uomo", female: "Donna", years: "anni", gFast: "Spesa Accelerata", gNorm: "Spesa Normale", gSlow: "Spesa Ridotta", iamEfi: "EFFICIENTE", iamAce: "ACCELERATO", iamCon: "CONSERVATORE", iamDescAce: "Spesa eccessiva.", iamDescCon: "Soppressione severa (Modalità Risparmio).", iamDescEfiC: "Leggermente conservatore.", iamDescEfiA: "Leggermente accelerato.", iamDescEfi: "Motore metabolico ideale.", ifm4: "OTTIMALE", ifm3: "ECCELLENTE", ifm2: "MISTA", ifm1: "BASSA", ifmDesc4: "Predominanza ossidazione grassi.", ifmDesc3: "Ottima flessibilità.", ifmDesc2: "Uso equilibrato. Se a digiuno, inizio rigidità.", ifmDesc1: "Glucodipendenza. Severa inflessibilità.", fcDesc1: "Allerta: >55% FC Max.", fcDesc2: "FC in range normali.", fcDesc3: "Eccellente economia cardiaca.", rOpt: "Ottimale", rMed: "Media", rBaj: "Bassa", rr1: "FR alta.", rr2: "EqCO2 > 36.", rr3: "Iperventilazione (RQ>1).", rr4: "Modello stabile.", oExc: "Eccellente", oLim: "Limite", oInef: "Inefficiente", frLow: "Bassa", frNor: "Normale", frHig: "Alta", effEfi: "EFFICIENTE", effInef: "INEFFICIENTE", effLim: "LIMITE", rtNo: "NON RACCOMANDATO", rtPre: "PRECAUZIONE", rtOk: "PRONTO", rtLim: "LIMITATO", rtCost: "ALTO COSTO", rtOpt: "OTTIMALE", rd1: "Richiede Restauro", rd2: "Metabolismo Accelerato", rd3: "Inefficienza respiratoria.", rd4: "Sistema stabile", rd5: "Tendenza accumulare grasso.", rd6: "Ambiente anabolico ideale.", rc1: "Priorità Restauro.", rc2: "Deficit controproducente.", rc3: "Non stressare con deficit.", rc4: "Deficit sicuro 20%", rc5: "Modalità risparmio.", rc6: "Richiede molto cibo.", rc7: "Equilibrio anabolico perfetto.", tgt1: "RESTAURO", tgt2: "DEFICIT LEGGERO", tgt3: "PERDITA GRASSO", tgt4: "SURPLUS", c1: "Precisione vs Formule:", c1b: "La spesa reale è ## kcal/g.", c2: "Allerta Incrocio:", c2b: "Urge refeed.", c3: "Alta ossidazione grassi:", c3b: "Eccellente uso di acidi grassi.", c4: "Risparmio glicogeno:", c4b: "Preservazione riserve.", c5: "Bassa ossidazione grassi:", c5b: "Glucodipendenza a riposo.", c6: "Protezione muscolo:", c6b: "Catabolismo proteico basso.", c7: "Metabolismo sano:", c7b: "Energia adeguata.", c8: "Modalità Soppressione:", c8b: "Rischio rimbalzo.", fb1: "PRECAUZIONE (12H)", fb2: "INIZIO (14H)", fb3: "MEDIO (16H)", fb4: "OTTIMALE (16-18H)", fm1: "Mantenere solo digiuno notturno.", fm2: "Iniziare 14-16h leggero.", fm3: "Protocolo 16h ideale.", fm4: "Ottima tolleranza digiuni profondi.", ah1: "RESTAURO", ah2: "BRUCIA GRASSI", ah3: "ANABOLISMO", ah4: "RENDIMENTO", ah5: "MANTENIMENTO", ae1: "Forza 3 giorni. Minimizzare cardio.", am1: "Stimola biogenesi mitocondriale.", ae2: "Forza + Cardio Zona 2.", am2: "Moltiplica consumo calorie.", ae3: "Forza pesante 5 giorni.", am3: "Accelera eliminazione lattato.", ae4: "Allenamento polarizzato 80/20.", am4: "Aumenta resistenza e VO2.", ae5: "Combinazione Forza/Cardio.", am5: "Ottimizza salute cellulare.", fw1: "Re-test 4-6 settimane vitale.", fw2: "Re-test 4-6 settimane (stress).", fw3: "Controllo flessibilità 4-6 settimane.", fw4: "Re-test 4-6 settimane o 3 mesi se mantiene.", yAyu: " e digiuno", tagWeeks: "REVISIONE IN 4-6 SETT.", tagMonths: "REVISIONE IN 3-6 MESI" 
+            },
+            de: {
+                sidebarTitle: "Control Panel", calibration: "Kalibrierung", step1: "1. Identifikation", patName: "Patient", patNamePh: "Name", date: "Datum", time: "Uhrzeit", step2: "2. Verantwortliche", prof: "Fachkraft", profPh: "Dr.", clinic: "Klinik", clinicPh: "Zentrum", step3: "3. Ziel & Biometrie", goalLabel: "Ziel", goalLoss: "Fettabbau", goalPerf: "Leistung", goalMaint: "Erhaltung", goalGain: "Muskelaufbau", actLabel: "Aktivität", act1: "Sitzend (x1.2)", act2: "Leicht (x1.35)", act3: "Moderat (x1.55)", act4: "Hoch (x1.75)", act5: "Sehr Hoch (x1.9)", ageLabel: "Alter", sexLabel: "Geschlecht", sexM: "Männlich", sexF: "Weiblich", weightLabel: "Gewicht (kg)", heightLabel: "Größe (cm)", bfLabel: "Körperfett % (Opt.)", includeFasting: "Fasten Einschl.", step4: "4. Kalorimetrie", formulaLabel: "Prädiktive Formel", advParams: "Erweiterte Parameter", 
+                rgpdAccept: "Ich akzeptiere – Haftungsausschluss und DSGVO", 
+                rgpdT1: "Die Ergebnisse dieses Berichts sind rein indikativ, stellen keine medizinische Diagnose dar und müssen von einem Arzt bestätigt werden.", 
+                rgpdT2: "Die Fachkraft übernimmt die volle rechtliche Verantwortung, die klinische Interpretation und die Verarbeitung der Patientendaten (DSGVO).", 
+                rgpdT3: "Numa Blue fungiert ausschließlich als Software-Tool zur Algorithmusberechnung und Datenstrukturierung.", 
+                rgpdT4: "Numa Blue lehnt ausdrücklich jede zivil-, straf- oder medizinrechtliche Haftung ab, die sich aus Entscheidungen ergibt, die aufgrund dieses Berichts getroffen werden.", 
+                btnPdf: "PDF DRUCKEN", btnGuide: "Leitfaden", repTitle: "Stoffwechselgesundheit", repSub: "Kalorimetrische Ruhemessung", rPat: "Patient", rDate: "DATUM:", rClinic: "KLINIK:", rProf: "PROF.:", rAge: "Alter", rSex: "Geschlecht", rWeight: "Gewicht", rHeight: "Größe", rGoal: "Ziel", bxAgeAn: "Altersanalyse", bxChrAge: "Chronologisches Alter", bxMetAge: "Stoffwechselalter", bxIam: "Metabolischer Anpassungsindex (MAI)", bxDiag: "Klinische Diagnose", bxReadyDef: "Kaloriendefizit?", bxReadyFast: "Defizit & Fasten?", bxReadyAna: "Anaboles Potenzial", bxCrit: "Kriterium:", hCal: "Kalorimetrische Analyse", hRee: "REE (Basal)", kcalDay: "kcal/Tag", measured: "Gemessen", expPrefix: "Erwartet:", refPrefix: "Ref:", bxReeRel: "Relatives REE", bxReeRelD: "Effizienz pro kg.", bxBsa: "REE nach BSA", bxBsaD: "Normalisierte Ausgabe.", bxFc: "HF (Ruhe)", hSub: "Oxidation (NP-RQ)", hRq: "Respiratorischer Quotient", hIfm: "Flexibilitätsindex", ifmOpt: "Optimal (MFI 4)", ifmMix: "Gemischt (MFI 2)", ifmLow: "Niedrig (MFI 1)", ifmInterp: "Interpretation:", gdFats: "G/T FETTE", gdCarbs: "G/T KOHLENH.", cFats: "FETTE", cCarbs: "KOHLENHYDRATE", cPros: "PROTEINE*", pro15: "Protein (Gesch. 15%)", pro15up: "PROTEIN (GESCH. 15%)", proNot: "Nicht messbar", proNote: "*Protein geschätzt.", donNote: "*Fett = 9kcal/g, Kohlenh = 4kcal/g.", page1: "Seite 1/4", page2: "Seite 2/4", page3: "Seite 3/4", page4: "Seite 4/4", pg2Title: "Ernährungsstrategie", pg2Sub: "Makros", tRel: "Zuverlässigkeit Test", rpuApt: "Gültige Ergebnisse.", tEff: "Atemeffizienz", tblP: "Parameter", tblM: "Gemessen", tInsight: "Atemeffizienz bewertet Kopplung.", dTitle: "Oxidation (Ruhe)", dWeight: "Gramm", dEnergy: "Kcal", pNut: "Vorgabe", pDaily: "TAGESZIEL", pFat: "Fette", pCarb: "Kohlenh.", pPro: "Proteine", pNote: "Werte in Gramm.", pBal: "Energiebilanz", pExp: "Ausgabe", pTar: "Ziel", pInt: "Zufuhr", lBas: "Basal", lAct: "Aktivität", lDig: "Verdauung", pg3Title: "Lebensstil", pg3Sub: "Klinisches Protokoll", cTitle: "Test Schlussfolgerungen", fTitle: "Ernährung & Fasten", fSub: "Fasten-Protokoll", aTitle: "Aktivität & Hypoxie", aVeh: "Übung", aMod: "Hypoxie", eTitle: "Entwicklung", nTitle: "Nächstes Level", nextDesc: "Zur Belastungskalorimetrie entwickeln.", pg4Title: "Beobachtungen", pg4Sub: "Klinische Notizen", notesPh: "Notizen hinzufügen...", male: "Männlich", female: "Weiblich", years: "Jahre", gFast: "Erhöhter Umsatz", gNorm: "Normaler Umsatz", gSlow: "Reduzierter Umsatz", iamEfi: "EFFIZIENT", iamAce: "BESCHLEUNIGT", iamCon: "KONSERVATIV", iamDescAce: "Übermäßiger Umsatz.", iamDescCon: "Schwere Unterdrückung (Sparmodus).", iamDescEfiC: "Leicht konservativ.", iamDescEfiA: "Leicht beschleunigt.", iamDescEfi: "Idealer metabolischer Motor.", ifm4: "OPTIMAL", ifm3: "EXZELLENT", ifm2: "GEMISCHT", ifm1: "NIEDRIG", ifmDesc4: "Dominanz der Fettoxidation.", ifmDesc3: "Sehr gute Flexibilität.", ifmDesc2: "Ausgewogen. Wenn nüchtern, beginnende Inflexibilität.", ifmDesc1: "Glukoseabhängigkeit. Schwere Inflexibilität.", fcDesc1: "Alarm: >55% Max HF.", fcDesc2: "HF in normalen Bereichen.", fcDesc3: "Exzellenter parasympathischer Tonus.", rOpt: "Optimal", rMed: "Mittel", rBaj: "Niedrig", rr1: "Hohe Atemfrequenz.", rr2: "EqCO2 > 36.", rr3: "Hyperventilation (RQ>1).", rr4: "Stabiles Muster.", oExc: "Exzellent", oLim: "Grenzwert", oInef: "Ineffizient", frLow: "Niedrig", frNor: "Normal", frHig: "Hoch", effEfi: "EFFIZIENT", effInef: "INEFFIZIENT", effLim: "GRENZWERT", rtNo: "NICHT EMPFOHLEN", rtPre: "VORSICHT", rtOk: "BEREIT", rtLim: "BEGRENZT", rtCost: "HOHE KOSTEN", rtOpt: "OPTIMAL", rd1: "Erfordert Wiederherstellung", rd2: "Beschleunigter Stoffwechsel.", rd3: "Atemtechnische Ineffizienz.", rd4: "Stabiles System", rd5: "Neigung zur Fettspeicherung.", rd6: "Ideale anabole Umgebung.", rc1: "Priorität Wiederherstellung.", rc2: "Defizit kontraproduktiv.", rc3: "Nicht mit Defizit stressen.", rc4: "Sicheres Defizit 20%", rc5: "Sparmodus.", rc6: "Erfordert viel Nahrung.", rc7: "Perfektes anaboles Gleichgewicht.", tgt1: "WIEDERHERSTELLUNG", tgt2: "LEICHTES DEFIZIT", tgt3: "FETTABBAU", tgt4: "ÜBERSCHUSS", c1: "Präzision vs Formeln:", c1b: "Realer Umsatz ist ## kcal/Tag.", c2: "Crossover-Alarm:", c2b: "Dringender Refeed.", c3: "Hohe Fettoxidation:", c3b: "Exzellente Fettsäuren-Nutzung.", c4: "Glykogen-Einsparung:", c4b: "Erhaltung der Reserven.", c5: "Niedrige Fettoxidation:", c5b: "Glukoseabhängigkeit in Ruhe.", c6: "Muskelschutz:", c6b: "Geringer Proteinabbau.", c7: "Gesunder Stoffwechsel:", c7b: "Angemessene Energie.", c8: "Unterdrückungsmodus:", c8b: "Risiko für Jojo-Effekt.", fb1: "VORSICHT (12H)", fb2: "START (14H)", fb3: "MITTEL (16H)", fb4: "OPTIMAL (16-18H)", fm1: "Nur Nachtfasten einhalten.", fm2: "Sanft mit 14-16h beginnen.", fm3: "16h-Protokoll ideal.", fm4: "Optimale Toleranz tiefes Fasten.", ah1: "WIEDERHERSTELLUNG", ah2: "FETTVERBRENNUNG", ah3: "ANABOLISMUS", ah4: "LEISTUNG", ah5: "ERHALTUNG", ae1: "Kraft 3 Tage. Cardio minimieren.", am1: "Stimuliert mitochondriale Biogenese.", ae2: "Kraft + Cardio Zone 2.", am2: "Vervielfacht Kalorienverbrennung.", ae3: "Schweres Krafttraining 5 Tage.", am3: "Beschleunigt Laktatabbau.", ae4: "Polarisiertes Training 80/20.", am4: "Steigert Ausdauer und VO2.", ae5: "Kombination Kraft/Cardio.", am5: "Optimiert Zellgesundheit.", fw1: "Re-Test 4-6 Wochen vital.", fw2: "Re-Test 4-6 Wochen (Stress).", fw3: "Flexibilitätskontrolle 4-6 Wochen.", fw4: "Re-Test 4-6 Wochen oder 3 Mon. wenn stabil.", yAyu: " & Fasten", tagWeeks: "ÜBERPRÜFUNG 4-6 WOCHEN", tagMonths: "ÜBERPRÜFUNG 3-6 MONATEN" 
+            }
+        };
+
+        let currentLang = 'es';
+
+        function setLang(lang) {
+            currentLang = lang;
+            document.querySelectorAll('.lang-btn').forEach(btn => { btn.classList.remove('bg-indigo-600', 'text-white', 'border-transparent'); btn.classList.add('bg-white', 'text-slate-600', 'border-slate-200'); });
+            const activeBtn = document.getElementById('btn-' + lang);
+            activeBtn.classList.remove('bg-white', 'text-slate-600', 'border-slate-200'); activeBtn.classList.add('bg-indigo-600', 'text-white', 'border-transparent');
+            document.querySelectorAll('[data-i18n]').forEach(el => { const key = el.getAttribute('data-i18n'); if (i18n[currentLang][key]) el.innerHTML = i18n[currentLang][key]; });
+            document.querySelectorAll('[data-i18n-ph]').forEach(el => { const key = el.getAttribute('data-i18n-ph'); if (i18n[currentLang][key]) el.placeholder = i18n[currentLang][key]; });
+            
+            const rgpdEl = document.getElementById('rgpd-text');
+            if (rgpdEl) {
+                rgpdEl.innerHTML = `<strong class="text-[10px] text-slate-900 block mb-1.5">${i18n[currentLang].rgpdAccept}</strong>
+                <ul class="list-disc pl-3 space-y-1 text-[8.5px]">
+                    <li>${i18n[currentLang].rgpdT1}</li>
+                    <li>${i18n[currentLang].rgpdT2}</li>
+                    <li>${i18n[currentLang].rgpdT3}</li>
+                    <li>${i18n[currentLang].rgpdT4}</li>
+                </ul>`;
+            }
+
+            document.getElementById('in-goal').options[0].text = i18n[currentLang].goalLoss; document.getElementById('in-goal').options[1].text = i18n[currentLang].goalPerf; document.getElementById('in-goal').options[2].text = i18n[currentLang].goalMaint; document.getElementById('in-goal').options[3].text = i18n[currentLang].goalGain;
+            document.getElementById('in-activity').options[0].text = i18n[currentLang].act1; document.getElementById('in-activity').options[1].text = i18n[currentLang].act2; document.getElementById('in-activity').options[2].text = i18n[currentLang].act3; document.getElementById('in-activity').options[3].text = i18n[currentLang].act4; document.getElementById('in-activity').options[4].text = i18n[currentLang].act5;
+            document.getElementById('in-sex').options[0].text = i18n[currentLang].sexM; document.getElementById('in-sex').options[1].text = i18n[currentLang].sexF;
+            runSystem();
+        }
+
+        Chart.register(ChartDataLabels);
+        let chartRqEnergy, chartDonG, chartDonKcal;
+        function initCharts() {
+            const optWithLabels = { animation: false, cutout: '60%', plugins: { legend: { display: false }, datalabels: { color: 'white', font: { weight: 'bold', size: 10 }, formatter: (v) => v > 5 ? v + '%' : '' } }, responsive: true, maintainAspectRatio: false };
+            chartRqEnergy = new Chart(document.getElementById('chart-rq-energy').getContext('2d'), { type: 'doughnut', data: { labels: ['Grasas', 'Carbos'], datasets: [{ data: [50, 50], backgroundColor: ['#10b981', '#f97316'], borderWidth: 0 }] }, options: optWithLabels });
+            chartDonG = new Chart(document.getElementById('chart-don-g').getContext('2d'), { type: 'doughnut', data: { labels: ['Grasas', 'Carbos', 'Proteínas'], datasets: [{ data: [25, 57, 18], backgroundColor: ['#10b981', '#f97316', '#3b82f6'], borderWidth: 0 }] }, options: optWithLabels });
+            chartDonKcal = new Chart(document.getElementById('chart-don-kcal').getContext('2d'), { type: 'doughnut', data: { labels: ['Grasas', 'Carbos', 'Proteínas'], datasets: [{ data: [43, 44, 13], backgroundColor: ['#10b981', '#f97316', '#3b82f6'], borderWidth: 0 }] }, options: optWithLabels });
+        }
+
+        function safeText(id, text) { const el = document.getElementById(id); if (el) el.innerHTML = text; }
+        function toggleDownload() {
+            const cb = document.getElementById('legal-checkbox'); const btn = document.getElementById('btn-download');
+            if (cb && cb.checked) { btn.disabled = false; btn.classList.remove('opacity-50', 'cursor-not-allowed'); } else { btn.disabled = true; btn.classList.add('opacity-50', 'cursor-not-allowed'); }
+        }
+
+        function runSystem() {
+            const t = i18n[currentLang]; 
+            let name = "---", doctor = "---", clinic = "---", dateInput = "", timeInput = "";
+            let age = 30, weight = 70, height = 170, sex = 'M', goal = 'weight_loss', activity = 1.2, formula = 'msje';
+            let ree = 1500, rq = 0.85, vo2 = 250, vco2 = 210, ve = 8, rr = 14, vt = 500, fc = 65;
+            let bfInput = document.getElementById('in-bf') ? document.getElementById('in-bf').value : "";
+            let bf = bfInput !== "" ? parseFloat(bfInput) : null;
+
+            if(document.getElementById('in-name') && document.getElementById('in-name').value) name = document.getElementById('in-name').value;
+            if(document.getElementById('in-doctor') && document.getElementById('in-doctor').value) doctor = document.getElementById('in-doctor').value;
+            if(document.getElementById('in-clinic') && document.getElementById('in-clinic').value) clinic = document.getElementById('in-clinic').value;
+            if(document.getElementById('in-date')) dateInput = document.getElementById('in-date').value;
+            if(document.getElementById('in-time')) timeInput = document.getElementById('in-time').value;
+            
+            if(document.getElementById('in-age')) age = parseFloat(document.getElementById('in-age').value) || age;
+            if(document.getElementById('in-weight')) weight = parseFloat(document.getElementById('in-weight').value) || weight;
+            if(document.getElementById('in-height')) height = parseFloat(document.getElementById('in-height').value) || height;
+            if(document.getElementById('in-sex')) sex = document.getElementById('in-sex').value || sex;
+            if(document.getElementById('in-goal')) goal = document.getElementById('in-goal').value || goal;
+            if(document.getElementById('in-activity')) activity = parseFloat(document.getElementById('in-activity').value) || activity;
+            if(document.getElementById('in-formula')) formula = document.getElementById('in-formula').value || formula;
+
+            if(document.getElementById('in-ree')) ree = parseFloat(document.getElementById('in-ree').value) || 0;
+            if(document.getElementById('in-rq')) rq = parseFloat(document.getElementById('in-rq').value) || 0.85;
+            if(document.getElementById('in-vo2')) vo2 = parseFloat(document.getElementById('in-vo2').value) || 0;
+            if(document.getElementById('in-vco2')) vco2 = parseFloat(document.getElementById('in-vco2').value) || 0;
+            if(document.getElementById('in-ve')) ve = parseFloat(document.getElementById('in-ve').value) || 0;
+            if(document.getElementById('in-fr')) rr = parseFloat(document.getElementById('in-fr').value) || 0;
+            if(document.getElementById('in-vt')) vt = parseFloat(document.getElementById('in-vt').value) || 0;
+            if(document.getElementById('in-hr')) fc = parseFloat(document.getElementById('in-hr').value) || 0;
+
+            let localeStr = 'es-ES';
+            if (currentLang === 'en') localeStr = 'en-US'; else if (currentLang === 'pt') localeStr = 'pt-BR'; else if (currentLang === 'it') localeStr = 'it-IT'; else if (currentLang === 'de') localeStr = 'de-DE';
+            const displayDate = dateInput ? new Date(dateInput).toLocaleDateString(localeStr) : "--/--/----";
+
+            safeText('p1-clinic-header', clinic); safeText('p2-clinic-header', clinic); safeText('p3-clinic-header', clinic); safeText('p4-clinic-header', clinic);
+            safeText('p1-doctor-header', doctor); safeText('p2-doctor-header', doctor); safeText('p3-doctor-header', doctor); safeText('p4-doctor-header', doctor);
+            safeText('p1-date', displayDate); safeText('p2-date', displayDate); safeText('p3-date', displayDate); safeText('p4-date', displayDate);
+            safeText('p1-name', name); safeText('p2-name', name); safeText('p3-name', name); safeText('p4-name', name);
+
+            safeText('p1-age', age + " " + t.years); safeText('p1-age-real-val', age + " " + t.years);
+            safeText('p1-sex', sex === 'M' ? t.male : t.female);
+            safeText('p1-weight', weight + " kg");
+            safeText('p1-height', height + " cm");
+            safeText('p1-bf', bf !== null ? bf + " %" : "--"); // Opcional
+            
+            let goalText = t.goalMaint;
+            if(goal==='weight_loss') goalText=t.goalLoss; if(goal==='muscle_gain') goalText=t.goalGain; if(goal==='performance') goalText=t.goalPerf;
+            safeText('p1-goal', goalText.toUpperCase());
+
+            let predRMR = 0;
+            if (formula === 'msje') {
+                predRMR = (10 * weight) + (6.25 * height) - (5 * age) + (sex === 'M' ? 5 : -161);
+                safeText('p1-formula-text', t.refPrefix + ' Mifflin-St Jeor');
+            } else if (formula === 'hb') {
+                if (sex === 'M') predRMR = 88.362 + (13.397 * weight) + (4.799 * height) - (5.677 * age);
+                else predRMR = 447.593 + (9.247 * weight) + (3.098 * height) - (4.330 * age);
+                safeText('p1-formula-text', t.refPrefix + ' Harris-Benedict');
+            } else if (formula === 'katch') {
+                let fatPercentage = bf !== null ? bf : (sex === 'M' ? 20 : 25);
+                let ffm = weight * (1 - (fatPercentage / 100));
+                predRMR = 370 + (21.6 * ffm);
+                safeText('p1-formula-text', t.refPrefix + ' Katch-McArdle');
+            }
+            
+            safeText('p1-ree-big', Math.round(ree));
+            safeText('p1-expected-text', `${t.expPrefix} ${Math.round(predRMR)}`);
+
+            let devPct = 0; let iam = 0; let nmi = 0; let reeBsa = 0;
+            if(predRMR > 0) {
+                devPct = ((ree - predRMR) / predRMR) * 100;
+                iam = ree / predRMR;
+                nmi = weight > 0 ? ree / weight : 0;
+                let bsa = 0.007184 * Math.pow(weight, 0.425) * Math.pow(height, 0.725);
+                reeBsa = bsa > 0 ? ree / bsa : 0;
+
+                const maxVal = Math.max(ree, predRMR, 2000);
+                const barMeasured = document.getElementById('p1-bar-measured');
+                const markerPredicted = document.getElementById('p1-marker-predicted');
+                if (barMeasured) barMeasured.style.width = `${(ree/maxVal)*100}%`;
+                if (markerPredicted) markerPredicted.style.left = `${(predRMR/maxVal)*100}%`;
+
+                const devSign = devPct > 0 ? "+" : "";
+                safeText('p1-dev-badge', `${devSign}${devPct.toFixed(1)}%`);
+                safeText('p1-nmi-grid', nmi.toFixed(1));
+                safeText('p1-bsa-grid', Math.round(reeBsa));
+
+                let iamState = t.iamEfi; let iamDesc = t.iamDescEfi; 
+                const devBadgeEl = document.getElementById('p1-dev-badge');
+                const devTextEl = document.getElementById('p1-dev-text');
+                
+                if (devPct > 15) {
+                    if (devBadgeEl) devBadgeEl.className = "px-2.5 py-1 bg-orange-100 text-orange-700 rounded text-[10px] font-black mb-1 inline-block";
+                    if (devTextEl) { devTextEl.innerHTML = t.gFast; devTextEl.className = "text-[8px] font-black text-orange-600 uppercase tracking-widest text-right leading-tight mt-1"; }
+                    iamState = t.iamAce; iamDesc = t.iamDescAce; 
+                } else if (devPct < -15) {
+                    if (devBadgeEl) devBadgeEl.className = "px-2.5 py-1 bg-red-100 text-red-700 rounded text-[10px] font-black mb-1 inline-block";
+                    if (devTextEl) { devTextEl.innerHTML = t.gSlow; devTextEl.className = "text-[8px] font-black text-red-600 uppercase tracking-widest text-right leading-tight mt-1"; }
+                    iamState = t.iamCon; iamDesc = t.iamDescCon; 
+                } else {
+                    if (devBadgeEl) devBadgeEl.className = "px-2.5 py-1 bg-blue-100 text-blue-700 rounded text-[10px] font-black mb-1 inline-block";
+                    if (devTextEl) { devTextEl.innerHTML = t.gNorm; devTextEl.className = "text-[8px] font-black text-blue-600 uppercase tracking-widest text-right leading-tight mt-1"; }
+                    iamState = t.iamEfi; 
+                    if (iam < 0.95) iamDesc = t.iamDescEfiC; else if (iam > 1.05) iamDesc = t.iamDescEfiA; else iamDesc = t.iamDescEfi;
+                }
+                
+                safeText('p1-iam-title', iamState);
+                safeText('p1-iam-badge', `IAM: ${iam.toFixed(2)}`);
+                safeText('p1-iam-desc', iamDesc);
+
+                if (document.getElementById('bar-nmi')) document.getElementById('bar-nmi').style.width = Math.min((nmi / 40) * 100, 100) + "%";
+                if (document.getElementById('bar-bsa')) document.getElementById('bar-bsa').style.width = Math.min((reeBsa / 1500) * 100, 100) + "%";
+            }
+
+            let metAge = age;
+            if (ree > 0) {
+                metAge = age + ((1 - iam) * 20); 
+                if (rr > 20) metAge += 2; 
+                if (rq > 0.95) metAge += 3; 
+                else if (rq <= 0.82) metAge -= 3; 
+                if (metAge > age + 10) metAge = age + 10; 
+                if (metAge < age - 10) metAge = age - 10;
+            }
+            safeText('p1-age-met-val', Math.round(metAge) + " " + t.years);
+            if (document.getElementById('bar-age-real')) document.getElementById('bar-age-real').style.width = Math.min((age / 80) * 100, 100) + "%";
+            if (document.getElementById('bar-age-met')) document.getElementById('bar-age-met').style.width = Math.min((metAge / 80) * 100, 100) + "%";
+
+            safeText('p1-rq-big', rq.toFixed(2));
+            let rqPct = ((rq - 0.70) / 0.30) * 100; if(rqPct < 0) rqPct = 0; if(rqPct > 100) rqPct = 100;
+            if(document.getElementById('p1-rq-marker')) document.getElementById('p1-rq-marker').style.left = `${rqPct}%`;
+
+            let ifmLevel = "IFM 2", ifmName = t.ifm2, ifmDesc = "", ifmBadgeColor = "text-blue-700 bg-blue-50";
+            if (rq <= 0.78) { ifmLevel = "IFM 4"; ifmName = t.ifm4; ifmBadgeColor="text-blue-800 bg-blue-100 border-blue-300"; ifmDesc=t.ifmDesc4; }
+            else if (rq <= 0.85) { ifmLevel = "IFM 3"; ifmName = t.ifm3; ifmBadgeColor="text-blue-800 bg-blue-100 border-blue-300"; ifmDesc=t.ifmDesc3; }
+            else if (rq <= 0.92) { ifmLevel = "IFM 2"; ifmName = t.ifm2; ifmBadgeColor="text-amber-800 bg-amber-100 border-amber-300"; ifmDesc=t.ifmDesc2; }
+            else { ifmLevel = "IFM 1"; ifmName = t.ifm1; ifmBadgeColor="text-red-800 bg-red-100 border-red-300"; ifmDesc=t.ifmDesc1; }
+
+            safeText('p1-ifm-badge', `${ifmName} (${ifmLevel})`);
+            if (document.getElementById('p1-ifm-badge')) document.getElementById('p1-ifm-badge').className = `px-2 py-0.5 rounded text-[8px] font-black uppercase tracking-widest border ${ifmBadgeColor}`;
+            safeText('p1-ifm-desc', ifmDesc);
+
+            const proKcal = ree * 0.15; const proGrams = proKcal / 4; const nonProKcal = ree * 0.85;
+            let choRatio = (rq - 0.70) / 0.30; if(choRatio < 0) choRatio = 0; if(choRatio > 1) choRatio = 1;
+            const fatRatio = 1.0 - choRatio;
+            const choKcal = nonProKcal * choRatio; const fatKcal = nonProKcal * fatRatio;
+            const choGrams = choKcal / 4; const fatGrams = fatKcal / 9;
+
+            const totalGrams = proGrams + choGrams + fatGrams;
+            const proPctG = totalGrams > 0 ? (proGrams / totalGrams) * 100 : 0;
+            const choPctG = totalGrams > 0 ? (choGrams / totalGrams) * 100 : 0;
+            const fatPctG = totalGrams > 0 ? (fatGrams / totalGrams) * 100 : 0;
+            const proPctK = 15; const choPctK = ree > 0 ? (choKcal / ree) * 100 : 0; const fatPctK = ree > 0 ? (fatKcal / ree) * 100 : 0;
+
+            safeText('p1-cho-gd', `${Math.round(choGrams)} ${t.gdCarbs}`);
+            safeText('p1-fat-gd', `${Math.round(fatGrams)} ${t.gdFats}`);
+            safeText('p2-donut-c-g', `${Math.round(choGrams)}`);
+            safeText('p2-donut-f-g', `${Math.round(fatGrams)}`);
+            safeText('p1-pro-gd', `${Math.round(proGrams)} g/d`);
+            safeText('p2-donut-p-g', `${Math.round(proGrams)} g/d`);
+
+            if (chartRqEnergy) { chartRqEnergy.data.labels = [t.cFats, t.cCarbs]; chartRqEnergy.data.datasets[0].data = [Math.round((fatKcal/(choKcal+fatKcal))*100)||50, Math.round((choKcal/(choKcal+fatKcal))*100)||50]; chartRqEnergy.update(); }
+            if (chartDonG) { chartDonG.data.labels = [t.cFats, t.cCarbs, t.cPros]; chartDonG.data.datasets[0].data = [Math.round(fatPctG), Math.round(choPctG), Math.round(proPctG)]; chartDonG.update(); }
+            if (chartDonKcal) { chartDonKcal.data.labels = [t.cFats, t.cCarbs, t.cPros]; chartDonKcal.data.datasets[0].data = [Math.round(fatPctK), Math.round(choPctK), Math.round(proPctK)]; chartDonKcal.update(); }
+
+            safeText('t-vo2', vo2); safeText('t-vco2', vco2); safeText('t-ve', ve); safeText('t-fr', rr); safeText('t-vt', vt);
+            
+            let fcPct = fc > 0 ? (fc/(220 - age))*100 : 0;
+            let eqO2 = vo2 > 0 ? ve / (vo2/1000) : 0; let eqCO2 = vco2 > 0 ? ve / (vco2/1000) : 0;
+            safeText('t-eqo2', eqO2 > 0 ? eqO2.toFixed(1) : "--"); safeText('t-eqco2', eqCO2 > 0 ? eqCO2.toFixed(1) : "--");
+
+            let respColor = "green";
+            if (eqCO2 >= 36 || rr > 20) { respColor = "red"; } else if (eqCO2 >= 30 || rr > 16) { respColor = "amber"; }
+
+            safeText('t-eqco2-obs', eqCO2 < 30 ? t.oExc : (eqCO2 < 36 ? t.oLim : t.oInef));
+            safeText('t-eqo2-obs', eqO2 < 30 ? t.oExc : (eqO2 < 36 ? t.oLim : t.oInef));
+            safeText('t-fr-obs', rr < 12 ? t.frLow : (rr <= 20 ? t.frNor : t.frHig));
+            if (document.getElementById('t-eqco2-obs')) document.getElementById('t-eqco2-obs').className = `text-right pr-2 font-black text-[10px] text-${respColor}-600`;
+
+            let rpuScore = 100; let relReasons = [];
+            if(rr > 20) { rpuScore -= 30; relReasons.push(t.rr1); }
+            if(eqCO2 >= 36) { rpuScore -= 20; relReasons.push(t.rr2); }
+            if(rq > 1.0) { rpuScore -= 40; relReasons.push(t.rr3); }
+            if(rpuScore === 100) relReasons.push(t.rr4);
+
+            safeText('p2-rpu-val', `${rpuScore}/100`);
+            if (document.getElementById('p2-rpu-bar')) document.getElementById('p2-rpu-bar').style.width = `${Math.max(0, rpuScore)}%`; 
+            if (document.getElementById('p2-rpu-bar')) document.getElementById('p2-rpu-bar').className = `h-full rounded-full ${rpuScore > 80 ? 'bg-emerald-500' : (rpuScore > 60 ? 'bg-amber-500' : 'bg-red-500')}`;
+            safeText('p2-rel-title', rpuScore > 80 ? t.rOpt : (rpuScore > 60 ? t.rMed : t.rBaj));
+            if (document.getElementById('p2-rel-dot')) document.getElementById('p2-rel-dot').className = `traffic-dot w-3 h-3 ${rpuScore > 80 ? 'bg-emerald-500' : (rpuScore > 60 ? 'bg-amber-500' : 'bg-red-500')}`;
+            if (document.getElementById('p2-reliability-reasons')) document.getElementById('p2-reliability-reasons').innerHTML = relReasons.map(r=>`<li>${r}</li>`).join("");
+
+            let fcDesc = "", fcColor = "text-blue-700", fcBarColor = "bg-blue-600";
+            if (fcPct > 55) { fcDesc = t.fcDesc1; fcColor = "text-red-700"; fcBarColor = "bg-red-600"; } else if (fcPct > 45) { fcDesc = t.fcDesc2; fcColor = "text-emerald-700"; fcBarColor = "bg-emerald-600"; } else { fcDesc = t.fcDesc3; fcColor = "text-blue-700"; fcBarColor = "bg-blue-600"; }
+            safeText('t-fc-obs', fcDesc);
+            if(document.getElementById('t-fc-rep')) { document.getElementById('t-fc-rep').innerText = fc + " bpm"; document.getElementById('t-fc-rep').className = `text-lg font-black leading-none ${fcColor}`; }
+            if (document.getElementById('bar-fc')) { document.getElementById('bar-fc').style.width = Math.min(fcPct, 100) + "%"; document.getElementById('bar-fc').className = `h-full rounded-full transition-all duration-1000 ${fcBarColor}`; }
+
+            const includeFasting = document.getElementById('in-fasting-toggle')?.checked ?? true;
+            let readyTitle = t.rtOk, readyDesc = t.rd4, readyColor = "green", decisionCrit = t.rc4 + (includeFasting ? t.yAyu : '.');
+            
+            if (goal === 'weight_loss') {
+                if (document.getElementById('p1-ready-q')) document.getElementById('p1-ready-q').innerText = includeFasting ? t.bxReadyFast : t.bxReadyDef;
+                if (iam < 0.85) { readyTitle = t.rtNo; readyColor = "red"; readyDesc = t.rd1; decisionCrit = t.rc1; } 
+                else if (iam > 1.15) { readyTitle = t.rtPre; readyColor = "amber"; readyDesc = t.rd2; decisionCrit = t.rc2; } 
+                else if (eqCO2 >= 36) { readyTitle = t.rtPre; readyColor = "amber"; readyDesc = t.rd3; decisionCrit = t.rc3; } 
+                else { readyTitle = t.rtOk; readyColor = "green"; readyDesc = t.rd4; }
+            } else if (goal === 'muscle_gain') {
+                if (document.getElementById('p1-ready-q')) document.getElementById('p1-ready-q').innerText = t.bxReadyAna;
+                if (iam < 0.85) { readyTitle = t.rtLim; readyColor = "amber"; readyDesc = t.rd5; decisionCrit = t.rc5; }
+                else if (iam > 1.15) { readyTitle = t.rtCost; readyColor = "amber"; readyDesc = t.rd2; decisionCrit = t.rc6; }
+                else { readyTitle = t.rtOpt; readyColor = "green"; readyDesc = t.rd6; decisionCrit = t.rc7; }
+            }
+
+            safeText('p1-ready-title', readyTitle); safeText('p1-ready-desc', readyDesc); safeText('p1-decision-criteria', decisionCrit);
+            if (document.getElementById('p1-restriction-light')) {
+                document.getElementById('p1-restriction-light').innerHTML = readyColor==='green'?'<i data-lucide="check" class="w-7 h-7 text-emerald-600"></i>':(readyColor==='red'?'<i data-lucide="x" class="w-7 h-7 text-red-600"></i>':'<i data-lucide="alert-triangle" class="w-7 h-7 text-amber-600"></i>');
+                document.getElementById('p1-restriction-light').className = `h-14 w-14 rounded-full flex items-center justify-center border-2 flex-shrink-0 shadow-sm border-${readyColor==='green'?'emerald':(readyColor==='red'?'red':'amber')}-200 bg-white`;
+            }
+
+            const TEE = ree * activity; let targetKcal = Math.round(TEE); let goalDesc = t.goalMaint.toUpperCase();
+            if (goal === 'weight_loss') {
+                if (readyColor === 'red') { targetKcal = Math.round(TEE); goalDesc = t.tgt1; }
+                else if (readyColor === 'amber') { targetKcal = Math.round(TEE * 0.90); goalDesc = `${t.tgt2} (-${Math.round(TEE*0.1)} KCAL)`; }
+                else { targetKcal = Math.round(TEE * 0.80); goalDesc = `${t.tgt3} (-${Math.round(TEE*0.2)} KCAL)`; }
+            } else if (goal === 'muscle_gain') { targetKcal = Math.round(TEE * 1.15); goalDesc = `${t.tgt4} (+${Math.round(TEE*0.15)} KCAL)`; }
+
+            safeText('p2-tar-kcal', targetKcal); safeText('p2-tar-desc', goalDesc); 
+
+            const tefVal = TEE * 0.1; const actVal = TEE - ree - tefVal; const maxBar = Math.max(TEE, targetKcal) * 1.15;
+            if (document.getElementById('sb-rmr')) document.getElementById('sb-rmr').style.height = `${(ree/maxBar)*100}%`; 
+            if (document.getElementById('sb-act')) document.getElementById('sb-act').style.height = `${((actVal>0?actVal:0)/maxBar)*100}%`; 
+            if (document.getElementById('sb-tef')) document.getElementById('sb-tef').style.height = `${(tefVal/maxBar)*100}%`;
+            safeText('sb-tee-val', Math.round(TEE));
+            if (document.getElementById('sb-tar')) document.getElementById('sb-tar').style.height = `${(targetKcal/maxBar)*100}%`;
+            safeText('sb-tar-val', targetKcal);
+
+            let proF = (goal==='weight_loss' || goal==='muscle_gain') ? 2.0 : 1.8;
+            const tPro = Math.round(weight * proF); const tFat = Math.round(weight * 0.9);
+            let tChoKcal = targetKcal - (tPro*4) - (tFat*9); if(tChoKcal < 0) tChoKcal = 0; const tCho = Math.round(tChoKcal / 4);
+
+            safeText('p2-mac-p', tPro + 'g'); safeText('p2-mac-f', tFat + 'g'); safeText('p2-mac-c', tCho + 'g');
+
+            let cHTML = `<li class="flex items-start gap-2"><i class="fa-solid fa-check text-emerald-600 mt-0.5 text-[10px]"></i> <div><strong class="text-slate-800">${t.c1}</strong> ${t.c1b.replace('##', Math.round(ree))}</div></li>`;
+            if (rq <= 0.78 && iam < 0.85) cHTML += `<li class="flex items-start gap-2"><i class="fa-solid fa-triangle-exclamation text-amber-500 mt-0.5 text-[10px]"></i> <div><strong class="text-slate-800">${t.c2}</strong> ${t.c2b}</div></li>`;
+            else if (rq <= 0.85) {
+                cHTML += `<li class="flex items-start gap-2"><i class="fa-solid fa-check text-emerald-600 mt-0.5 text-[10px]"></i> <div><strong class="text-slate-800">${t.c3}</strong> ${t.c3b}</div></li>`;
+                cHTML += `<li class="flex items-start gap-2"><i class="fa-solid fa-check text-emerald-600 mt-0.5 text-[10px]"></i> <div><strong class="text-slate-800">${t.c4}</strong> ${t.c4b}</div></li>`;
+            } else cHTML += `<li class="flex items-start gap-2"><i class="fa-solid fa-triangle-exclamation text-amber-500 mt-0.5 text-[10px]"></i> <div><strong class="text-slate-800">${t.c5}</strong> ${t.c5b}</div></li>`;
+            cHTML += `<li class="flex items-start gap-2"><i class="fa-solid fa-check text-emerald-600 mt-0.5 text-[10px]"></i> <div><strong class="text-slate-800">${t.c6}</strong> ${t.c6b}</div></li>`;
+            if (iam >= 0.85) cHTML += `<li class="flex items-start gap-2"><i class="fa-solid fa-check text-emerald-600 mt-0.5 text-[10px]"></i> <div><strong class="text-slate-800">${t.c7}</strong> ${t.c7b}</div></li>`;
+            else cHTML += `<li class="flex items-start gap-2"><i class="fa-solid fa-triangle-exclamation text-red-500 mt-0.5 text-[10px]"></i> <div><strong class="text-slate-800">${t.c8}</strong> ${t.c8b}</div></li>`;
+            if (document.getElementById('p3-conclusions-list')) document.getElementById('p3-conclusions-list').innerHTML = cHTML;
+
+            let fastMsg = "", fastHours = "", fastBadge = "", fCol = "emerald";
+            if (iam < 0.85) { fastHours = "12h"; fastBadge = t.fb1; fCol = "amber"; fastMsg = t.fm1; } 
+            else if (rq > 0.92) { fastHours = "14-16h"; fastBadge = t.fb2; fCol = "orange"; fastMsg = t.fm2; } 
+            else if (rq > 0.85) { fastHours = "16h"; fastBadge = t.fb3; fCol = "emerald"; fastMsg = t.fm3; } 
+            else { fastHours = "16-18h"; fastBadge = t.fb4; fCol = "blue"; fastMsg = t.fm4; }
+
+            safeText('p3-fasting-hours', fastHours);
+            if(document.getElementById('p3-fasting-hours')) document.getElementById('p3-fasting-hours').className = `text-4xl font-black text-${fCol}-700 leading-none`;
+            safeText('p3-fasting-badge', fastBadge);
+            if (document.getElementById('p3-fasting-badge')) document.getElementById('p3-fasting-badge').className = `px-3 py-1.5 mb-3 bg-${fCol}-100 text-${fCol}-800 border border-${fCol}-200 rounded text-[9px] font-black uppercase tracking-widest text-center w-full`;
+            safeText('p3-fasting-desc', fastMsg);
+
+            if (document.getElementById('p3-fasting-container')) {
+                if (includeFasting) { document.getElementById('p3-fasting-container').classList.remove('hidden'); document.getElementById('p3-fasting-container').classList.add('flex'); document.getElementById('p3-fasting-header').classList.remove('hidden'); } 
+                else { document.getElementById('p3-fasting-container').classList.add('hidden'); document.getElementById('p3-fasting-container').classList.remove('flex'); document.getElementById('p3-fasting-header').classList.add('hidden'); }
+            }
+
+            let actHeader = t.ah5, actBg = "bg-green-100 text-green-900", actIconCol = "text-green-700", exDesc = t.ae5, hypDesc = t.am5;
+            if (goal === 'weight_loss') {
+                if (iam < 0.85) { actHeader = t.ah1; actBg = "bg-red-100 text-red-900"; actIconCol = "text-red-700"; exDesc = t.ae1; hypDesc = t.am1; } 
+                else { actHeader = t.ah2; actBg = "bg-emerald-100 text-emerald-900"; actIconCol = "text-emerald-700"; exDesc = t.ae2; hypDesc = t.am2; }
+            } else if (goal === 'muscle_gain') { actHeader = t.ah3; actBg = "bg-blue-100 text-blue-900"; actIconCol = "text-blue-700"; exDesc = t.ae3; hypDesc = t.am3; } 
+            else if (goal === 'performance') { actHeader = t.ah4; actBg = "bg-purple-100 text-purple-900"; actIconCol = "text-purple-700"; exDesc = t.ae4; hypDesc = t.am4; }
+
+            safeText('act-header-title', actHeader);
+            if(document.getElementById('act-header-bg')) document.getElementById('act-header-bg').className = `px-4 py-3 flex items-center gap-3 border-b border-slate-300 ${actBg}`;
+            if(document.getElementById('act-header-icon')) document.getElementById('act-header-icon').className = `bg-white/90 border border-green-200 p-1 rounded shadow-sm ${actIconCol}`;
+            safeText('act-exercise-desc', exDesc); safeText('act-hypoxia-desc', hypDesc);
+
+            let followupText = t.fw4, dateStr = t.tagMonths; 
+            if (iam < 0.85) { followupText = t.fw1; dateStr = t.tagWeeks; } else if (iam > 1.15) { followupText = t.fw2; dateStr = t.tagWeeks; } else if (rq > 0.92) { followupText = t.fw3; dateStr = t.tagWeeks; } else if (goal !== 'maintenance') { dateStr = t.tagWeeks; }
+            
+            if(document.getElementById('p3-followup-text')) document.getElementById('p3-followup-text').innerHTML = followupText + `<br><span class="inline-block mt-2 px-2.5 py-1 bg-slate-100 rounded text-[9px] font-black text-slate-800 tracking-widest border border-slate-200"><i class="fa-regular fa-calendar-check mr-1"></i> ${dateStr}</span>`;
+            safeText('p3-next-desc', t.nextDesc);
+            lucide.createIcons();
+        }
+
+        window.onload = () => { initCharts(); setLang('es'); toggleDownload(); };
+    </script>
+</body>
+</html>
